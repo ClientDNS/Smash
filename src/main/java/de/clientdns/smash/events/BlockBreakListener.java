@@ -1,0 +1,16 @@
+package de.clientdns.smash.events;
+
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.jetbrains.annotations.NotNull;
+
+public class BlockBreakListener implements Listener {
+
+    @SuppressWarnings("unused")
+    @EventHandler
+    void on(@NotNull BlockBreakEvent event) {
+        event.setDropItems(false);
+        event.setCancelled(event.getPlayer().getGameMode() != org.bukkit.GameMode.CREATIVE);
+    }
+}
