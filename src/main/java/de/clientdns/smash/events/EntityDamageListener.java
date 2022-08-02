@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class EntityDamageListener implements Listener {
 
+    @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull EntityDamageEvent event) {
         if (event.getEntity().getType() == EntityType.PLAYER) {

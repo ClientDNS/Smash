@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class FoodLevelChangeListener implements Listener {
 
+    @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull FoodLevelChangeEvent event) {
         event.setCancelled(true);
