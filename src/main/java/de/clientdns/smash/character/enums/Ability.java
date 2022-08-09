@@ -3,7 +3,9 @@ package de.clientdns.smash.character.enums;
 public enum Ability {
 
     STAMP_ATTACK,
-    LESS_KNOCKBACK,
     BOW_ATTACK,
-    KNOCKBACK_STRENGTH
+    LESS_KNOCKBACK,
+    STRENGTH_KNOCKBACK,
+    SPEED,
+    SPEED_AND_JUMPBOOST
 }
