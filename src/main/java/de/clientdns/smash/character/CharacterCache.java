@@ -24,8 +24,4 @@ public class CharacterCache {
     public void remove(Player player) {
         playerCharacters.remove(player);
     }
-
-    public boolean has(Player player) {
-        return playerCharacters.containsKey(player);
-    }
 }
