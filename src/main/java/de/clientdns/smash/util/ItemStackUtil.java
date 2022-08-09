@@ -1,6 +1,7 @@
 package de.clientdns.smash.util;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -9,11 +10,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+@SuppressWarnings("unused")
 public class ItemStackUtil {
 
     private final ItemStack itemStack;
@@ -49,25 +48,26 @@ public class ItemStackUtil {
         return this;
     }
 
+    public ItemStackUtil name(String displayName, NamedTextColor color) {
+        itemMeta.displayName(MiniMessage.miniMessage().deserialize(displayName).color(color));
+        return this;
+    }
+
     public ItemStackUtil itemFlags(ItemFlag... flags) {
         itemMeta.addItemFlags(flags);
         return this;
     }
 
-    public ItemStackUtil loreLines(@NotNull List<String> components) {
+    public ItemStackUtil loreLines(@NotNull List<String> strings) {
         List<Component> lore = new ArrayList<>();
-        for (String component : components) {
-            lore.add(MiniMessage.miniMessage().deserialize(component));
-        }
+        strings.forEach(string -> lore.add(MiniMessage.miniMessage().deserialize(string)));
         itemMeta.lore(lore);
         return this;
     }
 
     public ItemStackUtil loreLines(@NotNull String @NotNull ... lines) {
         List<Component> lore = new ArrayList<>();
-        for (String component : lines) {
-            lore.add(MiniMessage.miniMessage().deserialize(component));
-        }
+        Arrays.stream(lines).forEach(line -> lore.add(MiniMessage.miniMessage().deserialize(line)));
         itemMeta.lore(lore);
         return this;
     }
