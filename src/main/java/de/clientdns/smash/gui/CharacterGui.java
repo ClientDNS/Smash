@@ -1,42 +1,52 @@
 package de.clientdns.smash.gui;
 
 import de.clientdns.smash.util.ItemStackUtil;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class CharacterGui {
+
+    public static final ItemStack MARIO = new ItemStackUtil().name("Mario", NamedTextColor.GOLD).material(Material.PLAYER_HEAD).build();
+    public static final ItemStack DONKEY_KONG = new ItemStackUtil().name("Donkey Kong", NamedTextColor.GOLD).material(Material.PLAYER_HEAD).build();
+    public static final ItemStack FLASH = new ItemStackUtil().name("Flash", NamedTextColor.GOLD).material(Material.PLAYER_HEAD).build();
+    public static final ItemStack PIKACHU = new ItemStackUtil().name("Pikachu", NamedTextColor.GOLD).material(Material.PLAYER_HEAD).build();
+    public static final ItemStack SUPERMAN = new ItemStackUtil().name("Superman", NamedTextColor.GOLD).material(Material.PLAYER_HEAD).build();
+    public static final ItemStack LINK = new ItemStackUtil().name("Link", NamedTextColor.GOLD).material(Material.PLAYER_HEAD).build();
+    private static final ItemStack EXPLANATION = new ItemStackUtil().name("Jeder Character verfügt über andere Fähigkeiten, wähle bedacht.", NamedTextColor.GRAY).material(Material.OAK_WALL_SIGN).build();
 
     public static void open(@NotNull Player player) {
         player.openInventory(CharacterGui.create());
     }
 
     private static @NotNull Inventory create() {
-        Inventory inventory = Bukkit.createInventory(null, 27, MiniMessage.miniMessage().deserialize("<gold>Charaktere</gold>"));
+        Inventory inventory = Bukkit.createInventory(null, 27, Component.text("Charaktere", NamedTextColor.GOLD));
 
         // Mario - Slot 1
-        inventory.setItem(1, new ItemStackUtil().name("<gold>Mario</gold>").loreLines(" ", "<gray>Auswählen</gray>", " ").material(Material.PLAYER_HEAD).build());
+        inventory.setItem(1, MARIO);
 
         // Donkey Kong - Slot 11
-        inventory.setItem(11, new ItemStackUtil().name("<gold>Donkey Kong</gold>").loreLines(" ", "<gray>Auswählen</gray>", " ").material(Material.PLAYER_HEAD).build());
+        inventory.setItem(11, DONKEY_KONG);
 
         // Flash - Slot 3
-        inventory.setItem(3, new ItemStackUtil().name("<gold>Flash</gold>").loreLines("", "<gray>Auswählen</gray>", " ").material(Material.PLAYER_HEAD).build());
+        inventory.setItem(3, FLASH);
 
         // Pikachu - Slot 5
-        inventory.setItem(5, new ItemStackUtil().name("<gold>Pikachu</gold>").loreLines(" ", "<gray>Auswählen</gray>", " ").material(Material.PLAYER_HEAD).build());
+        inventory.setItem(5, PIKACHU);
 
         // Superman - Slot 15
-        inventory.setItem(15, new ItemStackUtil().name("<gold>Superman</gold>").loreLines(" ", "<gray>Auswählen</gray>", " ").material(Material.PLAYER_HEAD).build());
+        inventory.setItem(15, SUPERMAN);
 
         // Link - Slot 7
-        inventory.setItem(7, new ItemStackUtil().name("<gold>Link</gold>").loreLines(" ", "<gray>Auswählen</gray>", " ").material(Material.PLAYER_HEAD).build());
+        inventory.setItem(7, LINK);
 
         // Explanation - Slot 22
-        inventory.setItem(22, new ItemStackUtil().loreLines("<gray>Jeder Character verfügt über andere Fähigkeiten, wähle bedacht.</gray>", " ").material(Material.OAK_SIGN).build());
+        inventory.setItem(22, EXPLANATION);
 
         return inventory;
     }
