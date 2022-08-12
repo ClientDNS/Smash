@@ -5,27 +5,41 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("unused")
 public class ItemStackUtil {
 
     private final ItemStack itemStack;
     private final ItemMeta itemMeta;
-    private final HashMap<Enchantment, Integer> itemEnchantments;
 
     public ItemStackUtil() {
         itemStack = new ItemStack(Material.STONE);
 
         itemMeta = itemStack.getItemMeta();
         itemMeta.displayName(Component.empty());
+    }
 
-        itemEnchantments = new HashMap<>();
+    public ItemStackUtil name(@NotNull String name) {
+        itemMeta.displayName(MiniMessage.miniMessage().deserialize(name));
+        return this;
+    }
+
+    public ItemStackUtil name(String name, NamedTextColor color) {
+        itemMeta.displayName(Component.text(name, color));
+        return this;
+    }
+
+    public ItemStackUtil name(Component name) {
+        itemMeta.displayName(name);
+        return this;
     }
 
     public ItemStackUtil material(Material material) {
@@ -38,33 +52,6 @@ public class ItemStackUtil {
         return this;
     }
 
-    public ItemStackUtil amount(int amount) {
-        itemStack.setAmount(amount);
-        return this;
-    }
-
-    public ItemStackUtil name(String displayName) {
-        itemMeta.displayName(MiniMessage.miniMessage().deserialize(displayName));
-        return this;
-    }
-
-    public ItemStackUtil name(String displayName, NamedTextColor color) {
-        itemMeta.displayName(MiniMessage.miniMessage().deserialize(displayName).color(color));
-        return this;
-    }
-
-    public ItemStackUtil itemFlags(ItemFlag... flags) {
-        itemMeta.addItemFlags(flags);
-        return this;
-    }
-
-    public ItemStackUtil loreLines(@NotNull List<String> strings) {
-        List<Component> lore = new ArrayList<>();
-        strings.forEach(string -> lore.add(MiniMessage.miniMessage().deserialize(string)));
-        itemMeta.lore(lore);
-        return this;
-    }
-
     public ItemStackUtil loreLines(@NotNull String @NotNull ... lines) {
         List<Component> lore = new ArrayList<>();
         Arrays.stream(lines).forEach(line -> lore.add(MiniMessage.miniMessage().deserialize(line)));
@@ -72,18 +59,12 @@ public class ItemStackUtil {
         return this;
     }
 
-    public ItemStackUtil enchant(Enchantment enchantment, int level) {
-        itemEnchantments.put(enchantment, level);
-        return this;
-    }
-
-    public ItemStackUtil enchants(Map<Enchantment, Integer> enchantments) {
-        itemEnchantments.putAll(enchantments);
+    public ItemStackUtil enchants(@NotNull Map<Enchantment, Integer> enchantments) {
+        enchantments.forEach((enchantment, level) -> itemMeta.addEnchant(enchantment, level, true));
         return this;
     }
 
     public ItemStack build() {
-        itemEnchantments.forEach((enchant, level) -> itemMeta.addEnchant(enchant, level, true));
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }
