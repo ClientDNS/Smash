@@ -33,7 +33,8 @@ public class PlayerJoinListener implements Listener {
         Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(1024);
         player.saveData();
 
-        player.getInventory().clear();
+        if (!player.getInventory().isEmpty())
+            player.getInventory().clear();
 
         ItemStack characters = new ItemStackUtil().name(Component.text("Charaktere", NamedTextColor.GOLD)).loreLines(" ", "<gray>Ändere deinen Charakter</gray>", " ").material(Material.CHEST).build();
         player.getInventory().setItem(0, characters);
