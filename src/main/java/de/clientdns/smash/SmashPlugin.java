@@ -21,6 +21,7 @@ public class SmashPlugin extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        plugin = this;
         // Initiating config file
         smashConfig = new SmashConfig();
 
@@ -30,8 +31,6 @@ public class SmashPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        plugin = this;
-
         // Initiating event listeners
         getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
         getServer().getPluginManager().registerEvents(new FoodLevelChangeListener(), this);
