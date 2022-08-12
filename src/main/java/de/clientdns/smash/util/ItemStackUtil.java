@@ -1,7 +1,6 @@
 package de.clientdns.smash.util;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -27,13 +26,22 @@ public class ItemStackUtil {
         itemMeta.displayName(Component.empty());
     }
 
-    public ItemStackUtil name(@NotNull String name) {
-        itemMeta.displayName(MiniMessage.miniMessage().deserialize(name));
-        return this;
+    public ItemStackUtil(Material material) {
+        itemStack = new ItemStack(material);
+
+        itemMeta = itemStack.getItemMeta();
+        itemMeta.displayName(Component.empty());
     }
 
-    public ItemStackUtil name(String name, NamedTextColor color) {
-        itemMeta.displayName(Component.text(name, color));
+    public ItemStackUtil(Material material, int amount) {
+        itemStack = new ItemStack(material, amount);
+
+        itemMeta = itemStack.getItemMeta();
+        itemMeta.displayName(Component.empty());
+    }
+
+    public ItemStackUtil name(@NotNull String name) {
+        itemMeta.displayName(MiniMessage.miniMessage().deserialize(name));
         return this;
     }
 

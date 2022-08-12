@@ -2,6 +2,7 @@ package de.clientdns.smash.events;
 
 import de.clientdns.smash.util.ItemStackUtil;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -34,13 +35,13 @@ public class PlayerJoinListener implements Listener {
 
         player.getInventory().clear();
 
-        ItemStack characters = new ItemStackUtil().name("<gold>Charaktere</gold>").loreLines(" ", "<gray>Ändere deinen Charakter</gray>", " ").material(Material.CHEST).build();
+        ItemStack characters = new ItemStackUtil().name(Component.text("Charaktere", NamedTextColor.GOLD)).loreLines(" ", "<gray>Ändere deinen Charakter</gray>", " ").material(Material.CHEST).build();
         player.getInventory().setItem(0, characters);
 
-        ItemStack maps = new ItemStackUtil().name("<gold>Maps</gold>").loreLines(" ", "<gray>Stimme für eine Map ab</gray>", " ").material(Material.MAP).build();
+        ItemStack maps = new ItemStackUtil().name(Component.text("Maps", NamedTextColor.GOLD)).loreLines(" ", "<gray>Stimme für eine Map ab</gray>", " ").material(Material.MAP).build();
         player.getInventory().setItem(4, maps);
 
-        ItemStack leave = new ItemStackUtil().name("<gold>Leave</gold>").loreLines("", "<gray>Verlasse das Spiel</gray>", " ").material(Material.SLIME_BALL).build();
+        ItemStack leave = new ItemStackUtil().name(Component.text("Leave", NamedTextColor.GOLD)).loreLines("", "<gray>Verlasse das Spiel</gray>", " ").material(Material.SLIME_BALL).build();
         player.getInventory().setItem(8, leave);
 
         event.joinMessage(Component.empty());
