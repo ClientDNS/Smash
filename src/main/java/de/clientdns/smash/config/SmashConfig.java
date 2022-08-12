@@ -1,12 +1,13 @@
 package de.clientdns.smash.config;
 
 import de.clientdns.smash.SmashPlugin;
+import org.apache.logging.log4j.util.Strings;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -17,14 +18,14 @@ public class SmashConfig {
     public final FileConfiguration config;
 
     public SmashConfig() {
-        File configFolders = new File(CONFIG_FILE_PATH);
-        File configFile = new File(configFolders, CONFIG_FILE_NAME);
+        File configFolder = new File(CONFIG_FILE_PATH);
+        File configFile = new File(configFolder, CONFIG_FILE_NAME);
         try {
-            if (configFolders.mkdirs()) {
-                SmashPlugin.getPlugin().getLogger().info("Created config folder: " + configFolders.getPath());
+            if (configFolder.mkdir()) {
+                SmashPlugin.getPlugin().getLogger().info("Created config folder: " + configFolder.getPath());
             }
             if (configFile.createNewFile()) {
-                SmashPlugin.getPlugin().getLogger().info("Config file created: " + configFile.getPath());
+                SmashPlugin.getPlugin().getLogger().info("Created config file: " + configFile.getPath());
             }
             config = SmashPlugin.getPlugin().getConfig();
         } catch (IOException ioException) {
@@ -52,10 +53,14 @@ public class SmashConfig {
         return Optional.of(config.getBoolean(key));
     }
 
+    public void setComments(String key, @NotNull List<String> comments) {
+        if (!config.getComments(key).contains(comments.stream().findAny().orElse(Strings.EMPTY))) {
+            config.setComments(key, comments);
+        }
+    }
+
     public <K extends String, V> void set(@NotNull K key, @NotNull V value) {
         if (config.get(key) == null) {
-            config.set(key, value);
-        } else if (!Objects.equals(config.get(key), value)) {
             config.set(key, value);
         }
     }
