@@ -33,42 +33,31 @@ public class InventoryClickListener implements Listener {
             Character currentCharacter;
 
             if (item.displayName().equals(CharacterGui.MARIO.displayName())) {
-                cache.remove(player);
                 cache.add(player, Character.MARIO);
-                currentCharacter = cache.get(player);
-                player.getInventory().close();
+                currentCharacter = cache.get(player).orElse(Character.MARIO);
                 player.sendMessage(Component.text("Du hast den Charakter ", NamedTextColor.GRAY).append(currentCharacter.getName()).append(Component.text(" ausgewählt.", NamedTextColor.GRAY)));
             } else if (item.displayName().equals(CharacterGui.DONKEY_KONG.displayName())) {
-                cache.remove(player);
                 cache.add(player, Character.DONKEY_KONG);
-                currentCharacter = cache.get(player);
-                player.getInventory().close();
+                currentCharacter = cache.get(player).orElse(Character.DONKEY_KONG);
                 player.sendMessage(Component.text("Du hast den Charakter ", NamedTextColor.GRAY).append(currentCharacter.getName()).append(Component.text(" ausgewählt.", NamedTextColor.GRAY)));
             } else if (item.displayName().equals(CharacterGui.FLASH.displayName())) {
-                cache.remove(player);
                 cache.add(player, Character.FLASH);
-                currentCharacter = cache.get(player);
-                player.getInventory().close();
+                currentCharacter = cache.get(player).orElse(Character.FLASH);
                 player.sendMessage(Component.text("Du hast den Charakter ", NamedTextColor.GRAY).append(currentCharacter.getName()).append(Component.text(" ausgewählt.", NamedTextColor.GRAY)));
             } else if (item.displayName().equals(CharacterGui.PIKACHU.displayName())) {
-                cache.remove(player);
                 cache.add(player, Character.PIKACHU);
-                currentCharacter = cache.get(player);
-                player.getInventory().close();
+                currentCharacter = cache.get(player).orElse(Character.PIKACHU);
                 player.sendMessage(Component.text("Du hast den Charakter ", NamedTextColor.GRAY).append(currentCharacter.getName()).append(Component.text(" ausgewählt.", NamedTextColor.GRAY)));
             } else if (item.displayName().equals(CharacterGui.SUPERMAN.displayName())) {
-                cache.remove(player);
                 cache.add(player, Character.SUPERMAN);
-                currentCharacter = cache.get(player);
-                player.getInventory().close();
+                currentCharacter = cache.get(player).orElse(Character.SUPERMAN);
                 player.sendMessage(Component.text("Du hast den Charakter ", NamedTextColor.GRAY).append(currentCharacter.getName()).append(Component.text(" ausgewählt.", NamedTextColor.GRAY)));
             } else if (item.displayName().equals(CharacterGui.LINK.displayName())) {
-                cache.remove(player);
                 cache.add(player, Character.LINK);
-                currentCharacter = cache.get(player);
-                player.getInventory().close();
+                currentCharacter = cache.get(player).orElse(Character.LINK);
                 player.sendMessage(Component.text("Du hast den Charakter ", NamedTextColor.GRAY).append(currentCharacter.getName()).append(Component.text(" ausgewählt.", NamedTextColor.GRAY)));
             }
+            player.getInventory().close();
         } else {
             event.setCancelled(true);
         }
