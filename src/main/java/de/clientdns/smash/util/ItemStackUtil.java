@@ -21,7 +21,7 @@ public class ItemStackUtil {
     private final ItemMeta itemMeta;
 
     public ItemStackUtil() {
-        itemStack = new ItemStack(Material.STONE);
+        itemStack = new ItemStack(Material.COBBLESTONE);
 
         itemMeta = itemStack.getItemMeta();
         itemMeta.displayName(Component.empty());
