@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 public class SmashConfig {
@@ -39,23 +40,23 @@ public class SmashConfig {
         return config.getKeys(deep);
     }
 
-    public String getString(String key) {
-        return config.getString(key);
+    public Optional<String> getString(String key) {
+        return Optional.ofNullable(config.getString(key));
     }
 
-    public int getInt(String key) {
-        return config.getInt(key);
+    public Optional<Integer> getInt(String key) {
+        return Optional.of(config.getInt(key));
     }
 
-    public double getDouble(String key) {
-        return config.getDouble(key);
+    public Optional<Double> getDouble(String key) {
+        return Optional.of(config.getDouble(key));
     }
 
-    public boolean getBoolean(String key) {
-        return config.getBoolean(key);
+    public Optional<Boolean> getBoolean(String key) {
+        return Optional.of(config.getBoolean(key));
     }
 
-    public void set(@NotNull String key, @NotNull Object value) {
+    public <K extends String, V> void set(@NotNull K key, @NotNull V value) {
         if (config.get(key) == null) {
             config.set(key, value);
         } else if (config.get(key) != null && !Objects.equals(config.get(key), value)) {
