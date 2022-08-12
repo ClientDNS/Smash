@@ -24,4 +24,8 @@ public class CharacterCache {
     public void remove(Player player) {
         playerCharacters.remove(player);
     }
+
+    public void clear() {
+        playerCharacters.clear();
+    }
 }
