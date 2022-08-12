@@ -12,15 +12,11 @@ import java.util.Set;
 
 public class SmashConfig {
 
-    public final String CONFIG_FILE_PATH;
-    public final String CONFIG_FILE_NAME;
+    public final String CONFIG_FILE_PATH = "plugins/Smash/";
+    public final String CONFIG_FILE_NAME = "config.yml";
     public final FileConfiguration config;
 
     public SmashConfig() {
-
-        CONFIG_FILE_PATH = "plugins/Smash/";
-        CONFIG_FILE_NAME = "config.yml";
-
         File configFolders = new File(CONFIG_FILE_PATH);
         File configFile = new File(configFolders, CONFIG_FILE_NAME);
         try {
@@ -28,7 +24,7 @@ public class SmashConfig {
                 SmashPlugin.getPlugin().getLogger().info("Created config folder: " + configFolders.getPath());
             }
             if (configFile.createNewFile()) {
-                SmashPlugin.getPlugin().getLogger().info("Config file created.");
+                SmashPlugin.getPlugin().getLogger().info("Config file created: " + configFile.getPath());
             }
             config = SmashPlugin.getPlugin().getConfig();
         } catch (IOException ioException) {
@@ -59,7 +55,7 @@ public class SmashConfig {
     public <K extends String, V> void set(@NotNull K key, @NotNull V value) {
         if (config.get(key) == null) {
             config.set(key, value);
-        } else if (config.get(key) != null && !Objects.equals(config.get(key), value)) {
+        } else if (!Objects.equals(config.get(key), value)) {
             config.set(key, value);
         }
     }
