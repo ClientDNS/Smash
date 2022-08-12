@@ -82,5 +82,8 @@ public class SmashPlugin extends JavaPlugin {
         if (getServer().getScheduler().isCurrentlyRunning(bukkitTask)) {
             getServer().getScheduler().cancelTask(bukkitTask);
         }
+
+        // Clearing character cache
+        characterCache.clear();
     }
 }
