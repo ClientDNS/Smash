@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class CharacterCache {
 
@@ -17,8 +18,12 @@ public class CharacterCache {
         playerCharacters.put(player, character);
     }
 
-    public Character get(Player player) {
-        return playerCharacters.get(player);
+    public void replace(Player player, Character character) {
+        playerCharacters.replace(player, character);
+    }
+
+    public Optional<Character> get(Player player) {
+        return Optional.ofNullable(playerCharacters.get(player));
     }
 
     public void remove(Player player) {
