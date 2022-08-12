@@ -20,15 +20,17 @@ public class SmashPlugin extends JavaPlugin {
     private int bukkitTask;
 
     @Override
-    public void onEnable() {
-
-        plugin = this;
-
+    public void onLoad() {
         // Initiating config file
         smashConfig = new SmashConfig();
 
         // Initiating character cache
         characterCache = new CharacterCache();
+    }
+
+    @Override
+    public void onEnable() {
+        plugin = this;
 
         // Initiating event listeners
         getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
