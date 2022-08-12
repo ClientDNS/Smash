@@ -9,9 +9,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.time.Duration;
-import java.time.Instant;
-
 public class SmashPlugin extends JavaPlugin {
 
     @Getter
@@ -24,8 +21,6 @@ public class SmashPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
-        Instant instant = Instant.now();
 
         plugin = this;
 
@@ -43,9 +38,6 @@ public class SmashPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
-
-        // Starting scheduler tasks
-        bukkitTask = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> getServer().getWorlds().forEach(world -> world.getEntities().stream().filter(Item.class::isInstance).forEach(Entity::remove)), 0, 10);
 
         // Initiating game rules
         getServer().getWorlds().forEach(world -> {
@@ -73,7 +65,8 @@ public class SmashPlugin extends JavaPlugin {
             world.setGameRule(GameRule.MAX_ENTITY_CRAMMING, 8);
         });
 
-        getLogger().info("SmashPlugin enabled in " + Duration.between(instant, Instant.now()).toMillis() + "ms");
+        // Starting scheduler tasks
+        bukkitTask = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> getServer().getWorlds().forEach(world -> world.getEntities().stream().filter(Item.class::isInstance).forEach(Entity::remove)), 0, 10);
     }
 
     @Override
