@@ -37,20 +37,20 @@ public class SmashConfig {
         return config.getKeys(deep);
     }
 
-    public Optional<String> getString(String key) {
-        return Optional.ofNullable(config.getString(key));
+    public Optional<String> getString(String path) {
+        return Optional.ofNullable(config.getString(path));
     }
 
-    public Optional<Integer> getInt(String key) {
-        return Optional.of(config.getInt(key));
+    public Optional<Integer> getInt(String path) {
+        return Optional.of(config.getInt(path));
     }
 
-    public Optional<Double> getDouble(String key) {
-        return Optional.of(config.getDouble(key));
+    public Optional<Double> getDouble(String path) {
+        return Optional.of(config.getDouble(path));
     }
 
-    public Optional<Boolean> getBoolean(String key) {
-        return Optional.of(config.getBoolean(key));
+    public Optional<Boolean> getBoolean(String path) {
+        return Optional.of(config.getBoolean(path));
     }
 
     public void setComments(String key, @NotNull List<String> comments) {
