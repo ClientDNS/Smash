@@ -67,8 +67,8 @@ public class ItemStackUtil {
         return this;
     }
 
-    public ItemStackUtil enchants(@NotNull Map<Enchantment, Integer> enchantments) {
-        enchantments.forEach((enchantment, level) -> itemMeta.addEnchant(enchantment, level, true));
+    public ItemStackUtil enchants(@NotNull Map<Enchantment, Integer> enchantments, boolean ignoreLevel) {
+        enchantments.forEach((enchantment, level) -> itemMeta.addEnchant(enchantment, level, ignoreLevel));
         return this;
     }
 
