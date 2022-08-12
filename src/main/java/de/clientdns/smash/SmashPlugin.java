@@ -48,7 +48,7 @@ public class SmashPlugin extends JavaPlugin {
         bukkitTask = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> getServer().getWorlds().forEach(world -> world.getEntities().stream().filter(Item.class::isInstance).forEach(Entity::remove)), 0, 10);
 
         // Initiating game rules
-        getServer().getWorlds().stream().findFirst().ifPresent(world -> {
+        getServer().getWorlds().forEach(world -> {
             world.setTime(1000);
             world.setThundering(false);
             world.setStorm(false);
