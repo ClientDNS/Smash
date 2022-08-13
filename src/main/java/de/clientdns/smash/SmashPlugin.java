@@ -17,7 +17,7 @@ public class SmashPlugin extends JavaPlugin {
     private static SmashConfig smashConfig;
     @Getter
     private static CharacterCache characterCache;
-    private int bukkitTask;
+    private int taskId;
 
     @Override
     public void onLoad() {
@@ -67,14 +67,14 @@ public class SmashPlugin extends JavaPlugin {
         });
 
         // Starting scheduler tasks
-        bukkitTask = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> getServer().getWorlds().forEach(world -> world.getEntities().stream().filter(Item.class::isInstance).forEach(Entity::remove)), 0, 10);
+        taskId = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> getServer().getWorlds().forEach(world -> world.getEntities().stream().filter(Item.class::isInstance).forEach(Entity::remove)), 0, 10);
     }
 
     @Override
     public void onDisable() {
         // Stopping scheduler tasks
-        if (getServer().getScheduler().isCurrentlyRunning(bukkitTask)) {
-            getServer().getScheduler().cancelTask(bukkitTask);
+        if (getServer().getScheduler().isCurrentlyRunning(taskId) && taskId != -1) {
+            getServer().getScheduler().cancelTask(taskId);
         }
 
         // Clearing character cache
