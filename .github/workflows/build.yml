@@ -9,5 +9,4 @@ jobs:
         with:
           java-version: 17
           distribution: 'adopt'
-          cache: maven
       - run: mvn -B package --file pom.xml
