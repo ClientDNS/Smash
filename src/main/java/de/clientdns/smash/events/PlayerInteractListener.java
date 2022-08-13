@@ -1,7 +1,7 @@
 package de.clientdns.smash.events;
 
-import de.clientdns.smash.gui.CharacterGui;
-import de.clientdns.smash.gui.MapGui;
+import de.clientdns.smash.inventories.CharacterInventory;
+import de.clientdns.smash.inventories.MapInventory;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
@@ -21,11 +21,11 @@ public class PlayerInteractListener implements Listener {
             switch (event.getMaterial()) {
                 case CHEST -> {
                     event.setCancelled(true);
-                    CharacterGui.open(player);
+                    CharacterInventory.open(player);
                 }
                 case MAP -> {
                     event.setCancelled(true);
-                    MapGui.open(player);
+                    MapInventory.open(player);
                 }
                 case SLIME_BALL -> {
                     event.setCancelled(true);

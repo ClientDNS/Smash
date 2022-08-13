@@ -1,4 +1,4 @@
-package de.clientdns.smash.gui;
+package de.clientdns.smash.inventories;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -6,10 +6,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
-public class MapGui {
+public class MapInventory {
 
     public static void open(@NotNull Player player) {
-        player.openInventory(MapGui.create());
+        player.openInventory(MapInventory.create());
     }
 
     private static @NotNull Inventory create() {

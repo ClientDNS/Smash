@@ -1,4 +1,4 @@
-package de.clientdns.smash.gui;
+package de.clientdns.smash.inventories;
 
 import de.clientdns.smash.util.ItemStackUtil;
 import net.kyori.adventure.text.Component;
@@ -10,7 +10,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class CharacterGui {
+public class CharacterInventory {
 
     public static final ItemStack MARIO = new ItemStackUtil().name(Component.text("Mario").color(NamedTextColor.GOLD)).material(Material.PLAYER_HEAD).build();
     public static final ItemStack DONKEY_KONG = new ItemStackUtil().name(Component.text("Donkey Kong").color(NamedTextColor.DARK_RED)).material(Material.PLAYER_HEAD).build();
@@ -21,7 +21,7 @@ public class CharacterGui {
     private static final ItemStack EXPLANATION = new ItemStackUtil().name(Component.text("Jeder Character verfügt über andere Fähigkeiten, wähle bedacht.", NamedTextColor.GRAY)).material(Material.OAK_WALL_SIGN).build();
 
     public static void open(@NotNull Player player) {
-        player.openInventory(CharacterGui.create());
+        player.openInventory(CharacterInventory.create());
     }
 
     private static @NotNull Inventory create() {
