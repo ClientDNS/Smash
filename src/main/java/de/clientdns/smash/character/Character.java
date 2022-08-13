@@ -1,7 +1,6 @@
 package de.clientdns.smash.character;
 
 import de.clientdns.smash.character.enums.Ability;
-import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
@@ -14,16 +13,27 @@ public enum Character {
     SUPERMAN(4, Component.text("Superman", NamedTextColor.RED), Ability.STAMP_ATTACK),
     LINK(5, Component.text("Link", NamedTextColor.DARK_GREEN), Ability.SPEED_AND_JUMPBOOST);
 
-    @Getter
     private final int id;
-    @Getter
+
     private final Component name;
-    @Getter
+
     private final Ability[] abilities;
 
     Character(int id, Component name, Ability... abilities) {
         this.id = id;
         this.name = name;
         this.abilities = abilities;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public Component getName() {
+        return name;
+    }
+
+    public Ability[] getAbilities() {
+        return abilities;
     }
 }

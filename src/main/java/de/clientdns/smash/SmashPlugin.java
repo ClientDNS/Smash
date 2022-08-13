@@ -3,7 +3,6 @@ package de.clientdns.smash;
 import de.clientdns.smash.character.CharacterCache;
 import de.clientdns.smash.config.SmashConfig;
 import de.clientdns.smash.events.*;
-import lombok.Getter;
 import org.bukkit.GameRule;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -11,11 +10,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class SmashPlugin extends JavaPlugin {
 
-    @Getter
     private static SmashPlugin plugin;
-    @Getter
     private static SmashConfig smashConfig;
-    @Getter
     private static CharacterCache characterCache;
     private int taskId;
 
@@ -67,6 +63,18 @@ public class SmashPlugin extends JavaPlugin {
 
         // Starting scheduler tasks
         taskId = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> getServer().getWorlds().forEach(world -> world.getEntities().stream().filter(Item.class::isInstance).forEach(Entity::remove)), 0, 10);
+    }
+
+    public static CharacterCache getCharacterCache() {
+        return characterCache;
+    }
+
+    public static SmashConfig getSmashConfig() {
+        return smashConfig;
+    }
+
+    public static SmashPlugin getPlugin() {
+        return plugin;
     }
 
     @Override
