@@ -62,7 +62,8 @@ public class SmashPlugin extends JavaPlugin {
         });
 
         // Starting scheduler tasks
-        taskId = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> getServer().getWorlds().forEach(world -> world.getEntities().stream().filter(Item.class::isInstance).forEach(Entity::remove)), 0, 10);
+
+        taskId = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> getServer().getWorlds().forEach(world -> world.getEntities().stream().filter(Item.class::isInstance).forEach(Entity::remove)), 10L, 10L);
     }
 
     public static CharacterCache getCharacterCache() {
