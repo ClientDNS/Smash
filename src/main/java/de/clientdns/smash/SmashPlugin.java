@@ -55,7 +55,6 @@ public class SmashPlugin extends JavaPlugin {
             world.setGameRule(GameRule.DO_MOB_LOOT, false);
             world.setGameRule(GameRule.MOB_GRIEFING, false);
             world.setGameRule(GameRule.NATURAL_REGENERATION, false);
-            world.setGameRule(GameRule.REDUCED_DEBUG_INFO, false);
             world.setGameRule(GameRule.DO_ENTITY_DROPS, false);
             world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, false);
             world.setGameRule(GameRule.LOG_ADMIN_COMMANDS, false);
