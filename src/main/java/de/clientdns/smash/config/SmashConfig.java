@@ -26,6 +26,8 @@ public class SmashConfig {
             }
             if (configFile.createNewFile()) {
                 SmashPlugin.getPlugin().getLogger().info("Created config file: " + configFile.getPath());
+            } else {
+                SmashPlugin.getPlugin().getLogger().info("Loaded config file: " + configFile.getPath());
             }
             config = SmashPlugin.getPlugin().getConfig();
         } catch (IOException ioException) {
@@ -59,9 +61,12 @@ public class SmashConfig {
         }
     }
 
-    public <K extends String, V> void set(@NotNull K key, @NotNull V value) {
+    public <K extends String, V> void set(@NotNull K key, @NotNull V value, List<String> comments) {
         if (config.get(key) == null) {
             config.set(key, value);
+            if (comments.size() > 0) {
+                config.setComments(key, comments);
+            }
         }
     }
 
