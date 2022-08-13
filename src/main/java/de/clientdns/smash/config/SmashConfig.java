@@ -1,7 +1,6 @@
 package de.clientdns.smash.config;
 
 import de.clientdns.smash.SmashPlugin;
-import org.apache.logging.log4j.util.Strings;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,12 +52,6 @@ public class SmashConfig {
 
     public Optional<Boolean> getBoolean(String path) {
         return Optional.of(config.getBoolean(path));
-    }
-
-    public void setComments(String key, @NotNull List<String> comments) {
-        if (!config.getComments(key).contains(comments.stream().findAny().orElse(Strings.EMPTY))) {
-            config.setComments(key, comments);
-        }
     }
 
     public <K extends String, V> void set(@NotNull K key, @NotNull V value, List<String> comments) {
