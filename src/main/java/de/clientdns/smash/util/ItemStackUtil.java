@@ -32,14 +32,12 @@ public class ItemStackUtil {
         itemMeta = itemStack.getItemMeta();
     }
 
-    public ItemStackUtil(Material material, int amount) {
+    public ItemStackUtil(Material material, short amount) {
         if (amount < 1) {
             throw new IllegalArgumentException("Amount must be greater than 0.");
         }
         itemStack = new ItemStack(material, amount);
-
         itemMeta = itemStack.getItemMeta();
-        itemMeta.displayName(Component.empty());
     }
 
     public ItemStackUtil amount(short amount) {
