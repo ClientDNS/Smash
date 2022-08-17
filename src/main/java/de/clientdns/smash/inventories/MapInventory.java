@@ -13,6 +13,6 @@ public class MapInventory {
     }
 
     private static @NotNull Inventory create() {
-        return Bukkit.createInventory(null, 54, MiniMessage.miniMessage().deserialize("<gold>Maps</gold>"));
+        return Bukkit.createInventory(null, 9 * 3, MiniMessage.miniMessage().deserialize("<gold>Maps</gold>"));
     }
 }
