@@ -1,5 +1,6 @@
 package de.clientdns.smash.events;
 
+import de.clientdns.smash.config.Constants;
 import de.clientdns.smash.inventories.CharacterInventory;
 import de.clientdns.smash.inventories.MapInventory;
 import net.kyori.adventure.text.Component;
@@ -29,7 +30,7 @@ public class PlayerInteractListener implements Listener {
                 }
                 case SLIME_BALL -> {
                     event.setCancelled(true);
-                    player.kick(Component.text("Du hast das Spiel verlassen!", NamedTextColor.RED));
+                    player.kick(Constants.prefix().append(Component.text("Du hast das Spiel verlassen!", NamedTextColor.RED)));
                 }
             }
         }

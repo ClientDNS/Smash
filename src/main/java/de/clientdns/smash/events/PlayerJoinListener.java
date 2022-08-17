@@ -1,5 +1,6 @@
 package de.clientdns.smash.events;
 
+import de.clientdns.smash.config.Constants;
 import de.clientdns.smash.util.ItemStackUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -22,7 +23,11 @@ public class PlayerJoinListener implements Listener {
     void on(@NotNull PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        player.setGameMode(GameMode.ADVENTURE);
+        if (Constants.setPlayerInAdventure()) {
+            player.setGameMode(GameMode.ADVENTURE);
+        } else {
+            player.setGameMode(player.getServer().getDefaultGameMode());
+        }
 
         player.setHealth(20);
         player.setFoodLevel(20);
@@ -33,8 +38,7 @@ public class PlayerJoinListener implements Listener {
         Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(1024);
         player.saveData();
 
-        if (!player.getInventory().isEmpty())
-            player.getInventory().clear();
+        if (!player.getInventory().isEmpty()) player.getInventory().clear();
 
         ItemStack characters = new ItemStackUtil().name(Component.text("Charaktere", NamedTextColor.GOLD)).loreLines(" ", "<gray>Ändere deinen Charakter</gray>", " ").material(Material.CHEST).build();
         player.getInventory().setItem(0, characters);
@@ -45,6 +49,11 @@ public class PlayerJoinListener implements Listener {
         ItemStack leave = new ItemStackUtil().name(Component.text("Leave", NamedTextColor.GOLD)).loreLines("", "<gray>Verlasse das Spiel</gray>", " ").material(Material.SLIME_BALL).build();
         player.getInventory().setItem(8, leave);
 
-        event.joinMessage(Component.empty());
+        if (Constants.disableJoinMessage())
+            event.joinMessage(Component.empty());
+        else
+            event.joinMessage(Constants.joinMessage().replaceText(builder -> builder.match("%player%").replacement(player.getName())));
+
+        player.sendMessage(String.valueOf(Constants.disableJoinMessage()));
     }
 }
