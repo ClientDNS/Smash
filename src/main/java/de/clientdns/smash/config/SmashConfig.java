@@ -12,9 +12,10 @@ import java.util.Set;
 
 public class SmashConfig {
 
-    public final String CONFIG_FILE_PATH = "plugins/Smash/";
     public final String CONFIG_FILE_NAME = "config.yml";
     public final FileConfiguration config;
+    private final char separator = File.separatorChar;
+    public final String CONFIG_FILE_PATH = "plugins" + separator + "Smash" + separator;
 
     public SmashConfig() {
         File configFolder = new File(CONFIG_FILE_PATH);
@@ -25,17 +26,16 @@ public class SmashConfig {
             }
             if (configFile.createNewFile()) {
                 SmashPlugin.getPlugin().getLogger().info("Created config file: " + configFile.getPath());
-            } else {
-                SmashPlugin.getPlugin().getLogger().info("Loaded config file: " + configFile.getPath());
             }
             config = SmashPlugin.getPlugin().getConfig();
+            SmashPlugin.getPlugin().getLogger().info("Loaded config file: " + configFile.getPath());
         } catch (IOException ioException) {
             throw new RuntimeException("Could not create config file", ioException);
         }
     }
 
-    public Set<String> getKeys(boolean deep) {
-        return config.getKeys(deep);
+    public Optional<Set<String>> getKeys(boolean deep) {
+        return Optional.of(config.getKeys(deep));
     }
 
     public Optional<String> getString(String path) {
@@ -54,9 +54,26 @@ public class SmashConfig {
         return Optional.of(config.getBoolean(path));
     }
 
+    public Optional<List<String>> getStringList(String path) {
+        return Optional.of(config.getStringList(path));
+    }
+
+    public Optional<List<Integer>> getIntList(String path) {
+        return Optional.of(config.getIntegerList(path));
+    }
+
+    public Optional<List<Double>> getDoubleList(String path) {
+        return Optional.of(config.getDoubleList(path));
+    }
+
+    public Optional<List<Boolean>> getBooleanList(String path) {
+        return Optional.of(config.getBooleanList(path));
+    }
+
     public <K extends String, V> void set(@NotNull K key, @NotNull V value, List<String> comments) {
         if (config.get(key) == null) {
             config.set(key, value);
+
             if (comments.size() > 0) {
                 config.setComments(key, comments);
             }
