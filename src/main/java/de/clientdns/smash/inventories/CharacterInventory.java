@@ -18,7 +18,7 @@ public class CharacterInventory {
     public static final ItemStack PIKACHU = new ItemStackUtil().name(Component.text("Pikachu", NamedTextColor.GOLD)).material(Material.PLAYER_HEAD).build();
     public static final ItemStack SUPERMAN = new ItemStackUtil().name(Component.text("Superman", NamedTextColor.GOLD)).material(Material.PLAYER_HEAD).build();
     public static final ItemStack LINK = new ItemStackUtil().name(Component.text("Link", NamedTextColor.DARK_GREEN)).material(Material.PLAYER_HEAD).build();
-    private static final ItemStack EXPLANATION = new ItemStackUtil().name(Component.text("Jeder Character verfügt über andere Fähigkeiten, wähle bedacht.", NamedTextColor.GRAY)).material(Material.OAK_WALL_SIGN).build();
+    private static final ItemStack EXPLANATION = new ItemStackUtil().name("<gray>Jeder Charakter verfügt über andere Fähigkeiten, wähle bedacht.</gray>").material(Material.OAK_WALL_SIGN).build();
 
     public static void open(@NotNull Player player) {
         player.openInventory(CharacterInventory.create());
