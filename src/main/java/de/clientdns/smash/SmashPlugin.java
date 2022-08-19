@@ -1,12 +1,16 @@
 package de.clientdns.smash;
 
 import de.clientdns.smash.character.CharacterCache;
+import de.clientdns.smash.commands.ConfigCommand;
 import de.clientdns.smash.config.SmashConfig;
 import de.clientdns.smash.events.*;
 import org.bukkit.GameRule;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.List;
+import java.util.Objects;
 
 public class SmashPlugin extends JavaPlugin {
 
@@ -15,11 +19,35 @@ public class SmashPlugin extends JavaPlugin {
     private static CharacterCache characterCache;
     private int taskId;
 
+    public static CharacterCache getCharacterCache() {
+        return characterCache;
+    }
+
+    public static SmashConfig getSmashConfig() {
+        return smashConfig;
+    }
+
+    public static SmashPlugin getPlugin() {
+        return plugin;
+    }
+
     @Override
     public void onLoad() {
         plugin = this;
+
         // Initiating config file
-        smashConfig = new SmashConfig();
+        loadConfig();
+
+        // Settings
+        smashConfig.set("config.set-player-in-adventure", false, List.of("Whether the player should be set in adventure mode", "Default: false"));
+        smashConfig.set("config.disable-join-message", true, List.of("Whether the join message should be disabled", "Default: true"));
+        smashConfig.set("config.disable-quit-message", true, List.of("Whether the quit message should be disabled", "Default: true"));
+
+        // Messages
+        smashConfig.set("config.messages.prefix", "§8[§6Smash§8]§r ", List.of("The prefix of the plugin", "Default: '§8[§6Smash§8]§r '"));
+        smashConfig.set("config.messages.join-message", "§e%player% joined the game", List.of("The join message", "Default: '§e%player% joined the game'"));
+        smashConfig.set("config.messages.quit-message", "§e%player% left the game", List.of("The quit message", "Default: '§e%player% left the game'"));
+        smashConfig.save();
 
         // Initiating character cache
         characterCache = new CharacterCache();
@@ -36,9 +64,11 @@ public class SmashPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
 
+        Objects.requireNonNull(getCommand("config")).setExecutor(new ConfigCommand());
+
         // Initiating game rules
         getServer().getWorlds().forEach(world -> {
-            world.setTime(1000);
+            world.setTime(1000L);
             world.setThundering(false);
             world.setStorm(false);
             world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
@@ -62,20 +92,7 @@ public class SmashPlugin extends JavaPlugin {
         });
 
         // Starting scheduler tasks
-
         taskId = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> getServer().getWorlds().forEach(world -> world.getEntities().stream().filter(Item.class::isInstance).forEach(Entity::remove)), 10L, 10L);
-    }
-
-    public static CharacterCache getCharacterCache() {
-        return characterCache;
-    }
-
-    public static SmashConfig getSmashConfig() {
-        return smashConfig;
-    }
-
-    public static SmashPlugin getPlugin() {
-        return plugin;
     }
 
     @Override
@@ -87,5 +104,9 @@ public class SmashPlugin extends JavaPlugin {
 
         // Clearing character cache
         characterCache.clear();
+    }
+
+    public void loadConfig() {
+        smashConfig = new SmashConfig();
     }
 }
