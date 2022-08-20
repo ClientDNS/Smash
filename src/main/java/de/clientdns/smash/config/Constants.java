@@ -23,14 +23,4 @@ public class Constants {
     public static @NotNull Component prefix() {
         return Component.text(SmashPlugin.getSmashConfig().getString("config.messages.prefix").orElse("§8[§6Smash§8] §r"));
     }
-
-    @Contract(" -> new")
-    public static @NotNull Component joinMessage() {
-        return Component.text(SmashPlugin.getSmashConfig().getString("config.messages.join-message").orElse("§e%player% joined the game"));
-    }
-
-    @Contract(" -> new")
-    public static @NotNull Component quitMessage() {
-        return Component.text(SmashPlugin.getSmashConfig().getString("config.messages.quit-message").orElse("§e%player% left the game"));
-    }
 }
