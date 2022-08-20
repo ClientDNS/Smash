@@ -1,6 +1,5 @@
-package de.clientdns.smash.character;
+package de.clientdns.smash.character.enums;
 
-import de.clientdns.smash.character.enums.Ability;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
