@@ -1,4 +1,4 @@
-package de.clientdns.smash.events;
+package de.clientdns.smash.listeners;
 
 import de.clientdns.smash.config.Constants;
 import net.kyori.adventure.text.Component;
@@ -14,8 +14,8 @@ public class PlayerQuitListener implements Listener {
     @EventHandler
     void on(@NotNull PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if (Constants.disableQuitMessage()) event.quitMessage(Component.empty());
+        if (Constants.disableJoinMessage()) event.quitMessage(Component.empty());
         else
-            event.quitMessage(Constants.quitMessage().replaceText(builder -> builder.match("%player%").replacement(player.getName())));
+            event.quitMessage(Constants.prefix().append(Component.text("§e" + player.getName() + " §7hat den Server verlassen§8.")));
     }
 }

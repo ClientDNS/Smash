@@ -1,4 +1,4 @@
-package de.clientdns.smash.events;
+package de.clientdns.smash.listeners;
 
 import de.clientdns.smash.config.Constants;
 import de.clientdns.smash.util.ItemStackUtil;
@@ -23,11 +23,8 @@ public class PlayerJoinListener implements Listener {
     void on(@NotNull PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        if (Constants.setPlayerInAdventure()) {
-            player.setGameMode(GameMode.ADVENTURE);
-        } else {
-            player.setGameMode(player.getServer().getDefaultGameMode());
-        }
+        if (Constants.setPlayerInAdventure()) player.setGameMode(GameMode.ADVENTURE);
+        else player.setGameMode(player.getServer().getDefaultGameMode());
 
         player.setHealth(20);
         player.setFoodLevel(20);
@@ -41,19 +38,15 @@ public class PlayerJoinListener implements Listener {
         if (!player.getInventory().isEmpty()) player.getInventory().clear();
 
         ItemStack characters = new ItemStackUtil().name(Component.text("Charaktere", NamedTextColor.GOLD)).loreLines(" ", "<gray>Ändere deinen Charakter</gray>", " ").material(Material.CHEST).build();
-        player.getInventory().setItem(0, characters);
+        player.getInventory().setItem(2, characters);
 
         ItemStack maps = new ItemStackUtil().name(Component.text("Maps", NamedTextColor.GOLD)).loreLines(" ", "<gray>Stimme für eine Map ab</gray>", " ").material(Material.MAP).build();
-        player.getInventory().setItem(4, maps);
+        player.getInventory().setItem(6, maps);
 
-        ItemStack leave = new ItemStackUtil().name(Component.text("Leave", NamedTextColor.GOLD)).loreLines("", "<gray>Verlasse das Spiel</gray>", " ").material(Material.SLIME_BALL).build();
-        player.getInventory().setItem(8, leave);
+        int online = player.getServer().getOnlinePlayers().size();
 
-        if (Constants.disableJoinMessage())
-            event.joinMessage(Component.empty());
+        if (Constants.disableJoinMessage()) event.joinMessage(Component.empty());
         else
-            event.joinMessage(Constants.joinMessage().replaceText(builder -> builder.match("%player%").replacement(player.getName())));
-
-        player.sendMessage(String.valueOf(Constants.disableJoinMessage()));
+            event.joinMessage(Constants.prefix().append(Component.text("§e" + player.getName() + " §7ist dem Server beigetreten§8.")));
     }
 }

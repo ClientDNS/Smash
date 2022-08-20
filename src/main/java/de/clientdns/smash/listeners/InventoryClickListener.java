@@ -1,8 +1,8 @@
-package de.clientdns.smash.events;
+package de.clientdns.smash.listeners;
 
 import de.clientdns.smash.SmashPlugin;
-import de.clientdns.smash.character.Character;
 import de.clientdns.smash.character.CharacterCache;
+import de.clientdns.smash.character.enums.Character;
 import de.clientdns.smash.inventories.CharacterInventory;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

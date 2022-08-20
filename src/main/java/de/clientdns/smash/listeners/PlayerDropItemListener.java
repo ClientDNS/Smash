@@ -1,4 +1,4 @@
-package de.clientdns.smash.events;
+package de.clientdns.smash.listeners;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

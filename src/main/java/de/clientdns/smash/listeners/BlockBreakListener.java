@@ -1,15 +1,15 @@
-package de.clientdns.smash.events;
+package de.clientdns.smash.listeners;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class FoodLevelChangeListener implements Listener {
+public class BlockBreakListener implements Listener {
 
     @SuppressWarnings("unused")
     @EventHandler
-    void on(@NotNull FoodLevelChangeEvent event) {
+    void on(@NotNull BlockBreakEvent event) {
         event.setCancelled(true);
     }
 }

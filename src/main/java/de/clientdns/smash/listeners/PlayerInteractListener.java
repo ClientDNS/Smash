@@ -1,10 +1,7 @@
-package de.clientdns.smash.events;
+package de.clientdns.smash.listeners;
 
-import de.clientdns.smash.config.Constants;
 import de.clientdns.smash.inventories.CharacterInventory;
 import de.clientdns.smash.inventories.MapInventory;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,10 +25,7 @@ public class PlayerInteractListener implements Listener {
                     event.setCancelled(true);
                     MapInventory.open(player);
                 }
-                case SLIME_BALL -> {
-                    event.setCancelled(true);
-                    player.kick(Constants.prefix().append(Component.text("Du hast das Spiel verlassen!", NamedTextColor.RED)));
-                }
+                default -> event.setCancelled(true);
             }
         }
     }
