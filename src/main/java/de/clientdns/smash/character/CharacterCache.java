@@ -1,5 +1,6 @@
 package de.clientdns.smash.character;
 
+import de.clientdns.smash.character.enums.Character;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
