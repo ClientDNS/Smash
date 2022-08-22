@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public class MapInventory {
 
     public static void open(@NotNull Player player) {
-        player.openInventory(MapInventory.create());
+        player.openInventory(create());
     }
 
     private static @NotNull Inventory create() {

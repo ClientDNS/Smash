@@ -15,7 +15,7 @@ public class CharacterCache {
         playerCharacters = new HashMap<>();
     }
 
-    public void add(Player player, Character character) {
+    public void put(Player player, Character character) {
         playerCharacters.put(player, character);
     }
 

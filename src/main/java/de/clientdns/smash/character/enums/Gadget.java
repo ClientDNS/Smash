@@ -5,5 +5,5 @@ public enum Gadget {
     MINIGUN,
     HOT_STICK,
     EXPLOSION_BOW,
-    MINIGUN_BOW
+    MINIGUN_BOW;
 }

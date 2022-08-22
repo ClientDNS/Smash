@@ -8,10 +8,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public class ItemStackUtil {
@@ -26,15 +26,17 @@ public class ItemStackUtil {
 
     public ItemStackUtil(Material material) {
         if (material == null) {
-            throw new IllegalArgumentException("Material must not be null.");
+            throw new NullPointerException("Material must not be null.");
         }
         itemStack = new ItemStack(material);
         itemMeta = itemStack.getItemMeta();
     }
 
     public ItemStackUtil(Material material, short amount) {
-        if (amount < 1) {
-            throw new IllegalArgumentException("Amount must be greater than 0.");
+        if (amount < 0) {
+            throw new IllegalArgumentException("Amount must not be negative.");
+        } else if (amount > 64) {
+            throw new IllegalArgumentException("Amount must not be greater than 64.");
         }
         itemStack = new ItemStack(material, amount);
         itemMeta = itemStack.getItemMeta();
@@ -43,6 +45,8 @@ public class ItemStackUtil {
     public ItemStackUtil amount(short amount) {
         if (amount < 0) {
             throw new IllegalArgumentException("Amount must be greater than 0.");
+        } else if (amount > 64) {
+            throw new IllegalArgumentException("Amount must be less than 64.");
         }
         itemStack.setAmount(amount);
         return this;
@@ -66,14 +70,14 @@ public class ItemStackUtil {
 
     public ItemStackUtil material(Material material) {
         if (material == null) {
-            throw new IllegalArgumentException("Material must not be null.");
+            throw new NullPointerException("Material must not be null.");
         }
         itemStack.setType(material);
         return this;
     }
 
-    public ItemStackUtil unbreakable() {
-        itemMeta.setUnbreakable(true);
+    public ItemStackUtil unbreakable(boolean unbreakable) {
+        itemMeta.setUnbreakable(unbreakable);
         return this;
     }
 
@@ -81,8 +85,7 @@ public class ItemStackUtil {
         if (lines.length == 0) {
             throw new IllegalArgumentException("Lore lines must not be empty.");
         }
-        List<Component> lore = new ArrayList<>();
-        Arrays.stream(lines).forEach(line -> lore.add(MiniMessage.miniMessage().deserialize(line)));
+        List<Component> lore = Arrays.stream(lines).toList().stream().map(line -> MiniMessage.miniMessage().deserialize(line)).collect(Collectors.toList());
         itemMeta.lore(lore);
         return this;
     }
@@ -92,19 +95,19 @@ public class ItemStackUtil {
             throw new IllegalArgumentException("Enchantments must not be empty.");
         }
         if (ignoreLevel) {
-            enchantments.forEach((enchantment, level) -> itemMeta.addEnchant(enchantment, level, false));
-        } else {
             enchantments.forEach((enchantment, level) -> itemMeta.addEnchant(enchantment, level, true));
+        } else {
+            enchantments.forEach((enchantment, level) -> itemMeta.addEnchant(enchantment, level, false));
         }
         return this;
     }
 
     public ItemStack build() {
         if (itemStack == null) {
-            throw new IllegalArgumentException("ItemStack must not be null.");
+            throw new NullPointerException("ItemStack must not be null.");
         }
         if (itemMeta == null) {
-            throw new IllegalArgumentException("ItemMeta must not be null.");
+            throw new NullPointerException("ItemMeta must not be null.");
         }
         itemStack.setItemMeta(itemMeta);
         return itemStack;

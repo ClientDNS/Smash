@@ -8,3 +8,5 @@ api-version: 1.19
 commands:
   config:
     description: "Manages the config file."
+  setup:
+    description: "Setup a map."

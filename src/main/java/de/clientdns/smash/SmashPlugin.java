@@ -1,34 +1,44 @@
 package de.clientdns.smash;
 
 import de.clientdns.smash.character.CharacterCache;
-import de.clientdns.smash.commands.ConfigCommand;
-import de.clientdns.smash.config.SmashConfig;
-import de.clientdns.smash.events.*;
+import de.clientdns.smash.commands.SetupCommand;
+import de.clientdns.smash.config.Config;
+import de.clientdns.smash.gamestate.GameStateManager;
+import de.clientdns.smash.listeners.*;
+import de.clientdns.smash.setup.SetupManager;
 import org.bukkit.GameRule;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.List;
 import java.util.Objects;
 
 public class SmashPlugin extends JavaPlugin {
 
     private static SmashPlugin plugin;
-    private static SmashConfig smashConfig;
+    private static Config config;
     private static CharacterCache characterCache;
-    private int taskId;
+    private static GameStateManager gameStateManager;
+    private static SetupManager setupManager;
 
     public static CharacterCache getCharacterCache() {
         return characterCache;
     }
 
-    public static SmashConfig getSmashConfig() {
-        return smashConfig;
+    public static Config getSmashConfig() {
+        return config;
     }
 
     public static SmashPlugin getPlugin() {
         return plugin;
+    }
+
+    public static GameStateManager getGameStateManager() {
+        return gameStateManager;
+    }
+
+    public static SetupManager getSetupManager() {
+        return setupManager;
     }
 
     @Override
@@ -38,36 +48,33 @@ public class SmashPlugin extends JavaPlugin {
         // Initiating config file
         loadConfig();
 
-        // Settings
-        smashConfig.set("config.set-player-in-adventure", false, List.of("Whether the player should be set in adventure mode", "Default: false"));
-        smashConfig.set("config.disable-join-message", true, List.of("Whether the join message should be disabled", "Default: true"));
-        smashConfig.set("config.disable-quit-message", true, List.of("Whether the quit message should be disabled", "Default: true"));
-
-        // Messages
-        smashConfig.set("config.messages.prefix", "§8[§6Smash§8]§r ", List.of("The prefix of the plugin", "Default: '§8[§6Smash§8]§r '"));
-        smashConfig.set("config.messages.join-message", "§e%player% joined the game", List.of("The join message", "Default: '§e%player% joined the game'"));
-        smashConfig.set("config.messages.quit-message", "§e%player% left the game", List.of("The quit message", "Default: '§e%player% left the game'"));
-        smashConfig.save();
-
         // Initiating character cache
         characterCache = new CharacterCache();
+
+        // Initiating setup manager
+        setupManager = new SetupManager();
     }
 
     @Override
     public void onEnable() {
         // Initiating event listeners
+        getServer().getPluginManager().registerEvents(new BlockBreakListener(), this);
+        getServer().getPluginManager().registerEvents(new BlockPlaceListener(), this);
         getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
         getServer().getPluginManager().registerEvents(new FoodLevelChangeListener(), this);
         getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerGameModeChangeListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerDropItemListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerLoginListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
 
-        Objects.requireNonNull(getCommand("config")).setExecutor(new ConfigCommand());
+        // Initiating commands
+        Objects.requireNonNull(getCommand("setup")).setExecutor(new SetupCommand());
 
         // Initiating game rules
         getServer().getWorlds().forEach(world -> {
+            world.getEntities().stream().filter(Item.class::isInstance).forEach(Entity::remove);
             world.setTime(1000L);
             world.setThundering(false);
             world.setStorm(false);
@@ -86,27 +93,25 @@ public class SmashPlugin extends JavaPlugin {
             world.setGameRule(GameRule.LOG_ADMIN_COMMANDS, false);
             world.setGameRule(GameRule.KEEP_INVENTORY, false);
             world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
-            world.setGameRule(GameRule.SPECTATORS_GENERATE_CHUNKS, true);
             world.setGameRule(GameRule.UNIVERSAL_ANGER, false);
             world.setGameRule(GameRule.MAX_ENTITY_CRAMMING, 8);
         });
 
-        // Starting scheduler tasks
-        taskId = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> getServer().getWorlds().forEach(world -> world.getEntities().stream().filter(Item.class::isInstance).forEach(Entity::remove)), 10L, 10L);
+        // Initiating game state manager
+        gameStateManager = new GameStateManager();
     }
 
     @Override
     public void onDisable() {
-        // Stopping scheduler tasks
-        if (getServer().getScheduler().isCurrentlyRunning(taskId) && taskId != -1) {
-            getServer().getScheduler().cancelTask(taskId);
-        }
-
         // Clearing character cache
         characterCache.clear();
     }
 
     public void loadConfig() {
-        smashConfig = new SmashConfig();
+        config = new Config();
+
+        // "Messages"
+        config.set("config.messages.prefix", "§8[§6Smash§8]§r ", "The prefix of the plugin", "§8[§6Smash§8]§r ");
+        config.save();
     }
 }

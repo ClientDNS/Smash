@@ -13,9 +13,7 @@ public enum Character {
     LINK(5, Component.text("Link", NamedTextColor.DARK_GREEN), Ability.SPEED_AND_JUMPBOOST);
 
     private final int id;
-
     private final Component name;
-
     private final Ability[] abilities;
 
     Character(int id, Component name, Ability... abilities) {

@@ -7,5 +7,5 @@ public enum Ability {
     LESS_KNOCKBACK,
     STRENGTH_KNOCKBACK,
     SPEED,
-    SPEED_AND_JUMPBOOST
+    SPEED_AND_JUMPBOOST;
 }

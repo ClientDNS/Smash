@@ -1,9 +1,13 @@
 package de.clientdns.smash.listeners;
 
+import de.clientdns.smash.SmashPlugin;
 import de.clientdns.smash.config.Constants;
+import de.clientdns.smash.countdown.LobbyCountdown;
+import de.clientdns.smash.gamestate.GameState;
 import de.clientdns.smash.util.ItemStackUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -23,8 +27,7 @@ public class PlayerJoinListener implements Listener {
     void on(@NotNull PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        if (Constants.setPlayerInAdventure()) player.setGameMode(GameMode.ADVENTURE);
-        else player.setGameMode(player.getServer().getDefaultGameMode());
+        player.setGameMode(GameMode.SURVIVAL);
 
         player.setHealth(20);
         player.setFoodLevel(20);
@@ -43,10 +46,23 @@ public class PlayerJoinListener implements Listener {
         ItemStack maps = new ItemStackUtil().name(Component.text("Maps", NamedTextColor.GOLD)).loreLines(" ", "<gray>Stimme für eine Map ab</gray>", " ").material(Material.MAP).build();
         player.getInventory().setItem(6, maps);
 
-        int online = player.getServer().getOnlinePlayers().size();
-
-        if (Constants.disableJoinMessage()) event.joinMessage(Component.empty());
-        else
-            event.joinMessage(Constants.prefix().append(Component.text("§e" + player.getName() + " §7ist dem Server beigetreten§8.")));
+        if (SmashPlugin.getGameStateManager().getCurrentState().equals(GameState.LOBBY)) {
+            int online = player.getServer().getOnlinePlayers().size();
+            int minPlayers = 1;
+            int maxPlayers = Bukkit.getMaxPlayers();
+            event.joinMessage(Constants.prefix().append(Component.text("§e" + player.getName() + " §7ist dem Server beigetreten§8. [§a" + online + "§8/§a" + maxPlayers + "§8]")));
+            if (online >= minPlayers) {
+                if (!LobbyCountdown.isRunning()) LobbyCountdown.start(player);
+            } else {
+                if (LobbyCountdown.isRunning()) LobbyCountdown.stop(player);
+            }
+        } else if (SmashPlugin.getGameStateManager().getCurrentState().equals(GameState.INGAME)) {
+            event.joinMessage(Component.empty());
+            player.setGameMode(GameMode.SPECTATOR);
+            player.setExp(0);
+            player.setLevel(0);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(0);
+            player.saveData();
+        }
     }
 }

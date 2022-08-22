@@ -1,6 +1,7 @@
 package de.clientdns.smash.config;
 
 import de.clientdns.smash.SmashPlugin;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,29 +10,30 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
-public class SmashConfig {
+public class Config {
 
     public final String CONFIG_FILE_NAME = "config.yml";
-    public final FileConfiguration config;
     private final char separator = File.separatorChar;
     public final String CONFIG_FILE_PATH = "plugins" + separator + "Smash" + separator;
+    public FileConfiguration config;
 
-    public SmashConfig() {
+    public Config() {
         File configFolder = new File(CONFIG_FILE_PATH);
         File configFile = new File(configFolder, CONFIG_FILE_NAME);
-        try {
-            if (configFolder.mkdir()) {
-                SmashPlugin.getPlugin().getLogger().info("Created config folder: " + configFolder.getPath());
+        CompletableFuture.runAsync(() -> {
+            try {
+                if (configFolder.mkdir()) {
+                    SmashPlugin.getPlugin().getLogger().info("[+] Config folder: " + configFolder.getPath());
+                }
+                if (configFile.createNewFile()) {
+                    SmashPlugin.getPlugin().getLogger().info("[+] Config file: " + configFile.getPath());
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-            if (configFile.createNewFile()) {
-                SmashPlugin.getPlugin().getLogger().info("Created config file: " + configFile.getPath());
-            }
-            config = SmashPlugin.getPlugin().getConfig();
-            SmashPlugin.getPlugin().getLogger().info("Loaded config file: " + configFile.getPath());
-        } catch (IOException ioException) {
-            throw new RuntimeException("Could not create config file", ioException);
-        }
+        }).thenAccept(Void -> config = SmashPlugin.getPlugin().getConfig()).join();
     }
 
     public Optional<Set<String>> getKeys(boolean deep) {
@@ -66,17 +68,28 @@ public class SmashConfig {
         return Optional.of(config.getDoubleList(path));
     }
 
-    public Optional<List<Boolean>> getBooleanList(String path) {
-        return Optional.of(config.getBooleanList(path));
+    public Optional<List<?>> getList(String path) {
+        return Optional.ofNullable(config.getList(path));
     }
 
-    public <K extends String, V> void set(@NotNull K key, @NotNull V value, List<String> comments) {
-        if (config.get(key) == null) {
-            config.set(key, value);
+    public Optional<Location> getLocation(String path) {
+        return Optional.ofNullable(config.getLocation(path));
+    }
 
-            if (comments.size() > 0) {
-                config.setComments(key, comments);
-            }
+    public boolean containsNot(String path) {
+        return !config.contains(path);
+    }
+
+    public <K extends String, V> void set(@NotNull K key, @NotNull V value, String description, V defaultValue) {
+        if (containsNot(key)) {
+            config.set(key, value);
+            config.setComments(key, List.of(description, "Default value: '" + defaultValue + "'"));
+        }
+    }
+
+    public void setLocation(String name, Location location) {
+        if (containsNot("maps." + name)) {
+            config.set("maps." + name, location);
         }
     }
 
