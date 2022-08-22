@@ -27,14 +27,16 @@ public class LobbyCountdown {
                 case 10:
                     Bukkit.broadcast(Constants.prefix().append(Component.text("§7Das Spiel startet in §e10 Sekunden§8.")));
                     break;
-                case 5:
-                    Bukkit.broadcast(Constants.prefix().append(Component.text("§7Das Spiel startet in §e5 Sekunden§8.")));
+                case 5: case 3: case 2:
+                    Bukkit.broadcast(Constants.prefix().append(Component.text("§7Das Spiel startet in §e" + seconds + " Sekunden§8.")));
+                    break;
+                case 1:
+                    Bukkit.broadcast(Constants.prefix().append(Component.text("§7Das Spiel startet in §eeiner Sekunde§8.")));
                     break;
                 case 0:
                     stop(player);
                     SmashPlugin.getGameStateManager().setCurrentState(GameState.INGAME);
                     player.setGameMode(GameMode.ADVENTURE);
-                    Bukkit.broadcast(Constants.prefix().append(Component.text("§7Das Spiel startet §ejetzt§8.")));
                     break;
                 default:
                     break;
