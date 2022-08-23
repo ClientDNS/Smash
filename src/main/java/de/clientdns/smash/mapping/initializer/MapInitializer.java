@@ -1,7 +1,6 @@
 package de.clientdns.smash.mapping.initializer;
 
 import de.clientdns.smash.SmashPlugin;
-import lombok.Getter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -9,7 +8,6 @@ import java.util.List;
 
 public class MapInitializer<E extends File> {
 
-    @Getter
     private final List<E> maps;
     File mapsFolder = SmashPlugin.getPlugin().getMapsFolder();
 
@@ -24,4 +22,7 @@ public class MapInitializer<E extends File> {
         }
     }
 
+    public List<E> getMaps() {
+        return maps;
+    }
 }

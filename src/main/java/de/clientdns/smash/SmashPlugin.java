@@ -6,7 +6,6 @@ import de.clientdns.smash.config.Config;
 import de.clientdns.smash.gamestate.GameStateManager;
 import de.clientdns.smash.listeners.*;
 import de.clientdns.smash.setup.SetupManager;
-import lombok.Getter;
 import org.bukkit.GameRule;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -20,8 +19,7 @@ public class SmashPlugin extends JavaPlugin {
     private static SmashPlugin plugin;
     private static Config config;
 
-    @Getter
-    private File mapsFolder;
+    private static File mapsFolder;
     private static CharacterCache characterCache;
     private static GameStateManager gameStateManager;
     private static SetupManager setupManager;
@@ -44,6 +42,10 @@ public class SmashPlugin extends JavaPlugin {
 
     public static SetupManager getSetupManager() {
         return setupManager;
+    }
+
+    public static File getMapsFolder() {
+        return mapsFolder;
     }
 
     @Override
