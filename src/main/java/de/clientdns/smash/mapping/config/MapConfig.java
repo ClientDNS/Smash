@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-public class MapConfig<K extends String, P> implements IConfig {
+public class MapConfig<K extends String, P extends String> implements IConfig {
 
     public K CONFIG_FILE_NAME;
     private final char separator = File.separatorChar;
@@ -20,7 +20,8 @@ public class MapConfig<K extends String, P> implements IConfig {
     public FileConfiguration config;
 
     public MapConfig(String path) {
-        File configFolder = new File(CONFIG_FILE_PATH + path + separator);
+        CONFIG_FILE_NAME = (K) ("plugins" + separator + "Smash" + separator);
+        File configFolder = new File(CONFIG_FILE_PATH);
         File configFile = new File(configFolder, CONFIG_FILE_NAME);
         CompletableFuture.runAsync(() -> {
             try {

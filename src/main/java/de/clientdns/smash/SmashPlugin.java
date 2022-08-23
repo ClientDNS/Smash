@@ -5,10 +5,13 @@ import de.clientdns.smash.commands.SetupCommand;
 import de.clientdns.smash.config.Config;
 import de.clientdns.smash.gamestate.GameStateManager;
 import de.clientdns.smash.listeners.*;
+import de.clientdns.smash.mapping.config.IConfig;
+import de.clientdns.smash.mapping.config.MapConfig;
 import de.clientdns.smash.setup.SetupManager;
 import org.bukkit.GameRule;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Steerable;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -106,6 +109,7 @@ public class SmashPlugin extends JavaPlugin {
 
         // Initiating game state manager
         gameStateManager = new GameStateManager();
+        generateMapDirectory();
     }
 
     @Override
@@ -127,5 +131,8 @@ public class SmashPlugin extends JavaPlugin {
         if (!mapsFolder.exists()) {
             mapsFolder.mkdir();
         }
+
+        IConfig mapConfig = new MapConfig<>("plugins/Smash/maps/clemens");
+        mapConfig.set("name",  "Clemens", "The name of the map", "Clemens");
     }
 }
