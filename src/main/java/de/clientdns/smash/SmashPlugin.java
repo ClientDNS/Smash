@@ -5,18 +5,23 @@ import de.clientdns.smash.commands.SetupCommand;
 import de.clientdns.smash.config.Config;
 import de.clientdns.smash.gamestate.GameStateManager;
 import de.clientdns.smash.listeners.*;
+import de.clientdns.smash.mapping.config.MapConfig;
+import de.clientdns.smash.mapping.config.json.JsonConfig;
 import de.clientdns.smash.setup.SetupManager;
 import org.bukkit.GameRule;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.Objects;
 
 public class SmashPlugin extends JavaPlugin {
 
     private static SmashPlugin plugin;
     private static Config config;
+    private static MapConfig mapConfig;
+    private static File mapsFolder;
     private static CharacterCache characterCache;
     private static GameStateManager gameStateManager;
     private static SetupManager setupManager;
@@ -39,6 +44,10 @@ public class SmashPlugin extends JavaPlugin {
 
     public static SetupManager getSetupManager() {
         return setupManager;
+    }
+
+    public static File getMapsFolder() {
+        return mapsFolder;
     }
 
     @Override
@@ -99,6 +108,7 @@ public class SmashPlugin extends JavaPlugin {
 
         // Initiating game state manager
         gameStateManager = new GameStateManager();
+        generateMapDirectory();
     }
 
     @Override
@@ -113,5 +123,16 @@ public class SmashPlugin extends JavaPlugin {
         // "Messages"
         config.set("config.messages.prefix", "§8[§6Smash§8]§r ", "The prefix of the plugin", "§8[§6Smash§8]§r ");
         config.save();
+    }
+
+    public void generateMapDirectory() {
+        mapsFolder = new File("plugins/Smash/maps/");
+        if (!mapsFolder.exists()) {
+            mapsFolder.mkdir();
+        }
+    }
+
+    public static MapConfig getMapConfig() {
+        return mapConfig;
     }
 }
