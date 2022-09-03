@@ -10,7 +10,6 @@ jobs:
         with:
           java-version: 17
           distribution: 'adopt'
-          cache: gradle
           check-latest: true
       - name: Build with Gradle
         run: ./gradlew build
