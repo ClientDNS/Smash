@@ -57,9 +57,9 @@ public class PlayerJoinListener implements Listener {
                     .replaceText(b -> b.matchLiteral("${name}").replacement(Component.text(player.getName(), NamedTextColor.YELLOW)));
             event.joinMessage(Constants.prefix().append(joinMessage));
             if (online >= minPlayers) {
-                LobbyCountdown.start(player);
+                LobbyCountdown.start();
             } else {
-                LobbyCountdown.stop(player);
+                LobbyCountdown.stop();
             }
         } else if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.INGAME)) {
             event.joinMessage(Component.empty());

@@ -27,7 +27,7 @@ public class PlayerQuitListener implements Listener {
 
         if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.LOBBY)) {
             if (online < minPlayers) {
-                LobbyCountdown.stop(player);
+                LobbyCountdown.stop();
             }
             Component quitMessage = Component.text("${name} §7hat den Server verlassen§8. [§a" + online + "§8/§a" + maxPlayers + "§8]")
                     .replaceText(b -> b.matchLiteral("${name}").replacement(Component.text(player.getName(), NamedTextColor.YELLOW)));
