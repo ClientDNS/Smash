@@ -12,4 +12,5 @@ jobs:
           distribution: 'adopt'
           cache: gradle
           check-latest: true
-      - run: ./gradlew build
+      - name: Build with Gradle
+        run: ./gradlew build
