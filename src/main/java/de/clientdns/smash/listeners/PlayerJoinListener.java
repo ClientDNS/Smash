@@ -44,10 +44,10 @@ public class PlayerJoinListener implements Listener {
 
             if (!player.getInventory().isEmpty()) player.getInventory().clear();
 
-            ItemStack characters = new ItemStackUtil().name(Component.text("Charaktere", NamedTextColor.GOLD)).loreLines(" ", "<gray>Ändere deinen Charakter</gray>", " ").material(Material.CHEST).build();
+            ItemStack characters = new ItemStackUtil(Material.CHEST).name(Component.text("Charaktere", NamedTextColor.GOLD)).loreLines(" ", "<gray>Ändere deinen Charakter</gray>", " ").build();
             player.getInventory().setItem(2, characters);
 
-            ItemStack maps = new ItemStackUtil().name(Component.text("Maps", NamedTextColor.GOLD)).loreLines(" ", "<gray>Stimme für eine Map ab</gray>", " ").material(Material.MAP).build();
+            ItemStack maps = new ItemStackUtil(Material.MAP).name(Component.text("Maps", NamedTextColor.GOLD)).loreLines(" ", "<gray>Stimme für eine Map ab</gray>", " ").build();
             player.getInventory().setItem(6, maps);
 
             int online = player.getServer().getOnlinePlayers().size();

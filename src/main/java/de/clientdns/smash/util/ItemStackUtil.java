@@ -43,14 +43,6 @@ public class ItemStackUtil {
         return this;
     }
 
-    public ItemStackUtil material(Material material) {
-        if (material == null) {
-            throw new NullPointerException("Material must not be null.");
-        }
-        itemStack.setType(material);
-        return this;
-    }
-
     public ItemStackUtil unbreakable(boolean unbreakable) {
         itemMeta.setUnbreakable(unbreakable);
         return this;
