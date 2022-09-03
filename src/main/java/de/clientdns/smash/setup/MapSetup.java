@@ -2,44 +2,45 @@ package de.clientdns.smash.setup;
 
 import de.clientdns.smash.SmashPlugin;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 public class MapSetup {
 
+    private final Player player;
     private final String name;
-    private final SetupManager setupManager = SmashPlugin.getSetupManager();
     private final Location[] spawnLocations = new Location[6];
-    private boolean running = false;
 
-    public MapSetup(String name) {
+    public MapSetup(Player player, String name) {
+        this.player = player;
         this.name = name;
     }
 
     public void start() {
-        running = true;
-        setupManager.add(this);
+        SmashPlugin.getPlugin().getSetupManager().add(player, this);
     }
 
-    public void stop() {
-        running = false;
-        setupManager.remove(this);
+    public void abort() {
+        SmashPlugin.getPlugin().getSetupManager().remove(player);
     }
 
     public void finish() {
-        if (running) {
-            stop();
-        }
-        setupManager.remove(this);
+        // TODO => Save map
+        SmashPlugin.getPlugin().getSetupManager().remove(player);
+    }
+
+    public void setSpawnLocation(int index, Location location) {
+        spawnLocations[index] = location;
+    }
+
+    public Location getSpawnLocation(int index) {
+        return spawnLocations[index];
     }
 
     public String getName() {
         return name;
     }
 
-    public boolean running() {
-        return running;
-    }
-
-    public Location[] getSpawnLocations() {
-        return spawnLocations;
+    public Player getPlayer() {
+        return player;
     }
 }

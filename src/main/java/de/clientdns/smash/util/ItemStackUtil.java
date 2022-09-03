@@ -16,13 +16,9 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class ItemStackUtil {
 
+    private final MiniMessage miniMessage = MiniMessage.miniMessage();
     private final ItemStack itemStack;
     private final ItemMeta itemMeta;
-
-    public ItemStackUtil() {
-        itemStack = new ItemStack(Material.COBBLESTONE);
-        itemMeta = itemStack.getItemMeta();
-    }
 
     public ItemStackUtil(Material material) {
         if (material == null) {
@@ -33,37 +29,16 @@ public class ItemStackUtil {
     }
 
     public ItemStackUtil(Material material, short amount) {
-        if (amount < 0) {
-            throw new IllegalArgumentException("Amount must not be negative.");
-        } else if (amount > 64) {
-            throw new IllegalArgumentException("Amount must not be greater than 64.");
-        }
         itemStack = new ItemStack(material, amount);
         itemMeta = itemStack.getItemMeta();
     }
 
     public ItemStackUtil amount(short amount) {
-        if (amount < 0) {
-            throw new IllegalArgumentException("Amount must be greater than 0.");
-        } else if (amount > 64) {
-            throw new IllegalArgumentException("Amount must be less than 64.");
-        }
         itemStack.setAmount(amount);
         return this;
     }
 
-    public ItemStackUtil name(@NotNull String name) {
-        if (name.isEmpty()) {
-            throw new IllegalArgumentException("Name must not be empty.");
-        }
-        itemMeta.displayName(MiniMessage.miniMessage().deserialize(name));
-        return this;
-    }
-
     public ItemStackUtil name(@NotNull Component name) {
-        if (name.equals(Component.empty())) {
-            throw new IllegalArgumentException("Name must not be empty.");
-        }
         itemMeta.displayName(name);
         return this;
     }
@@ -85,20 +60,16 @@ public class ItemStackUtil {
         if (lines.length == 0) {
             throw new IllegalArgumentException("Lore lines must not be empty.");
         }
-        List<Component> lore = Arrays.stream(lines).toList().stream().map(line -> MiniMessage.miniMessage().deserialize(line)).collect(Collectors.toList());
+        List<Component> lore = Arrays.stream(lines).toList().stream().map(miniMessage::deserialize).collect(Collectors.toList());
         itemMeta.lore(lore);
         return this;
     }
 
-    public ItemStackUtil enchants(@NotNull Map<Enchantment, Integer> enchantments, boolean ignoreLevel) {
+    public ItemStackUtil enchants(@NotNull Map<Enchantment, Integer> enchantments) {
         if (enchantments.isEmpty()) {
             throw new IllegalArgumentException("Enchantments must not be empty.");
         }
-        if (ignoreLevel) {
-            enchantments.forEach((enchantment, level) -> itemMeta.addEnchant(enchantment, level, true));
-        } else {
-            enchantments.forEach((enchantment, level) -> itemMeta.addEnchant(enchantment, level, false));
-        }
+        enchantments.forEach((enchantment, level) -> itemMeta.addEnchant(enchantment, level, true));
         return this;
     }
 

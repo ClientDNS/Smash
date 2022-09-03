@@ -80,10 +80,10 @@ public class Config {
         return !config.contains(path);
     }
 
-    public <K extends String, V> void set(@NotNull K key, @NotNull V value, String description, V defaultValue) {
+    public <K extends String, V> void set(@NotNull K key, @NotNull V value, String description) {
         if (containsNot(key)) {
             config.set(key, value);
-            config.setComments(key, List.of(description, "Default value: '" + defaultValue + "'"));
+            config.setComments(key, List.of(description));
         }
     }
 

@@ -12,13 +12,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class CharacterInventory {
 
-    public static final ItemStack MARIO = new ItemStackUtil().name(Component.text("Mario").color(NamedTextColor.GOLD)).material(Material.PLAYER_HEAD).build();
-    public static final ItemStack DONKEY_KONG = new ItemStackUtil().name(Component.text("Donkey Kong").color(NamedTextColor.DARK_RED)).material(Material.PLAYER_HEAD).build();
-    public static final ItemStack FLASH = new ItemStackUtil().name(Component.text("Flash", NamedTextColor.GOLD)).material(Material.PLAYER_HEAD).build();
-    public static final ItemStack PIKACHU = new ItemStackUtil().name(Component.text("Pikachu", NamedTextColor.GOLD)).material(Material.PLAYER_HEAD).build();
-    public static final ItemStack SUPERMAN = new ItemStackUtil().name(Component.text("Superman", NamedTextColor.GOLD)).material(Material.PLAYER_HEAD).build();
-    public static final ItemStack LINK = new ItemStackUtil().name(Component.text("Link", NamedTextColor.DARK_GREEN)).material(Material.PLAYER_HEAD).build();
-    private static final ItemStack EXPLANATION = new ItemStackUtil().name(Component.text("Jeder Charakter verfügt über andere Fähigkeiten, wähle bedacht.")).material(Material.OAK_WALL_SIGN).build();
+    public static final ItemStack MARIO = new ItemStackUtil(Material.PLAYER_HEAD).name(Component.text("Mario", NamedTextColor.DARK_RED)).build();
+    public static final ItemStack DONKEY_KONG = new ItemStackUtil(Material.PLAYER_HEAD).name(Component.text("Donkey Kong", NamedTextColor.DARK_RED)).build();
+    public static final ItemStack FLASH = new ItemStackUtil(Material.PLAYER_HEAD).name(Component.text("Flash", NamedTextColor.GOLD)).build();
+    public static final ItemStack PIKACHU = new ItemStackUtil(Material.PLAYER_HEAD).name(Component.text("Pikachu", NamedTextColor.GOLD)).build();
+    public static final ItemStack SUPERMAN = new ItemStackUtil(Material.PLAYER_HEAD).name(Component.text("Superman", NamedTextColor.GOLD)).build();
+    public static final ItemStack LINK = new ItemStackUtil(Material.PLAYER_HEAD).name(Component.text("Link", NamedTextColor.DARK_GREEN)).build();
+    private static final ItemStack EXPLANATION = new ItemStackUtil(Material.OAK_WALL_SIGN).name(Component.text("Jeder Charakter verfügt über andere Fähigkeiten, wähle bedacht.")).build();
 
     public static void open(@NotNull Player player) {
         player.openInventory(create());

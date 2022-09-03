@@ -5,54 +5,47 @@ import de.clientdns.smash.config.Constants;
 import de.clientdns.smash.gamestate.GameState;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
-
-import java.util.concurrent.atomic.AtomicInteger;
+import org.jetbrains.annotations.NotNull;
 
 public class LobbyCountdown {
 
-    private static int taskId = -1;
+    private static int taskId;
+    private static int seconds;
 
     public static void start(Player player) {
-        AtomicInteger seconds = new AtomicInteger(30);
+        if (!SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.LOBBY)) {
+            throw new IllegalStateException("LobbyCountdown can only be started in LOBBY state");
+        }
+        taskId = -1;
+        seconds = 15;
         taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(SmashPlugin.getPlugin(), () -> {
-            switch (seconds.get()) {
-                case 30:
-                    Bukkit.broadcast(Constants.prefix().append(Component.text("§7Das Spiel startet in §e30 Sekunden§8.")));
-                    break;
-                case 15:
-                    Bukkit.broadcast(Constants.prefix().append(Component.text("§7Das Spiel startet in §e15 Sekunden§8.")));
-                    break;
-                case 10:
-                    Bukkit.broadcast(Constants.prefix().append(Component.text("§7Das Spiel startet in §e10 Sekunden§8.")));
-                    break;
-                case 5: case 3: case 2:
-                    Bukkit.broadcast(Constants.prefix().append(Component.text("§7Das Spiel startet in §e" + seconds + " Sekunden§8.")));
-                    break;
-                case 1:
-                    Bukkit.broadcast(Constants.prefix().append(Component.text("§7Das Spiel startet in §eeiner Sekunde§8.")));
-                    break;
-                case 0:
+            switch (seconds) {
+                case 15, 10, 5, 3, 2 ->
+                        Bukkit.broadcast(Constants.prefix().append(Component.text("§7Das Spiel startet in §e" + seconds + " Sekunden§8.")));
+                case 1 ->
+                        Bukkit.broadcast(Constants.prefix().append(Component.text("§7Das Spiel startet in §eeiner Sekunde§8.")));
+                case 0 -> {
                     stop(player);
-                    SmashPlugin.getGameStateManager().setCurrentState(GameState.INGAME);
-                    player.setGameMode(GameMode.ADVENTURE);
-                    break;
-                default:
-                    break;
+                    SmashPlugin.getPlugin().getGameStateManager().setCurrentState(GameState.INGAME);
+                    return;
+                }
             }
-            player.setLevel(seconds.getAndDecrement());
+            player.setLevel(seconds);
+            player.setExp(seconds / 15f);
+            seconds--;
         }, 0L, 20L);
     }
 
-    public static void stop(Player player) {
-        if (isRunning()) {
+    public static void stop(@NotNull Player player) {
+        if (taskId == -1) {
+            return;
+        }
+        if (Bukkit.getScheduler().isCurrentlyRunning(taskId)) {
             Bukkit.getScheduler().cancelTask(taskId);
             player.setLevel(0);
+            player.setExp(0);
+            taskId = -1;
         }
-    }
-
-    public static boolean isRunning() {
-        return Bukkit.getScheduler().isCurrentlyRunning(taskId) && taskId != -1;
     }
 }

@@ -1,39 +1,47 @@
 package de.clientdns.smash.setup;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SetupManager {
 
-    private final List<MapSetup> runningMapSetups = new ArrayList<>();
+    private final Map<Player, MapSetup> mapSetups = new HashMap<>();
 
-    public void add(MapSetup mapSetup) {
-        runningMapSetups.add(mapSetup);
+    public void add(Player player, MapSetup setup) {
+        mapSetups.put(player, setup);
     }
 
-    public void remove(MapSetup mapSetup) {
-        runningMapSetups.remove(mapSetup);
+    public void remove(Player player) {
+        mapSetups.remove(player);
     }
 
-    public MapSetup get(String mapName) {
-        for (MapSetup mapSetup : runningMapSetups) {
-            if (mapSetup.getName().equals(mapName)) {
-                return mapSetup;
-            }
-        }
-        return null;
+    public void remove(MapSetup setup) {
+        mapSetups.values().remove(setup);
     }
 
-    public boolean contains(String mapName) {
-        for (MapSetup mapSetup : runningMapSetups) {
-            if (mapSetup.getName().equals(mapName)) {
-                return true;
-            }
-        }
-        return false;
+    public Map<Player, MapSetup> getRunningMapSetups() {
+        return mapSetups;
     }
 
-    public boolean contains(MapSetup mapSetup) {
-        return runningMapSetups.contains(mapSetup);
+    public boolean contains(Player player) {
+        return mapSetups.containsKey(player);
+    }
+
+    public MapSetup get(Player player) {
+        return mapSetups.get(player);
+    }
+
+    public void clear() {
+        mapSetups.clear();
+    }
+
+    public boolean isEmpty() {
+        return mapSetups.isEmpty();
+    }
+
+    public int size() {
+        return mapSetups.size();
     }
 }

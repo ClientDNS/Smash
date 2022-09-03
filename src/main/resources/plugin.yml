@@ -1,12 +1,10 @@
 name: smash
-version: 1.0
+version: 1.0-SNAPSHOT
 description: "The plugin for Super Smash Bros but in Minecraft."
 author: "ClientDNS"
 main: "de.clientdns.smash.SmashPlugin"
 api-version: 1.19
 
 commands:
-  config:
-    description: "Manages the config file."
   setup:
     description: "Setup a map."

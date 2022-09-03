@@ -7,8 +7,6 @@ import de.clientdns.smash.gamestate.GameStateManager;
 import de.clientdns.smash.listeners.*;
 import de.clientdns.smash.setup.SetupManager;
 import org.bukkit.GameRule;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -16,28 +14,28 @@ import java.util.Objects;
 public class SmashPlugin extends JavaPlugin {
 
     private static SmashPlugin plugin;
-    private static Config config;
-    private static CharacterCache characterCache;
-    private static GameStateManager gameStateManager;
-    private static SetupManager setupManager;
-
-    public static CharacterCache getCharacterCache() {
-        return characterCache;
-    }
-
-    public static Config getSmashConfig() {
-        return config;
-    }
+    private Config config;
+    private CharacterCache characterCache;
+    private GameStateManager gameStateManager;
+    private SetupManager setupManager;
 
     public static SmashPlugin getPlugin() {
         return plugin;
     }
 
-    public static GameStateManager getGameStateManager() {
+    public CharacterCache getCharacterCache() {
+        return characterCache;
+    }
+
+    public Config getSmashConfig() {
+        return config;
+    }
+
+    public GameStateManager getGameStateManager() {
         return gameStateManager;
     }
 
-    public static SetupManager getSetupManager() {
+    public SetupManager getSetupManager() {
         return setupManager;
     }
 
@@ -61,20 +59,24 @@ public class SmashPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new BlockBreakListener(), this);
         getServer().getPluginManager().registerEvents(new BlockPlaceListener(), this);
         getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
+        getServer().getPluginManager().registerEvents(new EntityPickupItemListener(), this);
         getServer().getPluginManager().registerEvents(new FoodLevelChangeListener(), this);
+        getServer().getPluginManager().registerEvents(new GameStateChangeListener(), this);
         getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDropItemListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerGameModeChangeListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerItemHeldListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerLoginListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
 
-        // Initiating commands
-        Objects.requireNonNull(getCommand("setup")).setExecutor(new SetupCommand());
+        SetupCommand setupCommand = new SetupCommand();
+        Objects.requireNonNull(getCommand("setup")).setExecutor(setupCommand);
+        Objects.requireNonNull(getCommand("setup")).setTabCompleter(setupCommand);
 
         // Initiating game rules
         getServer().getWorlds().forEach(world -> {
-            world.getEntities().stream().filter(Item.class::isInstance).forEach(Entity::remove);
             world.setTime(1000L);
             world.setThundering(false);
             world.setStorm(false);
@@ -110,8 +112,12 @@ public class SmashPlugin extends JavaPlugin {
     public void loadConfig() {
         config = new Config();
 
-        // "Messages"
-        config.set("config.messages.prefix", "§8[§6Smash§8]§r ", "The prefix of the plugin", "§8[§6Smash§8]§r ");
+        config.set("config.min-players", 2, "Minimum amount of players needed to start a game");
+
+        // Messages
+        config.set("config.messages.prefix", "§8[§6Smash§8]§r ", "The prefix of the plugin");
+        config.set("config.messages.permission-required", "Du hast keine Berechtigung, dies zu tun.", "The message when a player doesn't have the permission to do something");
+        config.set("config.messages.player-required", "Du musst ein Spieler sein, um dies zu tun.", "The message when a player isn't a player");
         config.save();
     }
 }

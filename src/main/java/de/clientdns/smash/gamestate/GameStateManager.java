@@ -1,18 +1,22 @@
 package de.clientdns.smash.gamestate;
 
+import de.clientdns.smash.events.GameStateChangeEvent;
+import org.bukkit.Bukkit;
+
 public class GameStateManager {
 
     private GameState currentState;
 
     public GameStateManager() {
-        setCurrentState(GameState.LOBBY);
+        this.currentState = GameState.LOBBY;
     }
 
-    public GameState getCurrentState() {
+    public GameState getGameState() {
         return this.currentState;
     }
 
-    public void setCurrentState(GameState newState) {
-        this.currentState = newState;
+    public void setCurrentState(GameState state) {
+        this.currentState = state;
+        Bukkit.getPluginManager().callEvent(new GameStateChangeEvent(state));
     }
 }

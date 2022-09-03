@@ -13,8 +13,9 @@ public class PlayerLoginListener implements Listener {
     @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull PlayerLoginEvent event) {
+        int online = event.getPlayer().getServer().getOnlinePlayers().size();
         int maxPlayers = event.getPlayer().getServer().getMaxPlayers();
-        if (maxPlayers > 0 && event.getPlayer().getServer().getOnlinePlayers().size() >= maxPlayers) {
+        if (maxPlayers > 0 && online >= maxPlayers) {
             event.setResult(PlayerLoginEvent.Result.KICK_FULL);
             event.kickMessage(Constants.prefix().append(Component.text("Der Server ist voll.", NamedTextColor.RED)));
         }

@@ -27,42 +27,43 @@ public class PlayerJoinListener implements Listener {
     void on(@NotNull PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        player.setGameMode(GameMode.SURVIVAL);
+        if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.LOBBY)) {
+            player.setGameMode(GameMode.SURVIVAL);
 
-        player.setHealth(20);
-        player.setFoodLevel(20);
+            player.setHealth(20);
+            player.setFoodLevel(20);
 
-        player.setExp(0);
-        player.setLevel(0);
-
-        Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(1024);
-        player.saveData();
-
-        if (!player.getInventory().isEmpty()) player.getInventory().clear();
-
-        ItemStack characters = new ItemStackUtil().name(Component.text("Charaktere", NamedTextColor.GOLD)).loreLines(" ", "<gray>Ändere deinen Charakter</gray>", " ").material(Material.CHEST).build();
-        player.getInventory().setItem(2, characters);
-
-        ItemStack maps = new ItemStackUtil().name(Component.text("Maps", NamedTextColor.GOLD)).loreLines(" ", "<gray>Stimme für eine Map ab</gray>", " ").material(Material.MAP).build();
-        player.getInventory().setItem(6, maps);
-
-        if (SmashPlugin.getGameStateManager().getCurrentState().equals(GameState.LOBBY)) {
-            int online = player.getServer().getOnlinePlayers().size();
-            int minPlayers = 1;
-            int maxPlayers = Bukkit.getMaxPlayers();
-            event.joinMessage(Constants.prefix().append(Component.text("§e" + player.getName() + " §7ist dem Server beigetreten§8. [§a" + online + "§8/§a" + maxPlayers + "§8]")));
-            if (online >= minPlayers) {
-                if (!LobbyCountdown.isRunning()) LobbyCountdown.start(player);
-            } else {
-                if (LobbyCountdown.isRunning()) LobbyCountdown.stop(player);
-            }
-        } else if (SmashPlugin.getGameStateManager().getCurrentState().equals(GameState.INGAME)) {
-            event.joinMessage(Component.empty());
-            player.setGameMode(GameMode.SPECTATOR);
             player.setExp(0);
             player.setLevel(0);
-            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(0);
+
+            player.setAllowFlight(false);
+            player.setFlying(false);
+
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(1024);
             player.saveData();
+
+            if (!player.getInventory().isEmpty()) player.getInventory().clear();
+
+            ItemStack characters = new ItemStackUtil().name(Component.text("Charaktere", NamedTextColor.GOLD)).loreLines(" ", "<gray>Ändere deinen Charakter</gray>", " ").material(Material.CHEST).build();
+            player.getInventory().setItem(2, characters);
+
+            ItemStack maps = new ItemStackUtil().name(Component.text("Maps", NamedTextColor.GOLD)).loreLines(" ", "<gray>Stimme für eine Map ab</gray>", " ").material(Material.MAP).build();
+            player.getInventory().setItem(6, maps);
+
+            int online = player.getServer().getOnlinePlayers().size();
+            int minPlayers = Constants.minPlayers();
+            int maxPlayers = Bukkit.getMaxPlayers();
+            Component joinMessage = Component.text("${name} §7ist dem Server beigetreten§8. [§a" + online + "§8/§a" + maxPlayers + "§8]")
+                    .replaceText(b -> b.matchLiteral("${name}").replacement(Component.text(player.getName(), NamedTextColor.YELLOW)));
+            event.joinMessage(Constants.prefix().append(joinMessage));
+            if (online >= minPlayers) {
+                LobbyCountdown.start(player);
+            } else {
+                LobbyCountdown.stop(player);
+            }
+        } else if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.INGAME)) {
+            event.joinMessage(Component.empty());
+            player.setGameMode(GameMode.SPECTATOR);
         }
     }
 }

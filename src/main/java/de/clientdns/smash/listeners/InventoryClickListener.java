@@ -1,11 +1,10 @@
 package de.clientdns.smash.listeners;
 
 import de.clientdns.smash.SmashPlugin;
-import de.clientdns.smash.character.CharacterCache;
+import de.clientdns.smash.character.PlayerManager;
 import de.clientdns.smash.character.enums.Character;
+import de.clientdns.smash.gamestate.GameState;
 import de.clientdns.smash.inventories.CharacterInventory;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,44 +26,36 @@ public class InventoryClickListener implements Listener {
         if (event.getCurrentItem() == null) {
             return;
         }
+        event.setCancelled(true);
         ItemStack item = event.getCurrentItem();
 
         Player player = (Player) event.getWhoClicked();
         InventoryView view = event.getView();
 
-        CharacterCache cache = SmashPlugin.getCharacterCache();
-        Character currentCharacter;
+        PlayerManager playerManager = new PlayerManager(player);
 
-        if (item.displayName().equals(CharacterInventory.MARIO.displayName())) {
-            cache.replace(player, Character.MARIO);
-            currentCharacter = cache.get(player).orElse(Character.MARIO);
-            player.getInventory().close();
-            player.sendMessage(Component.text("Du hast den Charakter ", NamedTextColor.GRAY).append(currentCharacter.getName()).append(Component.text(" ausgewählt.", NamedTextColor.GRAY)));
-        } else if (item.displayName().equals(CharacterInventory.DONKEY_KONG.displayName())) {
-            cache.replace(player, Character.DONKEY_KONG);
-            currentCharacter = cache.get(player).orElse(Character.DONKEY_KONG);
-            player.getInventory().close();
-            player.sendMessage(Component.text("Du hast den Charakter ", NamedTextColor.GRAY).append(currentCharacter.getName()).append(Component.text(" ausgewählt.", NamedTextColor.GRAY)));
-        } else if (item.displayName().equals(CharacterInventory.FLASH.displayName())) {
-            cache.replace(player, Character.FLASH);
-            currentCharacter = cache.get(player).orElse(Character.FLASH);
-            player.getInventory().close();
-            player.sendMessage(Component.text("Du hast den Charakter ", NamedTextColor.GRAY).append(currentCharacter.getName()).append(Component.text(" ausgewählt.", NamedTextColor.GRAY)));
-        } else if (item.displayName().equals(CharacterInventory.PIKACHU.displayName())) {
-            cache.replace(player, Character.PIKACHU);
-            currentCharacter = cache.get(player).orElse(Character.PIKACHU);
-            player.getInventory().close();
-            player.sendMessage(Component.text("Du hast den Charakter ", NamedTextColor.GRAY).append(currentCharacter.getName()).append(Component.text(" ausgewählt.", NamedTextColor.GRAY)));
-        } else if (item.displayName().equals(CharacterInventory.SUPERMAN.displayName())) {
-            cache.replace(player, Character.SUPERMAN);
-            currentCharacter = cache.get(player).orElse(Character.SUPERMAN);
-            player.getInventory().close();
-            player.sendMessage(Component.text("Du hast den Charakter ", NamedTextColor.GRAY).append(currentCharacter.getName()).append(Component.text(" ausgewählt.", NamedTextColor.GRAY)));
-        } else if (item.displayName().equals(CharacterInventory.LINK.displayName())) {
-            cache.replace(player, Character.LINK);
-            currentCharacter = cache.get(player).orElse(Character.LINK);
-            player.getInventory().close();
-            player.sendMessage(Component.text("Du hast den Charakter ", NamedTextColor.GRAY).append(currentCharacter.getName()).append(Component.text(" ausgewählt.", NamedTextColor.GRAY)));
+        if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.LOBBY)) {
+            if (item.displayName().equals(CharacterInventory.MARIO.displayName())) {
+                player.getInventory().close();
+                playerManager.setCharacter(Character.MARIO);
+            } else if (item.displayName().equals(CharacterInventory.DONKEY_KONG.displayName())) {
+                player.getInventory().close();
+                playerManager.setCharacter(Character.DONKEY_KONG);
+            } else if (item.displayName().equals(CharacterInventory.FLASH.displayName())) {
+                player.getInventory().close();
+                playerManager.setCharacter(Character.FLASH);
+            } else if (item.displayName().equals(CharacterInventory.PIKACHU.displayName())) {
+                player.getInventory().close();
+                playerManager.setCharacter(Character.PIKACHU);
+            } else if (item.displayName().equals(CharacterInventory.SUPERMAN.displayName())) {
+                player.getInventory().close();
+                playerManager.setCharacter(Character.SUPERMAN);
+            } else if (item.displayName().equals(CharacterInventory.LINK.displayName())) {
+                player.getInventory().close();
+                playerManager.setCharacter(Character.LINK);
+            }
+        } else {
+            event.setCancelled(true);
         }
     }
 }
