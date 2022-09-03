@@ -12,4 +12,4 @@ jobs:
           distribution: 'adopt'
           cache: gradle
           check-latest: true
-      - run: chmod +x gradlew && ./gradlew build
+      - run: ./gradlew build
