@@ -12,6 +12,6 @@ jobs:
           distribution: 'adopt'
           cache: gradle
           check-latest: true
-      - uses: gradle/gradle-build-action@2.3.0
+      - uses: gradle/gradle-build-action@v2.3.0
         with:
           arguments: build
