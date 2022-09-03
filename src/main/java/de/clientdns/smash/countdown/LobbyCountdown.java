@@ -28,6 +28,12 @@ public class LobbyCountdown {
                     Bukkit.broadcast(Constants.prefix().append(Component.text("§7Das Spiel startet in §e10 Sekunden§8.")));
                     break;
                 case 5: case 3: case 2:
+
+
+                    //Process for loading the map
+
+
+
                     Bukkit.broadcast(Constants.prefix().append(Component.text("§7Das Spiel startet in §e" + seconds + " Sekunden§8.")));
                     break;
                 case 1:

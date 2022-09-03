@@ -6,7 +6,7 @@ import de.clientdns.smash.config.Config;
 import de.clientdns.smash.gamestate.GameStateManager;
 import de.clientdns.smash.listeners.*;
 import de.clientdns.smash.mapping.config.MapConfig;
-import de.clientdns.smash.mapping.config.json.JsonConfig;
+import de.clientdns.smash.mapping.initializer.MapInitializer;
 import de.clientdns.smash.setup.SetupManager;
 import org.bukkit.GameRule;
 import org.bukkit.entity.Entity;
@@ -14,6 +14,8 @@ import org.bukkit.entity.Item;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Objects;
 
 public class SmashPlugin extends JavaPlugin {
@@ -47,7 +49,7 @@ public class SmashPlugin extends JavaPlugin {
     }
 
     public static File getMapsFolder() {
-        return mapsFolder;
+        return new File("plugins/Smash/maps");
     }
 
     @Override
@@ -55,13 +57,21 @@ public class SmashPlugin extends JavaPlugin {
         plugin = this;
 
         // Initiating config file
-        loadConfig();
+        try {
+            loadConfig();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         // Initiating character cache
         characterCache = new CharacterCache();
 
         // Initiating setup manager
         setupManager = new SetupManager();
+
+        //Generating maps folder
+        generateMapDirectory();
+        System.out.println(mapsFolder.listFiles());
     }
 
     @Override
@@ -108,7 +118,6 @@ public class SmashPlugin extends JavaPlugin {
 
         // Initiating game state manager
         gameStateManager = new GameStateManager();
-        generateMapDirectory();
     }
 
     @Override
@@ -117,12 +126,18 @@ public class SmashPlugin extends JavaPlugin {
         characterCache.clear();
     }
 
-    public void loadConfig() {
+    public void loadConfig() throws IOException {
         config = new Config();
 
         // "Messages"
         config.set("config.messages.prefix", "§8[§6Smash§8]§r ", "The prefix of the plugin", "§8[§6Smash§8]§r ");
         config.save();
+        getLogger().info("Config file loaded");
+        getLogger().info("initializeing maps");
+
+        MapInitializer<File> initializer = new MapInitializer<>();
+
+        getLogger().info("Map directory generated");
     }
 
     public void generateMapDirectory() {
