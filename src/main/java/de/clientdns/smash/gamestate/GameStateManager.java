@@ -19,4 +19,16 @@ public class GameStateManager {
         this.currentState = state;
         Bukkit.getPluginManager().callEvent(new GameStateChangeEvent(state));
     }
+
+    public boolean isLobbyState() {
+        return this.currentState.equals(GameState.LOBBY);
+    }
+
+    public boolean isIngameState() {
+        return this.currentState.equals(GameState.INGAME);
+    }
+
+    public boolean isEndState() {
+        return this.currentState.equals(GameState.END);
+    }
 }

@@ -3,7 +3,6 @@ package de.clientdns.smash.listeners;
 import de.clientdns.smash.SmashPlugin;
 import de.clientdns.smash.character.PlayerManager;
 import de.clientdns.smash.character.enums.Character;
-import de.clientdns.smash.gamestate.GameState;
 import de.clientdns.smash.inventories.CharacterInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,7 +33,7 @@ public class InventoryClickListener implements Listener {
 
         PlayerManager playerManager = new PlayerManager(player);
 
-        if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.LOBBY)) {
+        if (SmashPlugin.getPlugin().getGameStateManager().isLobbyState()) {
             if (item.displayName().equals(CharacterInventory.MARIO.displayName())) {
                 player.getInventory().close();
                 playerManager.setCharacter(Character.MARIO);

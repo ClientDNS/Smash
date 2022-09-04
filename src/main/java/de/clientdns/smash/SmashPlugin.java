@@ -5,7 +5,8 @@ import de.clientdns.smash.commands.SetupCommand;
 import de.clientdns.smash.config.Config;
 import de.clientdns.smash.gamestate.GameStateManager;
 import de.clientdns.smash.listeners.*;
-import de.clientdns.smash.setup.SetupManager;
+import de.clientdns.smash.listeners.custom.GameStateChangeListener;
+import de.clientdns.smash.map.setup.SetupManager;
 import org.bukkit.GameRule;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -64,15 +65,19 @@ public class SmashPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new GameStateChangeListener(), this);
         getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDropItemListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerGameModeChangeListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerItemHeldListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerLoginListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
 
+        // Command instances
         SetupCommand setupCommand = new SetupCommand();
+
+        // Executor for commands
         Objects.requireNonNull(getCommand("setup")).setExecutor(setupCommand);
+
+        // Tab completer for commands
         Objects.requireNonNull(getCommand("setup")).setTabCompleter(setupCommand);
 
         // Initiating game rules

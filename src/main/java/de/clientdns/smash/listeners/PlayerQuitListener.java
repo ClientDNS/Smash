@@ -2,9 +2,7 @@ package de.clientdns.smash.listeners;
 
 import de.clientdns.smash.SmashPlugin;
 import de.clientdns.smash.config.Constants;
-import de.clientdns.smash.countdown.EndCountdown;
 import de.clientdns.smash.countdown.LobbyCountdown;
-import de.clientdns.smash.gamestate.GameState;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -25,23 +23,27 @@ public class PlayerQuitListener implements Listener {
         int minPlayers = Constants.minPlayers();
         int maxPlayers = Bukkit.getMaxPlayers();
 
-        if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.LOBBY)) {
-            if (online < minPlayers) {
-                LobbyCountdown.stop();
-            }
+        if (SmashPlugin.getPlugin().getGameStateManager().isLobbyState()) {
             Component quitMessage = Component.text("${name} §7hat den Server verlassen§8. [§a" + online + "§8/§a" + maxPlayers + "§8]")
                     .replaceText(b -> b.matchLiteral("${name}").replacement(Component.text(player.getName(), NamedTextColor.YELLOW)));
             event.quitMessage(Constants.prefix().append(quitMessage));
-        } else if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.INGAME)) {
+            if (online < minPlayers) {
+                LobbyCountdown.forceStop();
+            }
+        } else if (SmashPlugin.getPlugin().getGameStateManager().isIngameState()) {
             if (online == 0) {
-                EndCountdown.start();
+                stopServer();
             }
         } else {
-            if (online < 1) {
-                Bukkit.broadcast(Component.text("Server ist leer, stoppe Server...", NamedTextColor.YELLOW));
-                Bukkit.shutdown();
+            // GameState is not LOBBY or INGAME
+            if (online == 0) {
+                stopServer();
             }
-            EndCountdown.start();
         }
+    }
+
+    private void stopServer() {
+        Bukkit.broadcast(Component.text("Server ist leer, stoppe Server...", NamedTextColor.YELLOW));
+        Bukkit.shutdown();
     }
 }

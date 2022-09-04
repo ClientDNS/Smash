@@ -12,10 +12,9 @@ public class LobbyCountdown {
     private static int seconds;
 
     public static void start() {
-        if (!SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.LOBBY)) {
-            throw new IllegalStateException("LobbyCountdown can only be started in LOBBY state");
+        if (!SmashPlugin.getPlugin().getGameStateManager().isLobbyState()) {
+            throw new IllegalStateException("LobbyCountdown can only be started in LOBBY state, tried to start in " + SmashPlugin.getPlugin().getGameStateManager().getGameState());
         }
-        taskId = -1;
         seconds = 15;
         taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(SmashPlugin.getPlugin(), () -> {
             switch (seconds) {
@@ -24,7 +23,7 @@ public class LobbyCountdown {
                 case 1 ->
                         Bukkit.broadcast(Constants.prefix().append(Component.text("§7Das Spiel startet in §eeiner Sekunde§8.")));
                 case 0 -> {
-                    stop();
+                    forceStop();
                     SmashPlugin.getPlugin().getGameStateManager().setCurrentState(GameState.INGAME);
                     return;
                 }
@@ -37,17 +36,14 @@ public class LobbyCountdown {
         }, 0L, 20L);
     }
 
-    public static void stop() {
-        if (taskId == -1) {
-            return;
-        }
-        if (Bukkit.getScheduler().isCurrentlyRunning(taskId)) {
+    public static void forceStop() {
+        if (taskId != -1) {
             Bukkit.getScheduler().cancelTask(taskId);
-            Bukkit.getOnlinePlayers().forEach(player -> {
-                player.setLevel(0);
-                player.setExp(0f);
-            });
             taskId = -1;
         }
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            player.setLevel(0);
+            player.setExp(0);
+        });
     }
 }

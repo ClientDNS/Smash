@@ -17,14 +17,15 @@ public class Config {
     public final String CONFIG_FILE_NAME = "config.yml";
     private final char separator = File.separatorChar;
     public final String CONFIG_FILE_PATH = "plugins" + separator + "Smash" + separator;
+    public File configFile;
     public FileConfiguration config;
 
     public Config() {
         File configFolder = new File(CONFIG_FILE_PATH);
-        File configFile = new File(configFolder, CONFIG_FILE_NAME);
         CompletableFuture.runAsync(() -> {
             try {
-                if (configFolder.mkdir()) {
+                configFile = new File(configFolder, CONFIG_FILE_NAME);
+                if (configFolder.mkdirs()) {
                     SmashPlugin.getPlugin().getLogger().info("[+] Config folder: " + configFolder.getPath());
                 }
                 if (configFile.createNewFile()) {
@@ -94,6 +95,20 @@ public class Config {
     }
 
     public void save() {
-        SmashPlugin.getPlugin().saveConfig();
+        CompletableFuture.runAsync(() -> {
+            try {
+                config.save(configFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).join();
+    }
+
+    public void close() {
+        config = null;
+    }
+
+    public void reload() {
+        config = SmashPlugin.getPlugin().getConfig();
     }
 }

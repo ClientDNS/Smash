@@ -1,4 +1,4 @@
-package de.clientdns.smash.setup;
+package de.clientdns.smash.map.setup;
 
 import de.clientdns.smash.SmashPlugin;
 import org.bukkit.Location;
@@ -7,25 +7,26 @@ import org.bukkit.entity.Player;
 public class MapSetup {
 
     private final Player player;
-    private final String name;
-    private final Location[] spawnLocations = new Location[6];
+    private final String mapName;
+    private final Location[] spawnLocations;
 
-    public MapSetup(Player player, String name) {
+    public MapSetup(Player player, String mapName) {
         this.player = player;
-        this.name = name;
+        this.mapName = mapName;
+        this.spawnLocations = new Location[6];
     }
 
     public void start() {
         SmashPlugin.getPlugin().getSetupManager().add(player, this);
     }
 
-    public void abort() {
+    public void delete() {
         SmashPlugin.getPlugin().getSetupManager().remove(player);
     }
 
     public void finish() {
         // TODO => Save map
-        SmashPlugin.getPlugin().getSetupManager().remove(player);
+        delete();
     }
 
     public void setSpawnLocation(int index, Location location) {
@@ -36,8 +37,8 @@ public class MapSetup {
         return spawnLocations[index];
     }
 
-    public String getName() {
-        return name;
+    public String getMapName() {
+        return mapName;
     }
 
     public Player getPlayer() {

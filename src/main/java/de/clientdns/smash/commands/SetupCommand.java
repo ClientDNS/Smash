@@ -3,7 +3,7 @@ package de.clientdns.smash.commands;
 import com.google.common.collect.ImmutableList;
 import de.clientdns.smash.SmashPlugin;
 import de.clientdns.smash.config.Constants;
-import de.clientdns.smash.setup.MapSetup;
+import de.clientdns.smash.map.setup.MapSetup;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
@@ -22,14 +22,18 @@ public class SetupCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof Player player) {
             if (!player.hasPermission("smash.setup")) {
-                sender.sendMessage(Constants.prefix().append(Constants.permissionRequired().color(NamedTextColor.RED)));
+                sender.sendMessage(Constants.prefix().append(Constants.permissionRequired()));
                 return false;
             }
             if (args.length == 1) {
+                if (args[0].equalsIgnoreCase("create")) {
+                    player.sendMessage(Constants.prefix().append(Component.text("Ich glaube, du hast einen Namen für die Map vergessen. :)", NamedTextColor.GREEN)));
+                    return false;
+                }
                 if (args[0].equalsIgnoreCase("abort")) {
                     if (SmashPlugin.getPlugin().getSetupManager().contains(player)) {
-                        MapSetup mapSetup = SmashPlugin.getPlugin().getSetupManager().get(player);
-                        mapSetup.abort();
+                        MapSetup mapSetup = SmashPlugin.getPlugin().getSetupManager().getSetup(player);
+                        mapSetup.delete();
                         player.sendMessage(Constants.prefix().append(Component.text("Du hast die Map-Erstellung abgebrochen.", NamedTextColor.GRAY)));
                     } else {
                         player.sendMessage(Constants.prefix().append(Component.text("Du hast keine Map-Erstellung gestartet.", NamedTextColor.GRAY)));
@@ -37,22 +41,15 @@ public class SetupCommand implements CommandExecutor, TabCompleter {
                     return true;
                 } else if (args[0].equalsIgnoreCase("finish")) {
                     if (SmashPlugin.getPlugin().getSetupManager().contains(player)) {
-                        MapSetup mapSetup = SmashPlugin.getPlugin().getSetupManager().get(player);
+                        MapSetup mapSetup = SmashPlugin.getPlugin().getSetupManager().getSetup(player);
                         mapSetup.finish();
                         player.sendMessage(Constants.prefix().append(Component.text("Du hast die Map erfolgreich erstellt.", NamedTextColor.GRAY)));
                     } else {
                         player.sendMessage(Constants.prefix().append(Component.text("Du hast keine Map-Erstellung gestartet.", NamedTextColor.GRAY)));
                     }
-                } else if (args[0].equalsIgnoreCase("list")) {
-                    if (!SmashPlugin.getPlugin().getSetupManager().getRunningMapSetups().isEmpty()) {
-                        player.sendMessage(Constants.prefix().append(Component.text("Aktive Map-Erstellungen:", NamedTextColor.GRAY)));
-                        SmashPlugin.getPlugin().getSetupManager().getRunningMapSetups().forEach((setupPlayer, setup) -> sender.sendMessage(Component.text(" - " + setup.getName() + " (" + setupPlayer.getName() + ")", NamedTextColor.GREEN)));
-                    } else
-                        player.sendMessage(Constants.prefix().append(Component.text("Es sind keine Map-Erstellungen aktiv.", NamedTextColor.GRAY)));
                 } else {
                     player.sendMessage(Constants.prefix().append(Component.text("/setup <abort>", NamedTextColor.RED)));
                     player.sendMessage(Constants.prefix().append(Component.text("/setup <finish>", NamedTextColor.RED)));
-                    player.sendMessage(Constants.prefix().append(Component.text("/setup <list>", NamedTextColor.RED)));
                 }
             } else if (args.length == 2) {
                 String mapName = args[1];
@@ -72,7 +69,7 @@ public class SetupCommand implements CommandExecutor, TabCompleter {
                 return false;
             }
         } else {
-            sender.sendMessage(Constants.prefix().append(Constants.playerRequired().color(NamedTextColor.RED)));
+            sender.sendMessage(Constants.prefix().append(Constants.playerRequired()));
         }
         return false;
     }
@@ -81,7 +78,7 @@ public class SetupCommand implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         if (sender.hasPermission("smash.setup")) {
             if (args.length == 1) {
-                return List.of("create", "finish", "list");
+                return List.of("create", "abort", "finish");
             }
         }
         return ImmutableList.of();

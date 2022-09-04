@@ -1,6 +1,5 @@
 package de.clientdns.smash.listeners;
 
-import de.clientdns.smash.config.Constants;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.event.EventHandler;
@@ -15,9 +14,9 @@ public class PlayerLoginListener implements Listener {
     void on(@NotNull PlayerLoginEvent event) {
         int online = event.getPlayer().getServer().getOnlinePlayers().size();
         int maxPlayers = event.getPlayer().getServer().getMaxPlayers();
-        if (maxPlayers > 0 && online >= maxPlayers) {
+        if (online >= maxPlayers) {
             event.setResult(PlayerLoginEvent.Result.KICK_FULL);
-            event.kickMessage(Constants.prefix().append(Component.text("Der Server ist voll.", NamedTextColor.RED)));
+            event.kickMessage(Component.text("Der Server ist voll.", NamedTextColor.RED));
         }
     }
 }

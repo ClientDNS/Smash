@@ -3,7 +3,6 @@ package de.clientdns.smash.listeners;
 import de.clientdns.smash.SmashPlugin;
 import de.clientdns.smash.config.Constants;
 import de.clientdns.smash.countdown.LobbyCountdown;
-import de.clientdns.smash.gamestate.GameState;
 import de.clientdns.smash.util.ItemStackUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -27,7 +26,7 @@ public class PlayerJoinListener implements Listener {
     void on(@NotNull PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.LOBBY)) {
+        if (SmashPlugin.getPlugin().getGameStateManager().isLobbyState()) {
             player.setGameMode(GameMode.SURVIVAL);
 
             player.setHealth(20);
@@ -58,10 +57,8 @@ public class PlayerJoinListener implements Listener {
             event.joinMessage(Constants.prefix().append(joinMessage));
             if (online >= minPlayers) {
                 LobbyCountdown.start();
-            } else {
-                LobbyCountdown.stop();
             }
-        } else if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.INGAME)) {
+        } else if (SmashPlugin.getPlugin().getGameStateManager().isIngameState()) {
             event.joinMessage(Component.empty());
             player.setGameMode(GameMode.SPECTATOR);
         }

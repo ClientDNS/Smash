@@ -1,4 +1,4 @@
-package de.clientdns.smash.setup;
+package de.clientdns.smash.map.setup;
 
 import org.bukkit.entity.Player;
 
@@ -17,10 +17,6 @@ public class SetupManager {
         mapSetups.remove(player);
     }
 
-    public void remove(MapSetup setup) {
-        mapSetups.values().remove(setup);
-    }
-
     public Map<Player, MapSetup> getRunningMapSetups() {
         return mapSetups;
     }
@@ -29,7 +25,7 @@ public class SetupManager {
         return mapSetups.containsKey(player);
     }
 
-    public MapSetup get(Player player) {
+    public MapSetup getSetup(Player player) {
         return mapSetups.get(player);
     }
 
@@ -39,9 +35,5 @@ public class SetupManager {
 
     public boolean isEmpty() {
         return mapSetups.isEmpty();
-    }
-
-    public int size() {
-        return mapSetups.size();
     }
 }

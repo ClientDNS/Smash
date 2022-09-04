@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
  * @since 1.0
  */
 public class GameStateChangeEvent extends Event {
+
     private static final HandlerList HANDLER_LIST = new HandlerList();
     private final GameState state;
 

@@ -1,8 +1,9 @@
-package de.clientdns.smash.listeners;
+package de.clientdns.smash.listeners.custom;
 
 import de.clientdns.smash.countdown.EndCountdown;
 import de.clientdns.smash.events.GameStateChangeEvent;
 import de.clientdns.smash.gamestate.GameState;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
@@ -20,6 +21,7 @@ public class GameStateChangeListener implements Listener {
                 player.setAllowFlight(false);
                 player.setFlying(false);
                 player.getInventory().clear();
+                // TODO: Give items and teleport to voted map locations
             });
         } else if (event.getGameState().equals(GameState.END)) {
             Bukkit.getOnlinePlayers().forEach(player -> {
@@ -27,8 +29,10 @@ public class GameStateChangeListener implements Listener {
                 player.setAllowFlight(false);
                 player.setFlying(false);
                 player.getInventory().clear();
+                // TODO: Teleport to spawn
             });
             EndCountdown.start();
         }
+        Bukkit.broadcast(Component.text("§7Der Spielzustand wurde auf §e" + event.getGameState() + " §7gesetzt§8."));
     }
 }
