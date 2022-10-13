@@ -18,13 +18,16 @@ public class ItemStackUtil {
     private ItemStack itemStack;
     private ItemMeta itemMeta;
 
+    private ItemStackUtil() {
+    }
+
     /**
      * Creates a new ItemStackUtil instance with the given {@link Material} and default amount of 1.
      *
      * @param material The material of the item.
      */
     public ItemStackUtil(Material material) {
-        new ItemStackUtil(material, 1);
+        this(material, 1);
     }
 
     /**
@@ -34,7 +37,7 @@ public class ItemStackUtil {
      * @param amount   The amount of the item.
      */
     public ItemStackUtil(Material material, int amount) {
-        new ItemStackUtil(material, amount, empty());
+        this(material, amount, empty());
     }
 
     public ItemStackUtil(Material material, int amount, Component displayName) {
