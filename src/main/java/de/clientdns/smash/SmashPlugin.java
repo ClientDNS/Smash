@@ -7,12 +7,13 @@ import de.clientdns.smash.gamestate.GameStateManager;
 import de.clientdns.smash.listeners.*;
 import de.clientdns.smash.listeners.custom.GameStateChangeListener;
 import de.clientdns.smash.map.setup.SetupManager;
+import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
 
-public class SmashPlugin extends JavaPlugin {
+public final class SmashPlugin extends JavaPlugin {
 
     private static SmashPlugin plugin;
     private Config config;
@@ -45,13 +46,16 @@ public class SmashPlugin extends JavaPlugin {
         plugin = this;
 
         // Initiating config file
-        loadConfig();
+        initConfig();
 
         // Initiating character cache
         characterCache = new CharacterCache();
 
         // Initiating setup manager
         setupManager = new SetupManager();
+
+        // Initiating game state manager
+        gameStateManager = new GameStateManager();
     }
 
     @Override
@@ -71,18 +75,13 @@ public class SmashPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerLoginListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
 
-        // Command instances
+        // Initiating commands
         SetupCommand setupCommand = new SetupCommand();
-
-        // Executor for commands
         Objects.requireNonNull(getCommand("setup")).setExecutor(setupCommand);
-
-        // Tab completer for commands
         Objects.requireNonNull(getCommand("setup")).setTabCompleter(setupCommand);
 
         // Initiating game rules
-        getServer().getWorlds().forEach(world -> {
-            world.setTime(1000L);
+        Bukkit.getWorlds().forEach(world -> {
             world.setThundering(false);
             world.setStorm(false);
             world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
@@ -103,9 +102,6 @@ public class SmashPlugin extends JavaPlugin {
             world.setGameRule(GameRule.UNIVERSAL_ANGER, false);
             world.setGameRule(GameRule.MAX_ENTITY_CRAMMING, 8);
         });
-
-        // Initiating game state manager
-        gameStateManager = new GameStateManager();
     }
 
     @Override
@@ -114,15 +110,21 @@ public class SmashPlugin extends JavaPlugin {
         characterCache.clear();
     }
 
-    public void loadConfig() {
+    private void initConfig() {
         config = new Config();
 
-        config.set("config.min-players", 2, "Minimum amount of players needed to start a game");
+        config.set("config.min-players", 2);
 
         // Messages
-        config.set("config.messages.prefix", "§8[§6Smash§8]§r ", "The prefix of the plugin");
-        config.set("config.messages.permission-required", "Du hast keine Berechtigung, dies zu tun.", "The message when a player doesn't have the permission to do something");
-        config.set("config.messages.player-required", "Du musst ein Spieler sein, um dies zu tun.", "The message when a player isn't a player");
-        config.save();
+        config.set("config.messages.prefix", "<gold>Smash</gold> <dark_gray>|</dark_gray> ", "Only in MiniMessage format!");
+        config.set("config.messages.permission-required", "<red>Du hast keine Berechtigung, dies zu tun.</red>", "Only in MiniMessage format!");
+        config.set("config.messages.player-required", "<red>Du musst ein Spieler sein, um dies zu tun.</red>", "Only in MiniMessage format!");
+        config.set("config.messages.player-not-found", "<red>Der Spieler wurde nicht gefunden.</red>", "Only in MiniMessage format!");
+        config.set("config.messages.player-not-online", "<red>Der Spieler ist nicht online.</red>", "Only in MiniMessage format!");
+
+        if (!config.save()) {
+            return;
+        }
+        getLogger().info("Config file loaded!");
     }
 }

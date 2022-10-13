@@ -8,107 +8,76 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 public class Config {
 
     public final String CONFIG_FILE_NAME = "config.yml";
-    private final char separator = File.separatorChar;
-    public final String CONFIG_FILE_PATH = "plugins" + separator + "Smash" + separator;
+    public final String CONFIG_FILE_PATH = "plugins/Smash/";
     public File configFile;
     public FileConfiguration config;
 
     public Config() {
         File configFolder = new File(CONFIG_FILE_PATH);
-        CompletableFuture.runAsync(() -> {
-            try {
-                configFile = new File(configFolder, CONFIG_FILE_NAME);
-                if (configFolder.mkdirs()) {
-                    SmashPlugin.getPlugin().getLogger().info("[+] Config folder: " + configFolder.getPath());
-                }
-                if (configFile.createNewFile()) {
-                    SmashPlugin.getPlugin().getLogger().info("[+] Config file: " + configFile.getPath());
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+        try {
+            configFile = new File(configFolder, CONFIG_FILE_NAME);
+            if (configFolder.mkdirs()) {
+                SmashPlugin.getPlugin().getLogger().info("Created config folder.");
             }
-        }).thenAccept(Void -> config = SmashPlugin.getPlugin().getConfig()).join();
+            if (configFile.createNewFile()) {
+                SmashPlugin.getPlugin().getLogger().info("Created config file.");
+            }
+            config = SmashPlugin.getPlugin().getConfig();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public Optional<Set<String>> getKeys(boolean deep) {
-        return Optional.of(config.getKeys(deep));
+    public Set<String> getKeys(boolean deep) {
+        return config.getKeys(deep);
     }
 
-    public Optional<String> getString(String path) {
-        return Optional.ofNullable(config.getString(path));
+    public String getString(String path) {
+        return config.getString(path);
     }
 
-    public Optional<Integer> getInt(String path) {
-        return Optional.of(config.getInt(path));
+    public int getInt(String path) {
+        return config.getInt(path);
     }
 
-    public Optional<Double> getDouble(String path) {
-        return Optional.of(config.getDouble(path));
+    public double getDouble(String path) {
+        return config.getDouble(path);
     }
 
-    public Optional<Boolean> getBoolean(String path) {
-        return Optional.of(config.getBoolean(path));
+    public boolean getBoolean(String path) {
+        return config.getBoolean(path);
     }
 
-    public Optional<List<String>> getStringList(String path) {
-        return Optional.of(config.getStringList(path));
+    public Location getLocation(String path) {
+        return config.getLocation(path);
     }
 
-    public Optional<List<Integer>> getIntList(String path) {
-        return Optional.of(config.getIntegerList(path));
-    }
-
-    public Optional<List<Double>> getDoubleList(String path) {
-        return Optional.of(config.getDoubleList(path));
-    }
-
-    public Optional<List<?>> getList(String path) {
-        return Optional.ofNullable(config.getList(path));
-    }
-
-    public Optional<Location> getLocation(String path) {
-        return Optional.ofNullable(config.getLocation(path));
+    public void setLocation(String path, Location location) {
+        set(path, location);
     }
 
     public boolean containsNot(String path) {
         return !config.contains(path);
     }
 
-    public <K extends String, V> void set(@NotNull K key, @NotNull V value, String description) {
+    public <V> void set(@NotNull String key, @NotNull V value, String... comment) {
         if (containsNot(key)) {
             config.set(key, value);
-            config.setComments(key, List.of(description));
+            config.setInlineComments(key, List.of(comment));
         }
     }
 
-    public void setLocation(String name, Location location) {
-        if (containsNot("maps." + name)) {
-            config.set("maps." + name, location);
+    public boolean save() {
+        try {
+            config.save(configFile);
+            return true;
+        } catch (IOException e) {
+            throw new RuntimeException("Could not save config file", e);
         }
-    }
-
-    public void save() {
-        CompletableFuture.runAsync(() -> {
-            try {
-                config.save(configFile);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }).join();
-    }
-
-    public void close() {
-        config = null;
-    }
-
-    public void reload() {
-        config = SmashPlugin.getPlugin().getConfig();
     }
 }

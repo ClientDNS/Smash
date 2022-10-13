@@ -1,37 +1,39 @@
 package de.clientdns.smash.character;
 
 import de.clientdns.smash.character.enums.Character;
+import de.clientdns.smash.config.Constants;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+
+import static net.kyori.adventure.text.Component.text;
 
 public class CharacterCache {
 
-    private static Map<Player, Character> playerCharacters;
+    private final Map<Player, Character> playerCharacters;
 
     public CharacterCache() {
         playerCharacters = new HashMap<>();
     }
 
-    public void put(Player player, Character character) {
-        playerCharacters.put(player, character);
-    }
-
-    public void replace(Player player, Character character) {
-        playerCharacters.replace(player, character);
-    }
-
-    public Optional<Character> get(Player player) {
-        return Optional.ofNullable(playerCharacters.get(player));
-    }
-
-    public void remove(Player player) {
-        playerCharacters.remove(player);
+    public void putOrReplace(Player player, Character character) {
+        if (!playerCharacters.containsKey(player)) {
+            playerCharacters.put(player, character);
+        } else {
+            playerCharacters.replace(player, character);
+        }
+        player.sendMessage(Constants.prefix().append(text("Du hast den Charakter ", NamedTextColor.GRAY).append(character.getName()).append(text(" ausgewählt!", NamedTextColor.GRAY))));
     }
 
     public void clear() {
         playerCharacters.clear();
+    }
+
+    public Character chooseRandom() {
+        SecureRandom random = new SecureRandom();
+        return Character.values()[random.nextInt(Character.values().length)];
     }
 }

@@ -1,7 +1,7 @@
 package de.clientdns.smash.inventories;
 
+import de.clientdns.smash.character.enums.Character;
 import de.clientdns.smash.util.ItemStackUtil;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -10,22 +10,25 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import static net.kyori.adventure.text.Component.empty;
+import static net.kyori.adventure.text.Component.text;
+
 public class CharacterInventory {
 
-    public static final ItemStack MARIO = new ItemStackUtil(Material.PLAYER_HEAD).name(Component.text("Mario", NamedTextColor.DARK_RED)).build();
-    public static final ItemStack DONKEY_KONG = new ItemStackUtil(Material.PLAYER_HEAD).name(Component.text("Donkey Kong", NamedTextColor.DARK_RED)).build();
-    public static final ItemStack FLASH = new ItemStackUtil(Material.PLAYER_HEAD).name(Component.text("Flash", NamedTextColor.GOLD)).build();
-    public static final ItemStack PIKACHU = new ItemStackUtil(Material.PLAYER_HEAD).name(Component.text("Pikachu", NamedTextColor.GOLD)).build();
-    public static final ItemStack SUPERMAN = new ItemStackUtil(Material.PLAYER_HEAD).name(Component.text("Superman", NamedTextColor.GOLD)).build();
-    public static final ItemStack LINK = new ItemStackUtil(Material.PLAYER_HEAD).name(Component.text("Link", NamedTextColor.DARK_GREEN)).build();
-    private static final ItemStack EXPLANATION = new ItemStackUtil(Material.OAK_WALL_SIGN).name(Component.text("Jeder Charakter verfügt über andere Fähigkeiten, wähle bedacht.")).build();
+    public static final ItemStack MARIO = new ItemStackUtil(Material.PLAYER_HEAD, 1, Character.MARIO.getName()).build();
+    public static final ItemStack DONKEY_KONG = new ItemStackUtil(Material.PLAYER_HEAD, 1, Character.DONKEY_KONG.getName()).build();
+    public static final ItemStack FLASH = new ItemStackUtil(Material.PLAYER_HEAD, 1, Character.FLASH.getName()).build();
+    public static final ItemStack PIKACHU = new ItemStackUtil(Material.PLAYER_HEAD, 1, Character.PIKACHU.getName()).build();
+    public static final ItemStack SUPERMAN = new ItemStackUtil(Material.PLAYER_HEAD, 1, Character.SUPERMAN.getName()).build();
+    public static final ItemStack LINK = new ItemStackUtil(Material.PLAYER_HEAD, 1, Character.LINK.getName()).build();
+    private static final ItemStack EXPLANATION = new ItemStackUtil(Material.OAK_WALL_SIGN).loreLines(empty(), text("Jeder Charakter verfügt über andere Fähigkeiten, wähle bedacht.", NamedTextColor.GRAY), empty()).build();
 
     public static void open(@NotNull Player player) {
-        player.openInventory(create());
+        player.openInventory(CharacterInventory.create());
     }
 
     private static @NotNull Inventory create() {
-        Inventory inventory = Bukkit.createInventory(null, 27, Component.text("Charaktere", NamedTextColor.GOLD));
+        Inventory inventory = Bukkit.createInventory(null, 27, text("Charaktere", NamedTextColor.GOLD));
 
         // Mario - Slot 1
         inventory.setItem(1, MARIO);

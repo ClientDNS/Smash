@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class GameStateChangeEvent extends Event {
 
-    private static final HandlerList HANDLER_LIST = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
     private final GameState state;
 
     /**
@@ -27,14 +27,19 @@ public class GameStateChangeEvent extends Event {
     }
 
     public static HandlerList getHandlerList() {
-        return HANDLER_LIST;
+        return handlers;
     }
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return HANDLER_LIST;
+        return handlers;
     }
 
+    /**
+     * Returns the new game state.
+     *
+     * @return The new game state
+     */
     public GameState getGameState() {
         return state;
     }

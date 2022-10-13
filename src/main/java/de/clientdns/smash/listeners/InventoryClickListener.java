@@ -1,15 +1,14 @@
 package de.clientdns.smash.listeners;
 
 import de.clientdns.smash.SmashPlugin;
-import de.clientdns.smash.character.PlayerManager;
+import de.clientdns.smash.character.CharacterCache;
 import de.clientdns.smash.character.enums.Character;
-import de.clientdns.smash.inventories.CharacterInventory;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,43 +17,49 @@ public class InventoryClickListener implements Listener {
     @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull InventoryClickEvent event) {
-        if (event.getClick() != ClickType.LEFT) {
+        if (event.getClickedInventory() == null) {
             event.setCancelled(true);
+            return;
         }
 
         if (event.getCurrentItem() == null) {
+            event.setCancelled(true);
             return;
         }
-        event.setCancelled(true);
         ItemStack item = event.getCurrentItem();
 
-        Player player = (Player) event.getWhoClicked();
-        InventoryView view = event.getView();
-
-        PlayerManager playerManager = new PlayerManager(player);
-
-        if (SmashPlugin.getPlugin().getGameStateManager().isLobbyState()) {
-            if (item.displayName().equals(CharacterInventory.MARIO.displayName())) {
-                player.getInventory().close();
-                playerManager.setCharacter(Character.MARIO);
-            } else if (item.displayName().equals(CharacterInventory.DONKEY_KONG.displayName())) {
-                player.getInventory().close();
-                playerManager.setCharacter(Character.DONKEY_KONG);
-            } else if (item.displayName().equals(CharacterInventory.FLASH.displayName())) {
-                player.getInventory().close();
-                playerManager.setCharacter(Character.FLASH);
-            } else if (item.displayName().equals(CharacterInventory.PIKACHU.displayName())) {
-                player.getInventory().close();
-                playerManager.setCharacter(Character.PIKACHU);
-            } else if (item.displayName().equals(CharacterInventory.SUPERMAN.displayName())) {
-                player.getInventory().close();
-                playerManager.setCharacter(Character.SUPERMAN);
-            } else if (item.displayName().equals(CharacterInventory.LINK.displayName())) {
-                player.getInventory().close();
-                playerManager.setCharacter(Character.LINK);
-            }
-        } else {
+        if (item.getItemMeta() == null) {
             event.setCancelled(true);
+            return;
         }
+        Component displayName = item.getItemMeta().displayName();
+
+        if (event.getClick() != ClickType.LEFT) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if (!SmashPlugin.getPlugin().getGameStateManager().isLobbyState()) {
+            event.setCancelled(true);
+            return;
+        }
+
+        Player player = (Player) event.getWhoClicked();
+        CharacterCache cache = SmashPlugin.getPlugin().getCharacterCache();
+
+        if (Character.MARIO.getName().equals(displayName)) {
+            cache.putOrReplace(player, Character.MARIO);
+        } else if (Character.DONKEY_KONG.getName().equals(displayName)) {
+            cache.putOrReplace(player, Character.DONKEY_KONG);
+        } else if (Character.FLASH.getName().equals(displayName)) {
+            cache.putOrReplace(player, Character.FLASH);
+        } else if (Character.PIKACHU.getName().equals(displayName)) {
+            cache.putOrReplace(player, Character.PIKACHU);
+        } else if (Character.SUPERMAN.getName().equals(displayName)) {
+            cache.putOrReplace(player, Character.SUPERMAN);
+        } else if (Character.LINK.getName().equals(displayName)) {
+            cache.putOrReplace(player, Character.LINK);
+        }
+        event.setCancelled(true);
     }
 }
