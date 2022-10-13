@@ -4,44 +4,55 @@ import de.clientdns.smash.SmashPlugin;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MapSetup {
 
     private final Player player;
     private final String mapName;
-    private final Location[] spawnLocations;
+    private final ArrayList<Location> spawnLocations;
 
     public MapSetup(Player player, String mapName) {
         this.player = player;
         this.mapName = mapName;
-        this.spawnLocations = new Location[6];
+        this.spawnLocations = new ArrayList<>();
     }
 
     public void start() {
-        SmashPlugin.getPlugin().getSetupManager().add(player, this);
+        SmashPlugin.getPlugin().getSetupManager().add(this.player, this);
     }
 
     public void delete() {
-        SmashPlugin.getPlugin().getSetupManager().remove(player);
+        SmashPlugin.getPlugin().getSetupManager().remove(this.player);
+    }
+
+    public boolean save() throws IllegalStateException {
+        if (this.spawnLocations.size() < 2) {
+            throw new IllegalStateException("Not enough spawn locations, min 2, you " + this.spawnLocations.size());
+        }
+        return true;
     }
 
     public void finish() {
-        // TODO => Save map
-        delete();
+        if (this.save()) {
+            this.delete();
+        }
     }
 
-    public void setSpawnLocation(int index, Location location) {
-        spawnLocations[index] = location;
+    public void addSpawnLocation(Location location) {
+        this.spawnLocations.add(location);
     }
 
-    public Location getSpawnLocation(int index) {
-        return spawnLocations[index];
+    public List<Location> getSpawnLocations() {
+        return this.spawnLocations;
     }
 
     public String getMapName() {
-        return mapName;
+        return this.mapName;
     }
 
     public Player getPlayer() {
-        return player;
+        return this.player;
     }
 }

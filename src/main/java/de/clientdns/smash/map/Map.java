@@ -12,4 +12,12 @@ public class Map {
         this.name = name;
         this.spawnLocations = new Location[spawnLocations.length];
     }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public Location[] getSpawnLocations() {
+        return this.spawnLocations;
+    }
 }

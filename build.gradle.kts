@@ -18,8 +18,8 @@ dependencies {
 }
 
 group = "de.clientdns"
-version = "1.0-SNAPSHOT"
-description = "Smash"
+version = "1.0"
+description = "The plugin for Super Smash Bros but in Minecraft."
 java.sourceCompatibility = JavaVersion.VERSION_17
 java.targetCompatibility = JavaVersion.VERSION_17
 

@@ -1,5 +1,5 @@
 name: smash
-version: 1.0-SNAPSHOT
+version: 1.0
 description: "The plugin for Super Smash Bros but in Minecraft."
 author: "ClientDNS"
 main: "de.clientdns.smash.SmashPlugin"
