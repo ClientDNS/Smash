@@ -39,26 +39,30 @@ public class InventoryClickListener implements Listener {
             return;
         }
 
-        if (!SmashPlugin.getPlugin().getGameStateManager().isLobbyState()) {
+        Player player = (Player) event.getWhoClicked();
+        if (SmashPlugin.getPlugin().getGameStateManager().isLobbyState()) {
+            CharacterCache cache = SmashPlugin.getPlugin().getCharacterCache();
+            if (Character.MARIO.getName().equals(displayName)) {
+                cache.put(player, Character.MARIO);
+            } else if (Character.DONKEY_KONG.getName().equals(displayName)) {
+                cache.put(player, Character.DONKEY_KONG);
+            } else if (Character.FLASH.getName().equals(displayName)) {
+                cache.put(player, Character.FLASH);
+            } else if (Character.PIKACHU.getName().equals(displayName)) {
+                cache.put(player, Character.PIKACHU);
+            } else if (Character.SUPERMAN.getName().equals(displayName)) {
+                cache.put(player, Character.SUPERMAN);
+            } else if (Character.LINK.getName().equals(displayName)) {
+                cache.put(player, Character.LINK);
+            }
             event.setCancelled(true);
             return;
-        }
-
-        Player player = (Player) event.getWhoClicked();
-        CharacterCache cache = SmashPlugin.getPlugin().getCharacterCache();
-
-        if (Character.MARIO.getName().equals(displayName)) {
-            cache.putOrReplace(player, Character.MARIO);
-        } else if (Character.DONKEY_KONG.getName().equals(displayName)) {
-            cache.putOrReplace(player, Character.DONKEY_KONG);
-        } else if (Character.FLASH.getName().equals(displayName)) {
-            cache.putOrReplace(player, Character.FLASH);
-        } else if (Character.PIKACHU.getName().equals(displayName)) {
-            cache.putOrReplace(player, Character.PIKACHU);
-        } else if (Character.SUPERMAN.getName().equals(displayName)) {
-            cache.putOrReplace(player, Character.SUPERMAN);
-        } else if (Character.LINK.getName().equals(displayName)) {
-            cache.putOrReplace(player, Character.LINK);
+        } else if (SmashPlugin.getPlugin().getGameStateManager().isIngameState()) {
+            event.setCancelled(true);
+            return;
+        } else if (SmashPlugin.getPlugin().getGameStateManager().isEndState()) {
+            event.setCancelled(false);
+            return;
         }
         event.setCancelled(true);
     }

@@ -2,6 +2,8 @@ package de.clientdns.smash.util;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.entity.Player;
 
 public class PlayerUtil {
 
@@ -11,7 +13,9 @@ public class PlayerUtil {
      * @param message The message to send as a {@link Component}.
      */
     public static void actionbar(Component message) {
-        Bukkit.getOnlinePlayers().forEach(player -> player.sendActionBar(message));
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendActionBar(message);
+        }
     }
 
     /**
@@ -30,6 +34,21 @@ public class PlayerUtil {
      * @param message The message to send as a {@link Component}.
      */
     public static void broadcast(Component message) {
-        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(message));
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendMessage(message);
+        }
+    }
+
+    /**
+     * Sends a message to every player on the server.
+     *
+     * @param message The message to send as a {@link Component}.
+     */
+    public static void broadcastTo(Component message, GameMode requiredGameMode) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getGameMode().equals(requiredGameMode)) {
+                player.sendMessage(message);
+            }
+        }
     }
 }

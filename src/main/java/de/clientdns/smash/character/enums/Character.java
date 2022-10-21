@@ -3,6 +3,7 @@ package de.clientdns.smash.character.enums;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
+import java.security.SecureRandom;
 import java.util.List;
 
 import static net.kyori.adventure.text.Component.text;
@@ -24,6 +25,11 @@ public enum Character {
         this.id = id;
         this.name = name;
         this.abilities = abilities;
+    }
+
+    public static Character random() {
+        SecureRandom random = new SecureRandom();
+        return Character.values()[random.nextInt(Character.values().length)];
     }
 
     public int getId() {

@@ -1,6 +1,9 @@
 build/
 .gradle/
 
+### MockBukkit Tests ###
+plugins/Smash/
+
 ### IntelliJ IDEA ###
 .idea/
 *.iws

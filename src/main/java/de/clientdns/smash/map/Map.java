@@ -20,4 +20,12 @@ public class Map {
     public Location[] getSpawnLocations() {
         return this.spawnLocations;
     }
+
+    public Location getSpawnLocation(int index) {
+        return this.spawnLocations[index];
+    }
+
+    public void setSpawnLocation(int index, Location location) {
+        this.spawnLocations[index] = location;
+    }
 }
