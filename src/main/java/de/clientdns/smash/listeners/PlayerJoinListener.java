@@ -1,7 +1,7 @@
 package de.clientdns.smash.listeners;
 
 import de.clientdns.smash.SmashPlugin;
-import de.clientdns.smash.config.Constants;
+import de.clientdns.smash.config.ConfigValues;
 import de.clientdns.smash.countdown.LobbyCountdown;
 import de.clientdns.smash.util.ItemStackUtil;
 import de.clientdns.smash.util.PlayerUtil;
@@ -22,40 +22,33 @@ import static net.kyori.adventure.text.Component.text;
 
 public class PlayerJoinListener implements Listener {
 
+    private final ItemStack characters = new ItemStackUtil(Material.CHEST, 1, text("Charaktere", NamedTextColor.GOLD)).loreLines(empty(), text("Ändere deinen Charakter", NamedTextColor.GRAY), empty()).build();
+    private final ItemStack maps = new ItemStackUtil(Material.MAP, 1, text("Maps", NamedTextColor.GOLD)).loreLines(empty(), text("Stimme für eine Map ab", NamedTextColor.GRAY), empty()).build();
+
     @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull PlayerJoinEvent event) {
         Player player = event.getPlayer();
-
         if (SmashPlugin.getPlugin().getGameStateManager().isLobbyState()) {
             player.setGameMode(GameMode.SURVIVAL);
-
             player.setHealth(20);
             player.setFoodLevel(20);
-
             player.setExp(0);
             player.setLevel(0);
-
             player.setAllowFlight(false);
             player.setFlying(false);
-
-            // Remove 1.9+ cooldown
-            player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(1024);
+            player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(1024); // Remove 1.9+ cooldown
             player.saveData();
-
             if (!player.getInventory().isEmpty()) player.getInventory().clear();
 
-            ItemStack characters = new ItemStackUtil(Material.CHEST, 1, text("Charaktere", NamedTextColor.GOLD)).loreLines(empty(), text("Ändere deinen Charakter", NamedTextColor.GRAY), empty()).build();
             player.getInventory().setItem(2, characters);
-
-            ItemStack maps = new ItemStackUtil(Material.MAP, 1, text("Maps", NamedTextColor.GOLD)).loreLines(empty(), text("Stimme für eine Map ab", NamedTextColor.GRAY), empty()).build();
             player.getInventory().setItem(6, maps);
 
             int online = Bukkit.getOnlinePlayers().size();
-            int minPlayers = Constants.minPlayers();
+            int minPlayers = ConfigValues.minPlayers();
             int maxPlayers = Bukkit.getMaxPlayers();
 
-            PlayerUtil.broadcast(text(player.getName() + " ist dem Server beigetreten.", NamedTextColor.GREEN));
+            PlayerUtil.broadcast(text(player.getName() + " ist dem Server beigetreten. (" + online + "/" + maxPlayers + ")", NamedTextColor.GREEN));
             if (online >= minPlayers) {
                 LobbyCountdown.start(); // Start countdown if minimum players are reached
             }

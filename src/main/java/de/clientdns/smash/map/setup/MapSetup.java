@@ -1,6 +1,9 @@
 package de.clientdns.smash.map.setup;
 
-import de.clientdns.smash.SmashPlugin;
+import de.clientdns.smash.events.SetupBeginEvent;
+import de.clientdns.smash.events.SetupDeleteEvent;
+import de.clientdns.smash.exceptions.SetupFailedException;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -20,17 +23,18 @@ public class MapSetup {
     }
 
     public void start() {
-        SmashPlugin.getPlugin().getSetupManager().add(this.player, this);
+        Bukkit.getPluginManager().callEvent(new SetupBeginEvent(player, this));
     }
 
     public void delete() {
-        SmashPlugin.getPlugin().getSetupManager().remove(this.player);
+        Bukkit.getPluginManager().callEvent(new SetupDeleteEvent(player, this));
     }
 
-    public boolean save() throws IllegalStateException {
+    public boolean save() throws SetupFailedException {
         if (this.spawnLocations.size() < 2) {
-            throw new IllegalStateException("Not enough spawn locations, min 2, you " + this.spawnLocations.size());
+            throw new SetupFailedException("Not enough spawn locations. (min: 2, you: " + this.spawnLocations.size() + ")");
         }
+        delete();
         return true;
     }
 

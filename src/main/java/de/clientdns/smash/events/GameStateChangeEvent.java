@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 public class GameStateChangeEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
+    private final GameState previous;
     private final GameState state;
 
     /**
@@ -22,7 +23,8 @@ public class GameStateChangeEvent extends Event {
      *
      * @param state The new game state
      */
-    public GameStateChangeEvent(GameState state) {
+    public GameStateChangeEvent(GameState previous, GameState state) {
+        this.previous = previous;
         this.state = state;
     }
 
@@ -33,6 +35,15 @@ public class GameStateChangeEvent extends Event {
     @Override
     public @NotNull HandlerList getHandlers() {
         return handlers;
+    }
+
+    /**
+     * Returns the game state before.
+     *
+     * @return The previous game state
+     */
+    public GameState getPrevious() {
+        return previous;
     }
 
     /**

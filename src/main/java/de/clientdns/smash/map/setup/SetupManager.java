@@ -2,13 +2,13 @@ package de.clientdns.smash.map.setup;
 
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SetupManager {
 
-    private final Map<Player, MapSetup> mapSetups = new HashMap<>();
+    private final Map<Player, MapSetup> mapSetups = new ConcurrentHashMap<>();
 
     public void add(Player player, MapSetup setup) {
         this.mapSetups.put(player, setup);
@@ -20,7 +20,7 @@ public class SetupManager {
 
     public Optional<MapSetup> get(Player player) {
         if (this.mapSetups.containsKey(player)) {
-            return Optional.of(this.mapSetups.get(player));
+            return Optional.ofNullable(this.mapSetups.get(player));
         }
         return Optional.empty();
     }

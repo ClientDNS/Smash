@@ -48,6 +48,8 @@ public class CharacterInventory {
         // Link - Slot 7
         inventory.setItem(7, LINK);
 
+        System.out.println(EXPLANATION.toString());
+
         // Explanation - Slot 22
         inventory.setItem(22, EXPLANATION);
 

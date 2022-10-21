@@ -1,6 +1,7 @@
 package de.clientdns.smash.util;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -9,12 +10,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
-
-import static net.kyori.adventure.text.Component.empty;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class ItemStackUtil {
-
     private ItemStack itemStack;
     private ItemMeta itemMeta;
 
@@ -37,16 +36,17 @@ public class ItemStackUtil {
      * @param amount   The amount of the item.
      */
     public ItemStackUtil(Material material, int amount) {
-        this(material, amount, empty());
+        this(material, amount, Component.empty());
     }
 
     public ItemStackUtil(Material material, int amount, Component displayName) {
         if (material == null) {
             throw new NullPointerException("Material must not be null.");
+        } else {
+            this.itemStack = new ItemStack(material, amount);
+            this.itemMeta = this.itemStack.getItemMeta();
+            this.itemMeta.displayName(displayName);
         }
-        itemStack = new ItemStack(material, amount);
-        itemMeta = itemStack.getItemMeta();
-        itemMeta.displayName(displayName);
     }
 
     /**
@@ -56,8 +56,25 @@ public class ItemStackUtil {
      * @return The ItemStackUtil instance.
      */
     public ItemStackUtil name(@NotNull Component name) {
-        itemMeta.displayName(name);
+        this.itemMeta.displayName(name);
         return this;
+    }
+
+    /**
+     * Gets the display name of the item.
+     *
+     * @return The display name of the item.
+     */
+    public String name() {
+        return LegacyComponentSerializer.legacyAmpersand().serialize(Objects.requireNonNull(itemMeta.displayName()));
+    }
+
+    public int amount() {
+        return this.itemStack.getAmount();
+    }
+
+    public Material material() {
+        return this.itemStack.getType();
     }
 
     /**
@@ -67,8 +84,17 @@ public class ItemStackUtil {
      * @return The ItemStackUtil instance.
      */
     public ItemStackUtil unbreakable(boolean unbreakable) {
-        itemMeta.setUnbreakable(unbreakable);
+        this.itemMeta.setUnbreakable(unbreakable);
         return this;
+    }
+
+    /**
+     * Gets the unbreakable state of the item.
+     *
+     * @return The unbreakable state of the item.
+     */
+    public boolean unbreakable() {
+        return this.itemMeta.isUnbreakable();
     }
 
     /**
@@ -80,37 +106,42 @@ public class ItemStackUtil {
     public ItemStackUtil loreLines(@NotNull Component @NotNull ... lines) {
         if (lines.length == 0) {
             throw new IllegalArgumentException("Lore lines must not be empty.");
+        } else {
+            this.itemMeta.lore(List.of(lines));
+            return this;
         }
-        itemMeta.lore(List.of(lines));
-        return this;
     }
 
     /**
      * Sets the enchantments of the item.
      *
-     * @param enchantments The enchantments.
+     * @param enchantments The enchantments of the item.
      * @return The ItemStackUtil instance.
      */
     public ItemStackUtil enchants(@NotNull Map<Enchantment, Integer> enchantments) {
         for (Enchantment enchantment : enchantments.keySet()) {
-            itemMeta.addEnchant(enchantment, enchantments.get(enchantment), true); // Ignore level limit
+            this.itemMeta.addEnchant(enchantment, enchantments.get(enchantment), true);
         }
         return this;
     }
 
+    public Map<Enchantment, Integer> enchants() {
+        return this.itemMeta.getEnchants();
+    }
+
     /**
-     * Builds the item.
+     * Builds the item and returns it.
      *
      * @return The item as {@link ItemStack}.
      */
     public ItemStack build() {
-        if (itemStack == null) {
+        if (this.itemStack == null) {
             return null;
-        }
-        if (itemMeta == null) {
+        } else if (this.itemMeta == null) {
             return null;
+        } else {
+            this.itemStack.setItemMeta(this.itemMeta);
+            return this.itemStack;
         }
-        itemStack.setItemMeta(itemMeta);
-        return itemStack;
     }
 }

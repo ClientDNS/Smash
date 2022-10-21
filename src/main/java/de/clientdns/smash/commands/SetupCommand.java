@@ -1,7 +1,7 @@
 package de.clientdns.smash.commands;
 
 import de.clientdns.smash.SmashPlugin;
-import de.clientdns.smash.config.Constants;
+import de.clientdns.smash.config.ConfigValues;
 import de.clientdns.smash.map.setup.MapSetup;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
@@ -22,57 +22,57 @@ public class SetupCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof Player player) {
             if (!player.hasPermission("smash.setup")) {
-                sender.sendMessage(Constants.prefix().append(Constants.permissionRequired()));
+                sender.sendMessage(ConfigValues.prefix().append(ConfigValues.permissionRequired()));
                 return false;
             }
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("create")) {
-                    player.sendMessage(Constants.prefix().append(text("Du hast einen Namen für die Map vergessen. :D", NamedTextColor.GRAY)));
+                    player.sendMessage(ConfigValues.prefix().append(text("Du hast einen Namen für die Map vergessen. :D", NamedTextColor.GRAY)));
                     return false;
                 }
                 if (args[0].equalsIgnoreCase("abort")) {
                     if (SmashPlugin.getPlugin().getSetupManager().get(player).isPresent()) {
                         MapSetup mapSetup = SmashPlugin.getPlugin().getSetupManager().get(player).get();
                         mapSetup.delete();
-                        player.sendMessage(Constants.prefix().append(text("Du hast die Map-Erstellung abgebrochen.", NamedTextColor.GREEN)));
+                        player.sendMessage(ConfigValues.prefix().append(text("Du hast die Map-Erstellung abgebrochen.", NamedTextColor.GREEN)));
                     } else {
-                        player.sendMessage(Constants.prefix().append(text("Du hast keine Map-Erstellung gestartet.", NamedTextColor.RED)));
+                        player.sendMessage(ConfigValues.prefix().append(text("Du hast keine Map-Erstellung gestartet.", NamedTextColor.RED)));
                     }
                     return true;
                 } else if (args[0].equalsIgnoreCase("finish")) {
                     if (SmashPlugin.getPlugin().getSetupManager().get(player).isPresent()) {
                         MapSetup mapSetup = SmashPlugin.getPlugin().getSetupManager().get(player).get();
                         mapSetup.finish();
-                        player.sendMessage(Constants.prefix().append(text("Du hast die Map erstellt.", NamedTextColor.GREEN)));
+                        player.sendMessage(ConfigValues.prefix().append(text("Du hast die Map erstellt.", NamedTextColor.GREEN)));
                     } else {
-                        player.sendMessage(Constants.prefix().append(text("Du hast keine Map-Erstellung gestartet.", NamedTextColor.RED)));
+                        player.sendMessage(ConfigValues.prefix().append(text("Du hast keine Map-Erstellung gestartet.", NamedTextColor.RED)));
                     }
                     return true;
                 } else {
-                    sender.sendMessage(Constants.prefix().append(text("Unbekannter Befehl.", NamedTextColor.RED)));
+                    sender.sendMessage(ConfigValues.prefix().append(text("Unbekannter Befehl.", NamedTextColor.RED)));
                 }
             } else if (args.length == 2) {
                 String mapName = args[1];
                 if (mapName.length() > 16) {
-                    player.sendMessage(Constants.prefix().append(text("Der Name der Map darf nicht länger als 16 Zeichen sein.", NamedTextColor.RED)));
+                    player.sendMessage(ConfigValues.prefix().append(text("Der Name der Map darf nicht länger als 16 Zeichen sein.", NamedTextColor.RED)));
                     return false;
                 }
                 MapSetup setup = new MapSetup(player, mapName);
                 if (args[0].equalsIgnoreCase("create")) {
                     if (SmashPlugin.getPlugin().getSetupManager().get(player).isEmpty()) {
                         setup.start();
-                        sender.sendMessage(Constants.prefix().append(text("Map-Erstellung '" + mapName + "' gestartet.", NamedTextColor.GREEN)));
+                        sender.sendMessage(ConfigValues.prefix().append(text("Map-Erstellung '" + mapName + "' gestartet.", NamedTextColor.GREEN)));
                     } else {
-                        sender.sendMessage(Constants.prefix().append(text("Map-Erstellung '" + mapName + "' läuft bereits.", NamedTextColor.RED)));
+                        sender.sendMessage(ConfigValues.prefix().append(text("Map-Erstellung '" + mapName + "' läuft bereits.", NamedTextColor.RED)));
                     }
                 } else {
-                    sender.sendMessage(Constants.prefix().append(text("Unbekannter Befehl.", NamedTextColor.RED)));
+                    sender.sendMessage(ConfigValues.prefix().append(text("Unbekannter Befehl.", NamedTextColor.RED)));
                 }
             } else {
-                sender.sendMessage(Constants.prefix().append(text("/setup <create> <map name (max. 16)>", NamedTextColor.RED)));
+                sender.sendMessage(ConfigValues.prefix().append(text("/setup <create> <map name (max. 16)>", NamedTextColor.RED)));
             }
         } else {
-            sender.sendMessage(Constants.prefix().append(Constants.playerRequired()));
+            sender.sendMessage(ConfigValues.prefix().append(ConfigValues.playerRequired()));
         }
         return false;
     }

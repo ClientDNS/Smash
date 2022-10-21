@@ -37,6 +37,11 @@ public class Config {
         return config.getKeys(deep);
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> T get(String path) {
+        return (T) config.get(path);
+    }
+
     public String getString(String path) {
         return config.getString(path);
     }
@@ -45,20 +50,12 @@ public class Config {
         return config.getInt(path);
     }
 
-    public double getDouble(String path) {
-        return config.getDouble(path);
-    }
-
-    public boolean getBoolean(String path) {
+    public boolean getBool(String path) {
         return config.getBoolean(path);
     }
 
     public Location getLocation(String path) {
         return config.getLocation(path);
-    }
-
-    public void setLocation(String path, Location location) {
-        set(path, location);
     }
 
     public boolean containsNot(String path) {
