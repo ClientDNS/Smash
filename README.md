@@ -4,7 +4,6 @@
 
 ## Developing on Smash
 
-<br>
 Clone the repository:
 
 ```shell
@@ -12,7 +11,7 @@ git clone https://github.com/ClientDNS/Smash
 cd Smash
 ```
 
-To update the source code to the latest commit, run the following command inside the `osu` directory:
+To update the source code to the latest commit, run the following command inside the `Smash` directory:
 
 ```shell
 git pull
