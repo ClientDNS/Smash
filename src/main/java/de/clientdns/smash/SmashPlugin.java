@@ -6,6 +6,8 @@ import de.clientdns.smash.config.Config;
 import de.clientdns.smash.gamestate.GameStateManager;
 import de.clientdns.smash.listeners.*;
 import de.clientdns.smash.listeners.custom.GameStateChangeListener;
+import de.clientdns.smash.listeners.custom.SetupBeginListener;
+import de.clientdns.smash.listeners.custom.SetupFinishListener;
 import de.clientdns.smash.map.setup.SetupManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
@@ -72,13 +74,17 @@ public final class SmashPlugin extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
         this.getServer().getPluginManager().registerEvents(new EntityPickupItemListener(), this);
         this.getServer().getPluginManager().registerEvents(new FoodLevelChangeListener(), this);
-        this.getServer().getPluginManager().registerEvents(new GameStateChangeListener(), this); // custom event
         this.getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerDropItemListener(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerItemHeldListener(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
+
+        // custom events
+        this.getServer().getPluginManager().registerEvents(new GameStateChangeListener(), this);
+        this.getServer().getPluginManager().registerEvents(new SetupBeginListener(), this);
+        this.getServer().getPluginManager().registerEvents(new SetupFinishListener(), this);
 
         SetupCommand setupCommand = new SetupCommand();
         Objects.requireNonNull(getCommand("setup")).setExecutor(setupCommand);
