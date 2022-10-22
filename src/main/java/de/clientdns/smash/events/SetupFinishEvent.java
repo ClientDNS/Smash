@@ -6,13 +6,13 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public class SetupDeleteEvent extends Event {
+public class SetupFinishEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
     private final Player player;
     private final MapSetup setup;
 
-    public SetupDeleteEvent(Player player, MapSetup setup) {
+    public SetupFinishEvent(Player player, MapSetup setup) {
         this.player = player;
         this.setup = setup;
     }

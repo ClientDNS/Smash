@@ -17,7 +17,7 @@ public class GameStateManager {
 
     public void setCurrentState(GameState state) {
         this.currentState = state;
-        Bukkit.getPluginManager().callEvent(new GameStateChangeEvent(this.currentState, state));
+        Bukkit.getPluginManager().callEvent(new GameStateChangeEvent(this.currentState));
     }
 
     public boolean isLobbyState() {

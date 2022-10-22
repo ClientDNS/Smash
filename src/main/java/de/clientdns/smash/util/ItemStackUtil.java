@@ -14,6 +14,7 @@ import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class ItemStackUtil {
+
     private ItemStack itemStack;
     private ItemMeta itemMeta;
 
