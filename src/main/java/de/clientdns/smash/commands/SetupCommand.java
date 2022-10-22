@@ -30,16 +30,7 @@ public class SetupCommand implements CommandExecutor, TabCompleter {
                     player.sendMessage(ConfigValues.prefix().append(text("Du hast einen Namen für die Map vergessen. :D", NamedTextColor.GRAY)));
                     return false;
                 }
-                if (args[0].equalsIgnoreCase("abort")) {
-                    if (SmashPlugin.getPlugin().getSetupManager().get(player).isPresent()) {
-                        MapSetup mapSetup = SmashPlugin.getPlugin().getSetupManager().get(player).get();
-                        mapSetup.delete();
-                        player.sendMessage(ConfigValues.prefix().append(text("Du hast die Map-Erstellung abgebrochen.", NamedTextColor.GREEN)));
-                    } else {
-                        player.sendMessage(ConfigValues.prefix().append(text("Du hast keine Map-Erstellung gestartet.", NamedTextColor.RED)));
-                    }
-                    return true;
-                } else if (args[0].equalsIgnoreCase("finish")) {
+                if (args[0].equalsIgnoreCase("finish")) {
                     if (SmashPlugin.getPlugin().getSetupManager().get(player).isPresent()) {
                         MapSetup mapSetup = SmashPlugin.getPlugin().getSetupManager().get(player).get();
                         mapSetup.finish();
@@ -81,7 +72,7 @@ public class SetupCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         if (sender.hasPermission("smash.setup")) {
             if (args.length == 1) {
-                return Stream.of("create", "abort", "finish").filter(s -> s.startsWith(args[0])).toList();
+                return Stream.of("create", "finish").filter(s -> s.startsWith(args[0])).toList();
             }
         }
         return List.of();
