@@ -17,6 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 
 public final class SmashPlugin extends JavaPlugin {
@@ -27,7 +28,7 @@ public final class SmashPlugin extends JavaPlugin {
     private SetupManager setupManager;
 
     public SmashPlugin() {
-        super();
+        super(); // This constructor is needed for MockBukkit to work properly
     }
 
     private SmashPlugin(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
@@ -126,8 +127,13 @@ public final class SmashPlugin extends JavaPlugin {
             this.config.set("messages.permission-required", "<red>Du hast keine Berechtigung, dies zu tun.</red>", "Only in MiniMessage format!");
             this.config.set("messages.player-required", "<red>Du musst ein Spieler sein, um dies zu tun.</red>", "Only in MiniMessage format!");
             this.config.set("messages.player-not-found", "<red>Der Spieler wurde nicht gefunden.</red>", "Only in MiniMessage format!");
-            if (this.config.save()) {
-                getLogger().info("Config file loaded!");
+            try {
+                if (this.config.save()) {
+                    this.getLogger().info("Config created successfully.");
+                }
+            } catch (IOException e) {
+                this.getLogger().severe("Failed to save config: " + e.getMessage());
+                Bukkit.getPluginManager().disablePlugin(this);
             }
         }
     }
