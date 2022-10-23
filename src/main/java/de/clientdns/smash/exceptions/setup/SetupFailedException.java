@@ -1,8 +1,8 @@
-package de.clientdns.smash.exceptions;
+package de.clientdns.smash.exceptions.setup;
 
 import java.io.Serial;
 
-public class SetupFailedException extends RuntimeException {
+public class SetupFailedException extends SetupException {
 
     @Serial
     private static final long serialVersionUID = 9079657993037196984L;
