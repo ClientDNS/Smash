@@ -1,7 +1,6 @@
 package de.clientdns.smash.config;
 
 import de.clientdns.smash.SmashPlugin;
-import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,34 +41,29 @@ public class Config {
         return (T) config.get(path);
     }
 
-    public String getString(String path) {
-        return config.getString(path);
-    }
-
-    public int getInt(String path) {
-        return config.getInt(path);
-    }
-
-    public boolean getBool(String path) {
-        return config.getBoolean(path);
-    }
-
-    public Location getLocation(String path) {
-        return config.getLocation(path);
-    }
-
     public boolean containsNot(String path) {
         return !config.contains(path);
     }
 
-    public <V> void set(@NotNull String key, @NotNull V value, String... comment) {
+    public <V> void set(@NotNull String key, @NotNull V value) {
+        set(key, value, "");
+    }
+
+    public <V> void set(@NotNull String key, @NotNull V value, String comment) {
         if (containsNot(key)) {
             config.set(key, value);
             config.setInlineComments(key, List.of(comment));
         }
     }
 
-    public boolean save() {
+    public <V> void set(@NotNull String key, @NotNull V value, String... comments) {
+        if (containsNot(key)) {
+            config.set(key, value);
+            config.setInlineComments(key, List.of(comments));
+        }
+    }
+
+    public boolean save() throws IOException {
         try {
             config.save(configFile);
             return true;
