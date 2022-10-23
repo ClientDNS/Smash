@@ -2,7 +2,7 @@ package de.clientdns.smash.map.setup;
 
 import de.clientdns.smash.events.SetupBeginEvent;
 import de.clientdns.smash.events.SetupFinishEvent;
-import de.clientdns.smash.exceptions.SetupFailedException;
+import de.clientdns.smash.exceptions.setup.SetupFailedException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -26,16 +26,20 @@ public class MapSetup {
         Bukkit.getPluginManager().callEvent(new SetupBeginEvent(player, this));
     }
 
-    public boolean save() throws SetupFailedException {
+    public boolean save() {
         if (this.spawnLocations.size() < 2) {
             throw new SetupFailedException("Not enough spawn locations. (min: 2, you: " + this.spawnLocations.size() + ")");
         }
         return true;
     }
 
-    public void finish() {
-        if (this.save()) {
-
+    public void finish() throws SetupFailedException {
+        try {
+            if (this.save()) {
+                //
+            }
+        } catch (SetupFailedException e) {
+            throw new SetupFailedException("Failed to save map setup.", e);
         }
         Bukkit.getPluginManager().callEvent(new SetupFinishEvent(player, this));
     }
