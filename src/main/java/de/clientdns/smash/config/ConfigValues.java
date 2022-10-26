@@ -2,32 +2,27 @@ package de.clientdns.smash.config;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.jetbrains.annotations.NotNull;
 
 public class ConfigValues {
 
-    private static final Component prefix = MiniMessage.miniMessage().deserialize(new Value<String>("messages.prefix").get());
-    private static final Component permissionRequired = MiniMessage.miniMessage().deserialize(new Value<String>("messages.permission-required").get());
-    private static final Component playerRequired = MiniMessage.miniMessage().deserialize(new Value<String>("messages.player-required").get());
-    private static final Component playerNotFound = MiniMessage.miniMessage().deserialize(new Value<String>("messages.player-not-found").get());
-    private static final int minPlayers = new Value<Integer>("min-players").get();
-
-    public static Component prefix() {
-        return prefix;
+    public static @NotNull Component prefix() {
+        return MiniMessage.miniMessage().deserialize(new Value<String>("messages.prefix").get());
     }
 
-    public static Component permissionRequired() {
-        return permissionRequired;
+    public static @NotNull Component permissionRequired() {
+        return MiniMessage.miniMessage().deserialize(new Value<String>("messages.permission-required").get());
     }
 
-    public static Component playerRequired() {
-        return playerRequired;
+    public static @NotNull Component playerRequired() {
+        return MiniMessage.miniMessage().deserialize(new Value<String>("messages.player-required").get());
     }
 
-    public static Component playerNotFound() {
-        return playerNotFound;
+    public static @NotNull Component playerNotFound() {
+        return MiniMessage.miniMessage().deserialize(new Value<String>("messages.player-not-found").get());
     }
 
     public static int minPlayers() {
-        return minPlayers;
+        return new Value<Integer>("min-players").get();
     }
 }
