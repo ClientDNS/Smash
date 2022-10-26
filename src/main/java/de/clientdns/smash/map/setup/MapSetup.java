@@ -26,22 +26,17 @@ public class MapSetup {
         Bukkit.getPluginManager().callEvent(new SetupBeginEvent(player, this));
     }
 
-    public boolean save() {
+    public boolean save() throws SetupFailedException {
         if (this.spawnLocations.size() < 2) {
-            throw new SetupFailedException("Not enough spawn locations. (min: 2, you: " + this.spawnLocations.size() + ")");
+            throw new SetupFailedException("Not enough spawn locations. (min: 2, current: " + this.spawnLocations.size() + ")");
         }
         return true;
     }
 
     public void finish() throws SetupFailedException {
-        try {
-            if (this.save()) {
-                //
-            }
-        } catch (SetupFailedException e) {
-            throw new SetupFailedException("Failed to save map setup.", e);
+        if (save()) {
+            Bukkit.getPluginManager().callEvent(new SetupFinishEvent(player, this));
         }
-        Bukkit.getPluginManager().callEvent(new SetupFinishEvent(player, this));
     }
 
     public void addSpawnLocation(Location location) {
