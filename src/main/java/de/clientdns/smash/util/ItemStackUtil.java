@@ -15,10 +15,11 @@ import java.util.Objects;
 @SuppressWarnings("unused")
 public class ItemStackUtil {
 
-    private ItemStack itemStack;
-    private ItemMeta itemMeta;
+    private final ItemStack itemStack;
+    private final ItemMeta itemMeta;
 
     private ItemStackUtil() {
+        throw new RuntimeException("This class cannot be instantiated.");
     }
 
     /**
