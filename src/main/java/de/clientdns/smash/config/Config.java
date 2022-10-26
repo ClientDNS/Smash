@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 public class Config {
 
@@ -21,10 +20,10 @@ public class Config {
         try {
             configFile = new File(configFolder, CONFIG_FILE_NAME);
             if (configFolder.mkdirs()) {
-                SmashPlugin.getPlugin().getLogger().info("Created config folder.");
+                SmashPlugin.getPlugin().getLogger().info("Created config folder");
             }
             if (configFile.createNewFile()) {
-                SmashPlugin.getPlugin().getLogger().info("Created config file.");
+                SmashPlugin.getPlugin().getLogger().info("Created config file");
             }
             config = SmashPlugin.getPlugin().getConfig();
         } catch (IOException e) {
@@ -32,17 +31,21 @@ public class Config {
         }
     }
 
-    public Set<String> getKeys(boolean deep) {
-        return config.getKeys(deep);
+    @SuppressWarnings("unchecked")
+    public <V> V get(String path) throws NullPointerException {
+        if (config.get(path) == null) {
+            throw new NullPointerException("Value of " + path + " is null");
+        }
+        return (V) config.get(path);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T get(String path) {
-        return (T) config.get(path);
+    public <V> V get(String path, V defaultValue) throws ClassCastException {
+        return (V) config.get(path, defaultValue);
     }
 
-    public boolean containsNot(String path) {
-        return !config.contains(path);
+    public boolean contains(String path) {
+        return config.contains(path);
     }
 
     public <V> void set(@NotNull String key, @NotNull V value) {
@@ -50,20 +53,13 @@ public class Config {
     }
 
     public <V> void set(@NotNull String key, @NotNull V value, String comment) {
-        if (containsNot(key)) {
+        if (!contains(key)) {
             config.set(key, value);
             config.setInlineComments(key, List.of(comment));
         }
     }
 
-    public <V> void set(@NotNull String key, @NotNull V value, String... comments) {
-        if (containsNot(key)) {
-            config.set(key, value);
-            config.setInlineComments(key, List.of(comments));
-        }
-    }
-
-    public boolean save() throws IOException {
+    public boolean save() {
         try {
             config.save(configFile);
             return true;
