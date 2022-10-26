@@ -8,24 +8,24 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SetupManager {
 
-    private final Map<Player, MapSetup> mapSetups = new ConcurrentHashMap<>();
+    private final Map<Player, MapSetup> setups = new ConcurrentHashMap<>();
 
     public void add(Player player, MapSetup setup) {
-        this.mapSetups.put(player, setup);
+        this.setups.put(player, setup);
     }
 
     public void remove(Player player) {
-        this.mapSetups.remove(player);
+        this.setups.remove(player);
     }
 
     public Optional<MapSetup> get(Player player) {
-        if (this.mapSetups.containsKey(player)) {
-            return Optional.ofNullable(this.mapSetups.get(player));
+        if (this.setups.containsKey(player)) {
+            return Optional.ofNullable(this.setups.get(player));
         }
         return Optional.empty();
     }
 
     public void clear() {
-        this.mapSetups.clear();
+        this.setups.clear();
     }
 }
