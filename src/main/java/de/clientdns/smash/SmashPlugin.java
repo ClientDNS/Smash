@@ -17,7 +17,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Objects;
 
 public final class SmashPlugin extends JavaPlugin {
@@ -58,10 +57,12 @@ public final class SmashPlugin extends JavaPlugin {
     @Override
     public void onLoad() {
         plugin = this;
-        this.characterCache = new CharacterCache();
-        this.setupManager = new SetupManager();
-        this.gameStateManager = new GameStateManager();
-        this.initConfig();
+        if (isBukkit()) {
+            this.initConfig();
+            this.characterCache = new CharacterCache();
+            this.setupManager = new SetupManager();
+            this.gameStateManager = new GameStateManager();
+        }
     }
 
     @Override
@@ -69,6 +70,33 @@ public final class SmashPlugin extends JavaPlugin {
         if (Runtime.version().feature() < 17) {
             this.getLogger().warning("You are using an unsupported Java version. Please use Java 17 or higher."); // TODO: Add link to download page
         }
+        if (isBukkit()) {
+            initListeners();
+            initCommands();
+            initWorldProperties();
+        }
+    }
+
+    @Override
+    public void onDisable() {
+        if (isBukkit()) {
+            this.characterCache.clear();
+        }
+    }
+
+    private void initConfig() {
+        this.config = new Config();
+        this.config.set("min-players", 2);
+        this.config.set("messages.prefix", "<gold>Smash</gold> <dark_gray>|</dark_gray> ", "Only in MiniMessage format!");
+        this.config.set("messages.permission-required", "<red>Du hast keine Berechtigung, dies zu tun.</red>", "Only in MiniMessage format!");
+        this.config.set("messages.player-required", "<red>Du musst ein Spieler sein, um dies zu tun.</red>", "Only in MiniMessage format!");
+        this.config.set("messages.player-not-found", "<red>Der Spieler wurde nicht gefunden.</red>", "Only in MiniMessage format!");
+        if (this.config.save()) {
+            this.getLogger().info("Config created successfully.");
+        }
+    }
+
+    private void initListeners() {
         this.getServer().getPluginManager().registerEvents(new AsyncPlayerPreLoginListener(), this);
         this.getServer().getPluginManager().registerEvents(new BlockBreakListener(), this);
         this.getServer().getPluginManager().registerEvents(new BlockPlaceListener(), this);
@@ -86,11 +114,15 @@ public final class SmashPlugin extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new GameStateChangeListener(), this);
         this.getServer().getPluginManager().registerEvents(new SetupBeginListener(), this);
         this.getServer().getPluginManager().registerEvents(new SetupFinishListener(), this);
+    }
 
+    private void initCommands() {
         SetupCommand setupCommand = new SetupCommand();
         Objects.requireNonNull(getCommand("setup")).setExecutor(setupCommand);
         Objects.requireNonNull(getCommand("setup")).setTabCompleter(setupCommand);
+    }
 
+    private void initWorldProperties() {
         for (World world : Bukkit.getWorlds()) {
             world.setThundering(false);
             world.setStorm(false);
@@ -114,34 +146,9 @@ public final class SmashPlugin extends JavaPlugin {
         }
     }
 
-    @Override
-    public void onDisable() {
-        this.characterCache.clear();
-    }
-
-    private void initConfig() {
-        if (isBukkit()) {
-            this.config = new Config();
-            this.config.set("min-players", 2);
-            this.config.set("messages.prefix", "<gold>Smash</gold> <dark_gray>|</dark_gray> ", "Only in MiniMessage format!");
-            this.config.set("messages.permission-required", "<red>Du hast keine Berechtigung, dies zu tun.</red>", "Only in MiniMessage format!");
-            this.config.set("messages.player-required", "<red>Du musst ein Spieler sein, um dies zu tun.</red>", "Only in MiniMessage format!");
-            this.config.set("messages.player-not-found", "<red>Der Spieler wurde nicht gefunden.</red>", "Only in MiniMessage format!");
-            try {
-                if (this.config.save()) {
-                    this.getLogger().info("Config created successfully.");
-                }
-            } catch (IOException e) {
-                this.getLogger().severe("Failed to save config: " + e.getMessage());
-                Bukkit.getPluginManager().disablePlugin(this);
-            }
-        }
-    }
-
     private boolean isBukkit() {
         try {
-            // However, this is not a good way to detect MockBukkit, but it works for now
-            SmashPlugin.getPlugin().getClassLoader().loadClass("org.bukkit.command.SimpleCommandMap.server");
+            Class.forName("org.bukkit.Server");
             return true;
         } catch (ClassNotFoundException e) {
             return false;
