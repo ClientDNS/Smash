@@ -39,8 +39,8 @@ public class InventoryClickListener implements Listener {
             return;
         }
 
-        Player player = (Player) event.getWhoClicked();
         if (SmashPlugin.getPlugin().getGameStateManager().isLobbyState()) {
+            Player player = (Player) event.getWhoClicked();
             CharacterCache cache = SmashPlugin.getPlugin().getCharacterCache();
             if (Character.MARIO.getName().equals(displayName)) {
                 cache.put(player, Character.MARIO);
