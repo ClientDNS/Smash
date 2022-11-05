@@ -1,10 +1,9 @@
 package de.clientdns.smash.listeners;
 
 import de.clientdns.smash.SmashPlugin;
-import de.clientdns.smash.config.ConfigValues;
+import de.clientdns.smash.config.values.ConfigValues;
 import de.clientdns.smash.countdown.LobbyCountdown;
 import de.clientdns.smash.util.PlayerUtil;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static net.kyori.adventure.text.Component.empty;
 import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class PlayerQuitListener implements Listener {
 
@@ -24,13 +24,12 @@ public class PlayerQuitListener implements Listener {
         int online = Bukkit.getOnlinePlayers().size() - 1;
         int minPlayers = ConfigValues.minPlayers();
         int maxPlayers = Bukkit.getMaxPlayers();
-
         if (SmashPlugin.getPlugin().getGameStateManager().isLobbyState()) {
             // GameState is in LOBBY state
-            PlayerUtil.broadcast(text(player.getName() + " hat den Server verlassen. (" + online + "/" + maxPlayers + ")", NamedTextColor.RED));
+            PlayerUtil.broadcast(text(player.getName() + " hat den Server verlassen. (" + online + "/" + maxPlayers + ")", RED));
             if (online < minPlayers) {
                 LobbyCountdown.forceStop();
-                Bukkit.broadcast(ConfigValues.prefix().append(text("Der Countdown wurde gestoppt, da nicht genügend Spieler online sind.", NamedTextColor.RED)));
+                Bukkit.broadcast(ConfigValues.prefix().append(text("Der Countdown wurde gestoppt, da nicht genügend Spieler online sind.", RED)));
             }
         } else if (SmashPlugin.getPlugin().getGameStateManager().isIngameState()) {
             // GameState is in INGAME state

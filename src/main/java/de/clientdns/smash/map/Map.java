@@ -1,6 +1,7 @@
 package de.clientdns.smash.map;
 
 import org.bukkit.Location;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 public class Map {
@@ -8,6 +9,7 @@ public class Map {
     private final String name;
     private final Location[] spawnLocations;
 
+    @ApiStatus.Experimental
     public Map(String name, Location @NotNull [] spawnLocations) {
         this.name = name;
         this.spawnLocations = new Location[spawnLocations.length];

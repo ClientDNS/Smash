@@ -3,11 +3,11 @@ package de.clientdns.smash.countdown;
 import de.clientdns.smash.SmashPlugin;
 import de.clientdns.smash.gamestate.GameState;
 import de.clientdns.smash.util.PlayerUtil;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class LobbyCountdown {
 
@@ -22,8 +22,8 @@ public class LobbyCountdown {
         taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(SmashPlugin.getPlugin(), () -> {
             switch (seconds) {
                 case 15, 10, 5, 4, 3, 2 ->
-                        PlayerUtil.broadcast(text("Das Spiel startet in " + seconds + " Sekunden.", NamedTextColor.YELLOW));
-                case 1 -> PlayerUtil.broadcast(text("Das Spiel startet in einer Sekunde.", NamedTextColor.YELLOW));
+                        PlayerUtil.broadcast(text("Das Spiel startet in " + seconds + " Sekunden.", YELLOW));
+                case 1 -> PlayerUtil.broadcast(text("Das Spiel startet in einer Sekunde.", YELLOW));
                 case 0 -> {
                     forceStop();
                     SmashPlugin.getPlugin().getGameStateManager().setCurrentState(GameState.INGAME);

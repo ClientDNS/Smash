@@ -11,27 +11,22 @@ public class Value<V> { // V = Expected value type (e.g. String, Integer, Boolea
      * Retrieves the value from the config.
      *
      * @param path The path to the value
+     * @throws NullPointerException If the path is null
      */
     public Value(String path) throws NullPointerException {
-        if (!isNull(path)) {
-            this.value = SmashPlugin.getPlugin().getSmashConfig().get(path);
+        if (SmashPlugin.getPlugin().getSmashConfig().get(path) == null) {
+            throw new NullPointerException("Path " + path + " is null");
         } else {
-            throw new NullPointerException("Value of " + path + " is null");
+            this.value = SmashPlugin.getPlugin().getSmashConfig().get(path);
         }
-    }
-
-    private boolean isNull(String path) {
-        return SmashPlugin.getPlugin().getSmashConfig().get(path) == null;
     }
 
     @NotNull
     public V get() {
-        if (this.value.toString().isBlank()) {
-            throw new IllegalStateException("Value is blank");
+        if (this.value == null) {
+            throw new NullPointerException("Value is null");
+        } else {
+            return this.value;
         }
-        if (this.value.toString().isEmpty()) {
-            throw new IllegalStateException("Value is empty");
-        }
-        return this.value;
     }
 }

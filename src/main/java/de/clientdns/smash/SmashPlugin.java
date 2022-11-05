@@ -1,6 +1,7 @@
 package de.clientdns.smash;
 
 import de.clientdns.smash.character.CharacterCache;
+import de.clientdns.smash.commands.ConfigCommand;
 import de.clientdns.smash.commands.SetupCommand;
 import de.clientdns.smash.config.Config;
 import de.clientdns.smash.gamestate.GameStateManager;
@@ -12,11 +13,8 @@ import de.clientdns.smash.map.setup.SetupManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.World;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.JavaPluginLoader;
 
-import java.io.File;
 import java.util.Objects;
 
 public final class SmashPlugin extends JavaPlugin {
@@ -25,14 +23,6 @@ public final class SmashPlugin extends JavaPlugin {
     private CharacterCache characterCache;
     private GameStateManager gameStateManager;
     private SetupManager setupManager;
-
-    public SmashPlugin() {
-        super(); // This constructor is needed for MockBukkit to work properly
-    }
-
-    private SmashPlugin(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
-        super(loader, description, dataFolder, file); // This constructor is needed for MockBukkit to work properly
-    }
 
     public static SmashPlugin getPlugin() {
         return plugin;
@@ -57,43 +47,26 @@ public final class SmashPlugin extends JavaPlugin {
     @Override
     public void onLoad() {
         plugin = this;
-        if (isBukkit()) {
-            this.initConfig();
-            this.characterCache = new CharacterCache();
-            this.setupManager = new SetupManager();
-            this.gameStateManager = new GameStateManager();
-        }
+        this.config = new Config();
+        this.characterCache = new CharacterCache();
+        this.setupManager = new SetupManager();
+        this.gameStateManager = new GameStateManager();
     }
 
     @Override
     public void onEnable() {
-        if (Runtime.version().feature() < 17) {
-            this.getLogger().warning("You are using an unsupported Java version. Please use Java 17 or higher."); // TODO: Add link to download page
-        }
-        if (isBukkit()) {
-            initListeners();
-            initCommands();
-            initWorldProperties();
-        }
+        if (Runtime.version().feature() < 17)
+            this.getLogger().warning("You are using an unsupported Java version (" + Runtime.version().feature() + "). Please use Java 17 or higher.");
+        this.config.setDefaultValues();
+        this.config.save();
+        initListeners();
+        initCommands();
+        initWorldProperties();
     }
 
     @Override
     public void onDisable() {
-        if (isBukkit()) {
-            this.characterCache.clear();
-        }
-    }
-
-    private void initConfig() {
-        this.config = new Config();
-        this.config.set("min-players", 2);
-        this.config.set("messages.prefix", "<gold>Smash</gold> <dark_gray>|</dark_gray> ", "Only in MiniMessage format!");
-        this.config.set("messages.permission-required", "<red>Du hast keine Berechtigung, dies zu tun.</red>", "Only in MiniMessage format!");
-        this.config.set("messages.player-required", "<red>Du musst ein Spieler sein, um dies zu tun.</red>", "Only in MiniMessage format!");
-        this.config.set("messages.player-not-found", "<red>Der Spieler wurde nicht gefunden.</red>", "Only in MiniMessage format!");
-        if (this.config.save()) {
-            this.getLogger().info("Config created successfully.");
-        }
+        this.characterCache.clear();
     }
 
     private void initListeners() {
@@ -105,6 +78,8 @@ public final class SmashPlugin extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new FoodLevelChangeListener(), this);
         this.getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerDropItemListener(), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerGameModeChangeListener(), this);
+        this.getServer().getPluginManager().registerEvents(new GameStateChangeListener(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerItemHeldListener(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
@@ -117,7 +92,10 @@ public final class SmashPlugin extends JavaPlugin {
     }
 
     private void initCommands() {
+        ConfigCommand configCommand = new ConfigCommand();
         SetupCommand setupCommand = new SetupCommand();
+        Objects.requireNonNull(this.getCommand("config")).setExecutor(configCommand);
+        Objects.requireNonNull(this.getCommand("config")).setTabCompleter(configCommand);
         Objects.requireNonNull(getCommand("setup")).setExecutor(setupCommand);
         Objects.requireNonNull(getCommand("setup")).setTabCompleter(setupCommand);
     }
@@ -143,15 +121,6 @@ public final class SmashPlugin extends JavaPlugin {
             world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
             world.setGameRule(GameRule.UNIVERSAL_ANGER, false);
             world.setGameRule(GameRule.MAX_ENTITY_CRAMMING, 8);
-        }
-    }
-
-    private boolean isBukkit() {
-        try {
-            Class.forName("org.bukkit.Server");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
         }
     }
 }

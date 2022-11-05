@@ -1,15 +1,15 @@
 package de.clientdns.smash.listeners;
 
 import de.clientdns.smash.SmashPlugin;
-import de.clientdns.smash.config.ConfigValues;
+import de.clientdns.smash.config.values.ConfigValues;
 import de.clientdns.smash.countdown.LobbyCountdown;
 import de.clientdns.smash.util.ItemStackUtil;
 import de.clientdns.smash.util.PlayerUtil;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,11 +19,12 @@ import org.jetbrains.annotations.NotNull;
 
 import static net.kyori.adventure.text.Component.empty;
 import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class PlayerJoinListener implements Listener {
 
-    private final ItemStack characters = new ItemStackUtil(Material.CHEST, 1, text("Charaktere", NamedTextColor.GOLD)).loreLines(empty(), text("Ändere deinen Charakter", NamedTextColor.GRAY), empty()).build();
-    private final ItemStack maps = new ItemStackUtil(Material.MAP, 1, text("Maps", NamedTextColor.GOLD)).loreLines(empty(), text("Stimme für eine Map ab", NamedTextColor.GRAY), empty()).build();
+    private final ItemStack characters = new ItemStackUtil(Material.CHEST, 1, text("Charaktere", GOLD)).loreLines(empty(), text("Ändere deinen Charakter", GRAY), empty()).build();
+    private final ItemStack maps = new ItemStackUtil(Material.MAP, 1, text("Maps", GOLD)).loreLines(empty(), text("Stimme für eine Map ab", GRAY), empty()).build();
 
     @SuppressWarnings("unused")
     @EventHandler
@@ -37,18 +38,22 @@ public class PlayerJoinListener implements Listener {
             player.setLevel(0);
             player.setAllowFlight(false);
             player.setFlying(false);
-            player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(1024); // Remove 1.9+ cooldown
-            player.saveData();
-            if (!player.getInventory().isEmpty()) player.getInventory().clear();
 
+            AttributeInstance attackSpeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
+            if (attackSpeed != null) {
+                attackSpeed.setBaseValue(1024); // Remove 1.9+ cooldown
+            }
+            player.saveData();
+
+            if (!player.getInventory().isEmpty())
+                player.getInventory().clear();
             player.getInventory().setItem(2, characters);
             player.getInventory().setItem(6, maps);
 
             int online = Bukkit.getOnlinePlayers().size();
             int minPlayers = ConfigValues.minPlayers();
-            int maxPlayers = Bukkit.getMaxPlayers();
 
-            PlayerUtil.broadcast(text(player.getName() + " ist dem Server beigetreten. (" + online + "/" + maxPlayers + ")", NamedTextColor.GREEN));
+            PlayerUtil.broadcast(text(player.getName() + " ist dem Server beigetreten.", GREEN));
             if (online >= minPlayers) {
                 LobbyCountdown.start(); // Start countdown if minimum players are reached
             }

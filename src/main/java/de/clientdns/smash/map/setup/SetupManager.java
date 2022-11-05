@@ -2,13 +2,13 @@ package de.clientdns.smash.map.setup;
 
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class SetupManager {
 
-    private final Map<Player, MapSetup> setups = new ConcurrentHashMap<>();
+    private final Map<Player, MapSetup> setups = new HashMap<>();
 
     public void add(Player player, MapSetup setup) {
         this.setups.put(player, setup);

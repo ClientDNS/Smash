@@ -12,14 +12,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-@SuppressWarnings("unused")
 public class ItemStackUtil {
 
     private final ItemStack itemStack;
     private final ItemMeta itemMeta;
 
+    @SuppressWarnings("unused")
     private ItemStackUtil() {
-        throw new RuntimeException("This class cannot be instantiated.");
+        throw new UnsupportedOperationException("This class cannot be instantiated.");
     }
 
     /**
@@ -71,10 +71,20 @@ public class ItemStackUtil {
         return LegacyComponentSerializer.legacyAmpersand().serialize(Objects.requireNonNull(itemMeta.displayName()));
     }
 
+    /**
+     * Gets the amount of the item.
+     *
+     * @return The amount of the item.
+     */
     public int amount() {
         return this.itemStack.getAmount();
     }
 
+    /**
+     * Gets the material of the item.
+     *
+     * @return The material of the item.
+     */
     public Material material() {
         return this.itemStack.getType();
     }
@@ -106,12 +116,8 @@ public class ItemStackUtil {
      * @return The ItemStackUtil instance.
      */
     public ItemStackUtil loreLines(@NotNull Component @NotNull ... lines) {
-        if (lines.length == 0) {
-            throw new IllegalArgumentException("Lore lines must not be empty.");
-        } else {
-            this.itemMeta.lore(List.of(lines));
-            return this;
-        }
+        this.itemMeta.lore(List.of(lines));
+        return this;
     }
 
     /**

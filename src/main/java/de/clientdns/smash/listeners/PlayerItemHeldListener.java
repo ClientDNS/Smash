@@ -1,6 +1,7 @@
 package de.clientdns.smash.listeners;
 
 import de.clientdns.smash.SmashPlugin;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,6 +15,9 @@ public class PlayerItemHeldListener implements Listener {
     void on(@NotNull PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
         if (SmashPlugin.getPlugin().getGameStateManager().isIngameState()) {
+            if (player.getGameMode().equals(GameMode.SPECTATOR)) {
+
+            }
             // Prevent player from moving to other slots than
             if (event.getPreviousSlot() != 0) {
                 player.getInventory().setHeldItemSlot(0);

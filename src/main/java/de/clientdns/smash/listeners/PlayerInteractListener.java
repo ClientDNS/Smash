@@ -14,21 +14,19 @@ public class PlayerInteractListener implements Listener {
     @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_AIR || event.getAction() != Action.RIGHT_CLICK_BLOCK) {
-            event.setCancelled(true);
-            return;
-        }
-        Player player = event.getPlayer();
-        switch (event.getMaterial()) {
-            case CHEST -> {
-                event.setCancelled(true);
-                CharacterInventory.open(player);
+        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+            Player player = event.getPlayer();
+            switch (event.getMaterial()) {
+                case CHEST -> {
+                    event.setCancelled(true);
+                    CharacterInventory.open(player);
+                }
+                case MAP -> {
+                    event.setCancelled(true);
+                    MapInventory.open(player);
+                }
+                default -> event.setCancelled(true);
             }
-            case MAP -> {
-                event.setCancelled(true);
-                MapInventory.open(player);
-            }
-            default -> event.setCancelled(true);
         }
     }
 }

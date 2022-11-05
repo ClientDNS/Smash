@@ -14,7 +14,7 @@ public class MapSetup {
 
     private final Player player;
     private final String mapName;
-    private final ArrayList<Location> spawnLocations;
+    private final List<Location> spawnLocations;
 
     public MapSetup(Player player, String mapName) {
         this.player = player;
@@ -34,9 +34,7 @@ public class MapSetup {
     }
 
     public void finish() throws SetupFailedException {
-        if (save()) {
-            Bukkit.getPluginManager().callEvent(new SetupFinishEvent(player, this));
-        }
+        Bukkit.getPluginManager().callEvent(new SetupFinishEvent(player, this));
     }
 
     public void addSpawnLocation(Location location) {

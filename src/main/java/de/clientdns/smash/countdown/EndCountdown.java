@@ -2,11 +2,11 @@ package de.clientdns.smash.countdown;
 
 import de.clientdns.smash.SmashPlugin;
 import de.clientdns.smash.util.PlayerUtil;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class EndCountdown {
 
@@ -20,9 +20,8 @@ public class EndCountdown {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(SmashPlugin.getPlugin(), () -> {
             switch (seconds) {
                 case 15, 10, 5, 4, 3, 2 ->
-                        PlayerUtil.broadcast(text("Der Server startet in " + seconds + " Sekunden neu.", NamedTextColor.YELLOW));
-                case 1 ->
-                        PlayerUtil.broadcast(text("Der Server startet in einer Sekunde neu...", NamedTextColor.YELLOW));
+                        PlayerUtil.broadcast(text("Der Server startet in " + seconds + " Sekunden neu.", YELLOW));
+                case 1 -> PlayerUtil.broadcast(text("Der Server startet in einer Sekunde neu...", YELLOW));
                 case 0 -> {
                     Bukkit.shutdown();
                     return;

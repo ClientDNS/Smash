@@ -2,7 +2,6 @@ package de.clientdns.smash.inventories;
 
 import de.clientdns.smash.character.enums.Character;
 import de.clientdns.smash.util.ItemStackUtil;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static net.kyori.adventure.text.Component.empty;
 import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class CharacterInventory {
 
@@ -21,14 +21,14 @@ public class CharacterInventory {
     public static final ItemStack PIKACHU = new ItemStackUtil(Material.PLAYER_HEAD, 1, Character.PIKACHU.getName()).build();
     public static final ItemStack SUPERMAN = new ItemStackUtil(Material.PLAYER_HEAD, 1, Character.SUPERMAN.getName()).build();
     public static final ItemStack LINK = new ItemStackUtil(Material.PLAYER_HEAD, 1, Character.LINK.getName()).build();
-    private static final ItemStack EXPLANATION = new ItemStackUtil(Material.OAK_WALL_SIGN).loreLines(empty(), text("Jeder Charakter verfügt über andere Fähigkeiten, wähle bedacht.", NamedTextColor.GRAY), empty()).build();
+    private static final ItemStack EXPLANATION = new ItemStackUtil(Material.OAK_WALL_SIGN, 1, empty()).loreLines(empty(), text("Jeder Charakter verfügt über andere Fähigkeiten, wähle bedacht.", GRAY), empty()).build();
 
     public static void open(@NotNull Player player) {
         player.openInventory(CharacterInventory.create());
     }
 
     private static @NotNull Inventory create() {
-        Inventory inventory = Bukkit.createInventory(null, 27, text("Charaktere", NamedTextColor.GOLD));
+        Inventory inventory = Bukkit.createInventory(null, 27, text("Charaktere", GOLD));
 
         // Mario - Slot 1
         inventory.setItem(1, MARIO);
@@ -47,8 +47,6 @@ public class CharacterInventory {
 
         // Link - Slot 7
         inventory.setItem(7, LINK);
-
-        System.out.println(EXPLANATION.toString());
 
         // Explanation - Slot 22
         inventory.setItem(22, EXPLANATION);
