@@ -3,7 +3,6 @@
 <hr>
 
 ![Status Badge](https://img.shields.io/github/workflow/status/ClientDNS/Smash/Continuous%20Integration?style=for-the-badge)
-![Lines of code](https://img.shields.io/tokei/lines/github/ClientDNS/Smash?style=for-the-badge)
 
 ## Developing on Smash
 
