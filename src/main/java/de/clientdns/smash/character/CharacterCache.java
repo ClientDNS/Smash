@@ -1,33 +1,33 @@
 package de.clientdns.smash.character;
 
 import de.clientdns.smash.character.enums.Character;
-import de.clientdns.smash.config.ConfigValues;
-import net.kyori.adventure.text.format.NamedTextColor;
+import de.clientdns.smash.config.values.ConfigValues;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class CharacterCache {
 
     private final Map<Player, Character> playerCharacters;
 
     public CharacterCache() {
-        playerCharacters = new ConcurrentHashMap<>();
+        this.playerCharacters = new HashMap<>();
     }
 
     public void put(Player player, Character character) {
-        if (!playerCharacters.containsKey(player)) {
-            playerCharacters.put(player, character);
+        if (!this.playerCharacters.containsKey(player)) {
+            this.playerCharacters.put(player, character);
         } else {
-            playerCharacters.replace(player, character);
+            this.playerCharacters.replace(player, character);
         }
-        player.sendMessage(ConfigValues.prefix().append(text("Du hast den Charakter ", NamedTextColor.GRAY).append(character.getName()).append(text(" ausgewählt!", NamedTextColor.GRAY))));
+        player.sendMessage(ConfigValues.prefix().append(text("Du hast den Charakter ", GRAY).append(character.getName()).append(text(" ausgewählt!", GRAY))));
     }
 
     public void clear() {
-        playerCharacters.clear();
+        this.playerCharacters.clear();
     }
 }
