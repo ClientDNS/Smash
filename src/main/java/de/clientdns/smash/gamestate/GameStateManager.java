@@ -15,7 +15,7 @@ public class GameStateManager {
         return this.currentState;
     }
 
-    public void setCurrentState(GameState state) {
+    public void setGameState(GameState state) {
         this.currentState = state;
         Bukkit.getPluginManager().callEvent(new GameStateChangeEvent(this.currentState));
     }

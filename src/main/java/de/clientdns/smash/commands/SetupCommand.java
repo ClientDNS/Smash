@@ -31,8 +31,8 @@ public class SetupCommand implements CommandExecutor, TabCompleter {
                     return false;
                 }
                 if (args[0].equalsIgnoreCase("finish")) {
-                    if (SmashPlugin.getPlugin().getSetupManager().get(player).isPresent()) {
-                        MapSetup mapSetup = SmashPlugin.getPlugin().getSetupManager().get(player).get();
+                    if (SmashPlugin.plugin().setupManager().setup(player).isPresent()) {
+                        MapSetup mapSetup = SmashPlugin.plugin().setupManager().setup(player).get();
                         mapSetup.finish();
                         player.sendMessage(ConfigValues.prefix().append(text("Du hast die Map erstellt.", GREEN)));
                     } else {
@@ -40,7 +40,7 @@ public class SetupCommand implements CommandExecutor, TabCompleter {
                     }
                     return true;
                 } else {
-                    sender.sendMessage(ConfigValues.prefix().append(text("Unbekannter Befehl.", RED)));
+                    sender.sendMessage(ConfigValues.prefix().append(ConfigValues.unknownCommand(args[0])));
                 }
             } else if (args.length == 2) {
                 String mapName = args[1];
@@ -50,14 +50,14 @@ public class SetupCommand implements CommandExecutor, TabCompleter {
                 }
                 MapSetup setup = new MapSetup(player, mapName);
                 if (args[0].equalsIgnoreCase("create")) {
-                    if (SmashPlugin.getPlugin().getSetupManager().get(player).isEmpty()) {
+                    if (SmashPlugin.plugin().setupManager().setup(player).isEmpty()) {
                         setup.start();
                         sender.sendMessage(ConfigValues.prefix().append(text("Map-Erstellung '" + mapName + "' gestartet.", GREEN)));
                     } else {
                         sender.sendMessage(ConfigValues.prefix().append(text("Map-Erstellung '" + mapName + "' läuft bereits.", RED)));
                     }
                 } else {
-                    sender.sendMessage(ConfigValues.prefix().append(text("Unbekannter Befehl.", RED)));
+                    sender.sendMessage(ConfigValues.prefix().append(ConfigValues.unknownCommand(args[0])));
                 }
             } else {
                 sender.sendMessage(ConfigValues.prefix().append(text("/setup <create> <map name (max. 16)>", RED)));
@@ -75,6 +75,6 @@ public class SetupCommand implements CommandExecutor, TabCompleter {
                 return Stream.of("create", "finish").filter(s -> s.startsWith(args[0])).toList();
             }
         }
-        return List.of();
+        return null;
     }
 }

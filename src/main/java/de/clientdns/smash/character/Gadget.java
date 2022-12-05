@@ -1,10 +1,10 @@
-package de.clientdns.smash.character.enums;
+package de.clientdns.smash.character;
 
 public enum Gadget {
 
     MINIGUN("Minigun"),
     HOT_STICK("Hot Stick"),
-    EXPLOSION_BOW("Explosion Bow");
+    EXPLOSIVE_BOW("Explosive Bow");
 
     private final String friendlyName;
 

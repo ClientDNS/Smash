@@ -10,3 +10,5 @@ commands:
     description: "Manage the config."
   setup:
     description: "Setup a map."
+  uptime:
+    description: "Show the uptime of the plugin."

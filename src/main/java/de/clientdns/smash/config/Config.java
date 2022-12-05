@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
+import java.util.logging.Logger;
 
 public class Config {
 
@@ -21,26 +23,32 @@ public class Config {
         File configFolder = new File(this.configFilePath);
         try {
             configFile = new File(configFolder, this.configFileName);
-            if (configFolder.mkdirs()) {
-                SmashPlugin.getPlugin().getLogger().info("Created config folder");
+            Logger logger = SmashPlugin.plugin().getLogger();
+            if (configFolder.mkdir()) {
+                logger.info("Created config folder");
             }
             if (this.configFile.createNewFile()) {
-                SmashPlugin.getPlugin().getLogger().info("Created config file");
+                logger.info("Created config file");
             }
             load();
+            setDefaultValues();
+            save();
         } catch (IOException e) {
             throw new RuntimeException("Could not create config file", e);
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public <V> V get(String path) throws NullPointerException, ClassCastException {
-        return (V) config.get(path);
+    public <V> V get(String path) throws NullPointerException {
+        return get(path, null);
     }
 
     @SuppressWarnings("unchecked")
-    public <V> V get(String path, V defaultValue) throws NullPointerException, ClassCastException {
+    public <V> V get(String path, V defaultValue) throws NullPointerException {
         return (V) config.get(path, defaultValue);
+    }
+
+    public Set<String> getKeys(boolean deep) {
+        return config.getKeys(deep);
     }
 
     public boolean notContains(String path) {
@@ -61,23 +69,23 @@ public class Config {
     }
 
     public void setDefaultValues() {
-        set("min-players", 2, "The minimum amount of players required to start a game");
-        set("messages.prefix", "<gold>Smash</gold> <dark_gray>|</dark_gray> ", "Only in MiniMessage format!");
-        set("messages.permission-required", "<red>Du hast keine Berechtigung, dies zu tun.</red>", "Only in MiniMessage format!");
-        set("messages.player-required", "<red>Du musst ein Spieler sein, um dies zu tun.</red>", "Only in MiniMessage format!");
-        set("messages.player-not-found", "<red>Der Spieler wurde nicht gefunden.</red>", "Only in MiniMessage format!");
-        set("messages.cannot-switch-gamemode", "<red>Du kannst deinen Spielmodus nicht ändern, während du in einem Spiel bist.</red>", "Only in MiniMessage format!");
+        set("prefix", "<gold>Smash</gold> <dark_gray>|</dark_gray> ", "Only in MiniMessage format!");
+        set("unknown-command", "<red>Unbekannter Befehl. ($command)</red>", "Only in MiniMessage format!");
+        set("permission-required", "<red>Du hast keine Berechtigung, dies zu tun.</red>", "Only in MiniMessage format!");
+        set("player-required", "<red>Du musst ein Spieler sein, um dies zu tun.</red>", "Only in MiniMessage format!");
+        set("player-not-found", "<red>Der Spieler wurde nicht gefunden.</red>", "Only in MiniMessage format!");
+        set("cannot-switch-gamemode", "<red>Du kannst deinen Spielmodus nicht ändern, während du in einem Spiel bist.</red>", "Only in MiniMessage format!");
+        set("config-reloaded", "<green>Die Config wurde neu geladen.</green>", "Only in MiniMessage format!");
+        set("min-players", 2, "The minimum amount of players required to start a game.");
     }
 
     public void reload() {
-        SmashPlugin.getPlugin().getLogger().info("Performing config reload");
+        ConfigValues.reset();
         this.load();
     }
 
     private void load() {
         this.config = YamlConfiguration.loadConfiguration(this.configFile);
-        SmashPlugin.getPlugin().getLogger().info("Resetting internal config values");
-        ConfigValues.reset();
     }
 
     public void save() {

@@ -23,15 +23,14 @@ public class PlayerQuitListener implements Listener {
         Player player = event.getPlayer();
         int online = Bukkit.getOnlinePlayers().size() - 1;
         int minPlayers = ConfigValues.minPlayers();
-        int maxPlayers = Bukkit.getMaxPlayers();
-        if (SmashPlugin.getPlugin().getGameStateManager().isLobbyState()) {
+        if (SmashPlugin.plugin().gameStateManager().isLobbyState()) {
             // GameState is in LOBBY state
-            PlayerUtil.broadcast(text(player.getName() + " hat den Server verlassen. (" + online + "/" + maxPlayers + ")", RED));
+            PlayerUtil.broadcast(text(player.getName() + " hat den Server verlassen.", RED));
             if (online < minPlayers) {
                 LobbyCountdown.forceStop();
                 Bukkit.broadcast(ConfigValues.prefix().append(text("Der Countdown wurde gestoppt, da nicht genügend Spieler online sind.", RED)));
             }
-        } else if (SmashPlugin.getPlugin().getGameStateManager().isIngameState()) {
+        } else if (SmashPlugin.plugin().gameStateManager().isIngameState()) {
             // GameState is in INGAME state
             if (online == 0) {
                 stopServer();

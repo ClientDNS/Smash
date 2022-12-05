@@ -14,11 +14,7 @@ public class Value<V> { // V = Expected value type (e.g. String, Integer, Boolea
      * @throws NullPointerException If the path is null
      */
     public Value(String path) throws NullPointerException {
-        if (SmashPlugin.getPlugin().getSmashConfig().get(path) == null) {
-            throw new NullPointerException("Path " + path + " is null");
-        } else {
-            this.value = SmashPlugin.getPlugin().getSmashConfig().get(path);
-        }
+        this.value = SmashPlugin.plugin().configuration().get(path);
     }
 
     @NotNull

@@ -1,11 +1,12 @@
 package de.clientdns.smash;
 
-import de.clientdns.smash.character.CharacterCache;
 import de.clientdns.smash.commands.ConfigCommand;
 import de.clientdns.smash.commands.SetupCommand;
+import de.clientdns.smash.commands.UptimeCommand;
 import de.clientdns.smash.config.Config;
 import de.clientdns.smash.gamestate.GameStateManager;
 import de.clientdns.smash.listeners.*;
+import de.clientdns.smash.listeners.custom.CharacterChangeListener;
 import de.clientdns.smash.listeners.custom.GameStateChangeListener;
 import de.clientdns.smash.listeners.custom.SetupBeginListener;
 import de.clientdns.smash.listeners.custom.SetupFinishListener;
@@ -15,61 +16,55 @@ import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.time.Instant;
 import java.util.Objects;
 
 public final class SmashPlugin extends JavaPlugin {
+
     private static SmashPlugin plugin;
     private Config config;
-    private CharacterCache characterCache;
     private GameStateManager gameStateManager;
     private SetupManager setupManager;
+    private Instant startTime;
 
-    public static SmashPlugin getPlugin() {
+    public static SmashPlugin plugin() {
         return plugin;
     }
 
-    public CharacterCache getCharacterCache() {
-        return this.characterCache;
-    }
-
-    public Config getSmashConfig() {
+    public Config configuration() {
         return this.config;
     }
 
-    public GameStateManager getGameStateManager() {
+    public GameStateManager gameStateManager() {
         return this.gameStateManager;
     }
 
-    public SetupManager getSetupManager() {
+    public SetupManager setupManager() {
         return this.setupManager;
+    }
+
+    public Instant startTime() {
+        return this.startTime;
     }
 
     @Override
     public void onLoad() {
         plugin = this;
+        this.startTime = Instant.now();
         this.config = new Config();
-        this.characterCache = new CharacterCache();
-        this.setupManager = new SetupManager();
         this.gameStateManager = new GameStateManager();
+        this.setupManager = new SetupManager();
     }
 
     @Override
     public void onEnable() {
-        if (Runtime.version().feature() < 17)
-            this.getLogger().warning("You are using an unsupported Java version (" + Runtime.version().feature() + "). Please use Java 17 or higher.");
-        this.config.setDefaultValues();
-        this.config.save();
-        initListeners();
-        initCommands();
-        initWorldProperties();
+        this.checkJava();
+        this.initListeners();
+        this.initCommands();
+        this.setWorldProperties();
     }
 
-    @Override
-    public void onDisable() {
-        this.characterCache.clear();
-    }
-
-    private void initListeners() {
+    void initListeners() {
         this.getServer().getPluginManager().registerEvents(new AsyncPlayerPreLoginListener(), this);
         this.getServer().getPluginManager().registerEvents(new BlockBreakListener(), this);
         this.getServer().getPluginManager().registerEvents(new BlockPlaceListener(), this);
@@ -86,21 +81,28 @@ public final class SmashPlugin extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
 
         // custom events
+        this.getServer().getPluginManager().registerEvents(new CharacterChangeListener(), this);
         this.getServer().getPluginManager().registerEvents(new GameStateChangeListener(), this);
         this.getServer().getPluginManager().registerEvents(new SetupBeginListener(), this);
         this.getServer().getPluginManager().registerEvents(new SetupFinishListener(), this);
     }
 
-    private void initCommands() {
+    void initCommands() {
         ConfigCommand configCommand = new ConfigCommand();
         SetupCommand setupCommand = new SetupCommand();
+        UptimeCommand uptimeCommand = new UptimeCommand();
+
         Objects.requireNonNull(this.getCommand("config")).setExecutor(configCommand);
+        Objects.requireNonNull(this.getCommand("setup")).setExecutor(setupCommand);
+        Objects.requireNonNull(this.getCommand("uptime")).setExecutor(uptimeCommand);
+
+        // Tab completer
         Objects.requireNonNull(this.getCommand("config")).setTabCompleter(configCommand);
-        Objects.requireNonNull(getCommand("setup")).setExecutor(setupCommand);
-        Objects.requireNonNull(getCommand("setup")).setTabCompleter(setupCommand);
+        Objects.requireNonNull(this.getCommand("setup")).setTabCompleter(setupCommand);
+        Objects.requireNonNull(this.getCommand("uptime")).setTabCompleter(uptimeCommand);
     }
 
-    private void initWorldProperties() {
+    void setWorldProperties() {
         for (World world : Bukkit.getWorlds()) {
             world.setThundering(false);
             world.setStorm(false);
@@ -122,5 +124,10 @@ public final class SmashPlugin extends JavaPlugin {
             world.setGameRule(GameRule.UNIVERSAL_ANGER, false);
             world.setGameRule(GameRule.MAX_ENTITY_CRAMMING, 8);
         }
+    }
+
+    void checkJava() {
+        if (Runtime.version().feature() < 17)
+            this.getLogger().severe("You are using an outdated java version (" + Runtime.version().feature() + ")! Please update to Java 17!");
     }
 }

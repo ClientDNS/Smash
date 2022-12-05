@@ -1,8 +1,8 @@
 package de.clientdns.smash.listeners;
 
 import de.clientdns.smash.SmashPlugin;
-import de.clientdns.smash.character.CharacterCache;
-import de.clientdns.smash.character.enums.Character;
+import de.clientdns.smash.cache.PlayerCache;
+import de.clientdns.smash.character.Character;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -39,29 +39,28 @@ public class InventoryClickListener implements Listener {
             return;
         }
 
-        if (SmashPlugin.getPlugin().getGameStateManager().isLobbyState()) {
+        if (SmashPlugin.plugin().gameStateManager().isLobbyState()) {
             Player player = (Player) event.getWhoClicked();
-            CharacterCache cache = SmashPlugin.getPlugin().getCharacterCache();
             if (Character.MARIO.getName().equals(displayName)) {
-                cache.put(player, Character.MARIO);
+                PlayerCache.set(player, Character.MARIO);
             } else if (Character.DONKEY_KONG.getName().equals(displayName)) {
-                cache.put(player, Character.DONKEY_KONG);
+                PlayerCache.set(player, Character.DONKEY_KONG);
             } else if (Character.FLASH.getName().equals(displayName)) {
-                cache.put(player, Character.FLASH);
+                PlayerCache.set(player, Character.FLASH);
             } else if (Character.PIKACHU.getName().equals(displayName)) {
-                cache.put(player, Character.PIKACHU);
+                PlayerCache.set(player, Character.PIKACHU);
             } else if (Character.SUPERMAN.getName().equals(displayName)) {
-                cache.put(player, Character.SUPERMAN);
+                PlayerCache.set(player, Character.SUPERMAN);
             } else if (Character.LINK.getName().equals(displayName)) {
-                cache.put(player, Character.LINK);
+                PlayerCache.set(player, Character.LINK);
             }
             event.setCancelled(true);
             return;
-        } else if (SmashPlugin.getPlugin().getGameStateManager().isIngameState()) {
+        } else if (SmashPlugin.plugin().gameStateManager().isIngameState()) {
             event.setCancelled(true);
             return;
-        } else if (SmashPlugin.getPlugin().getGameStateManager().isEndState()) {
-            event.setCancelled(false);
+        } else if (SmashPlugin.plugin().gameStateManager().isEndState()) {
+            event.setCancelled(true);
             return;
         }
         event.setCancelled(true);

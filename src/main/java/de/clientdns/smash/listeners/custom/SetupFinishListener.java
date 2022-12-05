@@ -10,6 +10,6 @@ public class SetupFinishListener implements Listener {
 
     @EventHandler
     void on(@NotNull SetupFinishEvent event) {
-        SmashPlugin.getPlugin().getSetupManager().remove(event.getPlayer());
+        SmashPlugin.plugin().setupManager().remove(event.getPlayer());
     }
 }

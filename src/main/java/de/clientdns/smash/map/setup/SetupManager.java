@@ -18,7 +18,7 @@ public class SetupManager {
         this.setups.remove(player);
     }
 
-    public Optional<MapSetup> get(Player player) {
+    public Optional<MapSetup> setup(Player player) {
         if (this.setups.containsKey(player)) {
             return Optional.ofNullable(this.setups.get(player));
         }

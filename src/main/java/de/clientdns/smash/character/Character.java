@@ -1,6 +1,7 @@
-package de.clientdns.smash.character.enums;
+package de.clientdns.smash.character;
 
 import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.Nullable;
 
 import java.security.SecureRandom;
 import java.util.List;
@@ -15,7 +16,7 @@ public enum Character {
     FLASH(2, text("Flash", RED), List.of(Ability.SPEED)),
     PIKACHU(3, text("Pikachu", YELLOW), List.of(Ability.STAMP_ATTACK)),
     SUPERMAN(4, text("Superman", RED), List.of(Ability.STAMP_ATTACK)),
-    LINK(5, text("Link", DARK_GREEN), List.of(Ability.SPEED_AND_JUMPBOOST));
+    LINK(5, text("Link", DARK_GREEN), List.of(Ability.JUMPBOOST, Ability.SPEED));
 
     private final int id;
     private final Component name;
@@ -32,15 +33,24 @@ public enum Character {
         return Character.values()[random.nextInt(Character.values().length)];
     }
 
+    public static @Nullable Character findByName(Component name) {
+        for (Character character : Character.values()) {
+            if (character.getName().equals(name)) {
+                return character;
+            }
+        }
+        return null;
+    }
+
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public Component getName() {
-        return name;
+        return this.name;
     }
 
     public List<Ability> getAbilities() {
-        return abilities;
+        return this.abilities;
     }
 }

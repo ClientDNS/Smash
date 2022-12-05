@@ -1,5 +1,7 @@
 package de.clientdns.smash.exceptions.setup;
 
+import de.clientdns.smash.exceptions.SetupException;
+
 import java.io.Serial;
 
 public class SetupFailedException extends SetupException {

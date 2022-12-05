@@ -41,6 +41,6 @@ public class GameStateChangeEvent extends Event {
      * @return The new game state
      */
     public GameState getGameState() {
-        return state;
+        return this.state;
     }
 }

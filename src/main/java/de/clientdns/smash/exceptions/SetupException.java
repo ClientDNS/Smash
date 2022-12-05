@@ -1,4 +1,4 @@
-package de.clientdns.smash.exceptions.setup;
+package de.clientdns.smash.exceptions;
 
 import java.io.Serial;
 

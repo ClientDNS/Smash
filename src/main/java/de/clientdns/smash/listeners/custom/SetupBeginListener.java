@@ -10,6 +10,6 @@ public class SetupBeginListener implements Listener {
 
     @EventHandler
     void on(@NotNull SetupBeginEvent event) {
-        SmashPlugin.getPlugin().getSetupManager().add(event.getPlayer(), event.getSetup());
+        SmashPlugin.plugin().setupManager().add(event.getPlayer(), event.getSetup());
     }
 }

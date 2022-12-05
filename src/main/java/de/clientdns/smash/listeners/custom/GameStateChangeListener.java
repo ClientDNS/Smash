@@ -29,20 +29,21 @@ public class GameStateChangeListener implements Listener {
                 player.setAllowFlight(false);
                 player.setFlying(false);
                 player.getInventory().clear();
-                LobbyCountdown.forceStop();
                 // TODO: Give items and teleport to voted map locations
             }
+            LobbyCountdown.forceStop();
         } else if (event.getGameState().equals(GameState.END)) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.setGameMode(GameMode.SPECTATOR);
                 player.setAllowFlight(true);
                 player.setFlying(true);
                 player.getInventory().clear();
-                LobbyCountdown.forceStop();
-                player.sendTitlePart(TitlePart.TITLE, text("Das Spiel ist vorbei!").color(RED));
+                player.sendTitlePart(TitlePart.TITLE, text("Das Spiel ist vorbei!", RED));
+                player.sendTitlePart(TitlePart.SUBTITLE, text("Du bist nun im Spectator-Modus.", GRAY));
                 player.sendTitlePart(TitlePart.TIMES, Title.Times.times(Duration.ZERO, Duration.ofMillis(2500), Duration.ZERO));
-                EndCountdown.start();
             }
+            LobbyCountdown.forceStop();
+            EndCountdown.start();
         }
     }
 }

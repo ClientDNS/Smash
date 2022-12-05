@@ -14,18 +14,12 @@ public class PlayerItemHeldListener implements Listener {
     @EventHandler
     void on(@NotNull PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
-        if (SmashPlugin.getPlugin().getGameStateManager().isIngameState()) {
-            if (player.getGameMode().equals(GameMode.SPECTATOR)) {
-
-            }
-            // Prevent player from moving to other slots than
-            if (event.getPreviousSlot() != 0) {
-                player.getInventory().setHeldItemSlot(0);
-            } else if (event.getNewSlot() != 0) {
-                player.getInventory().setHeldItemSlot(0);
-            } else {
-                player.getInventory().setHeldItemSlot(0);
-            }
+        if (SmashPlugin.plugin().gameStateManager().isIngameState()) {
+            if (player.getGameMode().equals(GameMode.SPECTATOR)) event.setCancelled(false);
+            // Prevent player from moving to other slots than 0
+            if (event.getPreviousSlot() != 0) player.getInventory().setHeldItemSlot(0);
+            else if (event.getNewSlot() != 0) player.getInventory().setHeldItemSlot(0);
+            else player.getInventory().setHeldItemSlot(0);
         }
     }
 }

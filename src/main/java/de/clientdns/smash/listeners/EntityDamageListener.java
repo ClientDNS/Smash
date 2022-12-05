@@ -11,9 +11,9 @@ public class EntityDamageListener implements Listener {
     @SuppressWarnings("unused")
     @EventHandler()
     void on(@NotNull EntityDamageEvent event) {
-        if (SmashPlugin.getPlugin().getGameStateManager().isLobbyState()) {
+        if (SmashPlugin.plugin().gameStateManager().isLobbyState()) {
             event.setCancelled(true);
-        } else if (SmashPlugin.getPlugin().getGameStateManager().isIngameState()) {
+        } else if (SmashPlugin.plugin().gameStateManager().isIngameState()) {
             event.setDamage(0D);
         } else {
             event.setCancelled(true);

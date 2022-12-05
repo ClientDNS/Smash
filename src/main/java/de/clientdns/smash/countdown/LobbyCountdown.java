@@ -15,18 +15,18 @@ public class LobbyCountdown {
     private static int seconds;
 
     public static void start() {
-        if (!SmashPlugin.getPlugin().getGameStateManager().isLobbyState()) {
-            throw new IllegalStateException("LobbyCountdown can only be started in LOBBY state, tried to start in " + SmashPlugin.getPlugin().getGameStateManager().getGameState());
+        if (!SmashPlugin.plugin().gameStateManager().isLobbyState()) {
+            throw new IllegalStateException("LobbyCountdown can only be started in LOBBY state, tried to start in " + SmashPlugin.plugin().gameStateManager().getGameState());
         }
         seconds = 15;
-        taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(SmashPlugin.getPlugin(), () -> {
+        taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(SmashPlugin.plugin(), () -> {
             switch (seconds) {
                 case 15, 10, 5, 4, 3, 2 ->
                         PlayerUtil.broadcast(text("Das Spiel startet in " + seconds + " Sekunden.", YELLOW));
                 case 1 -> PlayerUtil.broadcast(text("Das Spiel startet in einer Sekunde.", YELLOW));
                 case 0 -> {
                     forceStop();
-                    SmashPlugin.getPlugin().getGameStateManager().setCurrentState(GameState.INGAME);
+                    SmashPlugin.plugin().gameStateManager().setGameState(GameState.INGAME);
                     return;
                 }
             }

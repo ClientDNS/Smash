@@ -1,27 +1,20 @@
 package de.clientdns.smash.inventories;
 
-import de.clientdns.smash.character.enums.Character;
-import de.clientdns.smash.util.ItemStackUtil;
+import de.clientdns.smash.builder.ItemStackBuilder;
+import de.clientdns.smash.character.Character;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 import static net.kyori.adventure.text.Component.empty;
 import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class CharacterInventory {
-
-    public static final ItemStack MARIO = new ItemStackUtil(Material.PLAYER_HEAD, 1, Character.MARIO.getName()).build();
-    public static final ItemStack DONKEY_KONG = new ItemStackUtil(Material.PLAYER_HEAD, 1, Character.DONKEY_KONG.getName()).build();
-    public static final ItemStack FLASH = new ItemStackUtil(Material.PLAYER_HEAD, 1, Character.FLASH.getName()).build();
-    public static final ItemStack PIKACHU = new ItemStackUtil(Material.PLAYER_HEAD, 1, Character.PIKACHU.getName()).build();
-    public static final ItemStack SUPERMAN = new ItemStackUtil(Material.PLAYER_HEAD, 1, Character.SUPERMAN.getName()).build();
-    public static final ItemStack LINK = new ItemStackUtil(Material.PLAYER_HEAD, 1, Character.LINK.getName()).build();
-    private static final ItemStack EXPLANATION = new ItemStackUtil(Material.OAK_WALL_SIGN, 1, empty()).loreLines(empty(), text("Jeder Charakter verfügt über andere Fähigkeiten, wähle bedacht.", GRAY), empty()).build();
 
     public static void open(@NotNull Player player) {
         player.openInventory(CharacterInventory.create());
@@ -30,26 +23,19 @@ public class CharacterInventory {
     private static @NotNull Inventory create() {
         Inventory inventory = Bukkit.createInventory(null, 27, text("Charaktere", GOLD));
 
-        // Mario - Slot 1
-        inventory.setItem(1, MARIO);
+        new ItemStackBuilder(Material.PLAYER_HEAD, 1, Character.MARIO.getName()).make(mario -> inventory.setItem(1, mario));
 
-        // Donkey Kong - Slot 11
-        inventory.setItem(11, DONKEY_KONG);
+        new ItemStackBuilder(Material.PLAYER_HEAD, 1, Character.DONKEY_KONG.getName()).make(donkeyKong -> inventory.setItem(11, donkeyKong));
 
-        // Flash - Slot 3
-        inventory.setItem(3, FLASH);
+        new ItemStackBuilder(Material.PLAYER_HEAD, 1, Character.FLASH.getName()).make(flash -> inventory.setItem(3, flash));
 
-        // Pikachu - Slot 5
-        inventory.setItem(5, PIKACHU);
+        new ItemStackBuilder(Material.PLAYER_HEAD, 1, Character.PIKACHU.getName()).make(pikachu -> inventory.setItem(5, pikachu));
 
-        // Superman - Slot 15
-        inventory.setItem(15, SUPERMAN);
+        new ItemStackBuilder(Material.PLAYER_HEAD, 1, Character.SUPERMAN.getName()).make(superman -> inventory.setItem(15, superman));
 
-        // Link - Slot 7
-        inventory.setItem(7, LINK);
+        new ItemStackBuilder(Material.PLAYER_HEAD, 1, Character.LINK.getName()).make(link -> inventory.setItem(7, link));
 
-        // Explanation - Slot 22
-        inventory.setItem(22, EXPLANATION);
+        new ItemStackBuilder(Material.OAK_WALL_SIGN, 1, empty(), List.of(empty(), text("Jeder Character verfügt über anderen Fähigkeiten, wähle bedacht!", GRAY))).make(explanation -> inventory.setItem(22, explanation));
 
         return inventory;
     }
