@@ -1,9 +1,9 @@
 package de.clientdns.smash.listeners.custom;
 
+import de.clientdns.smash.api.gamestate.GameState;
 import de.clientdns.smash.countdown.EndCountdown;
 import de.clientdns.smash.countdown.LobbyCountdown;
-import de.clientdns.smash.events.GameStateChangeEvent;
-import de.clientdns.smash.gamestate.GameState;
+import de.clientdns.smash.api.events.GameStateChangeEvent;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.TitlePart;
 import org.bukkit.Bukkit;
@@ -15,15 +15,18 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 
-import static net.kyori.adventure.text.Component.text;
-import static net.kyori.adventure.text.format.NamedTextColor.*;
+import static de.clientdns.smash.config.Value.plain;
+import static net.kyori.adventure.text.format.NamedTextColor.GRAY;
+import static net.kyori.adventure.text.format.NamedTextColor.RED;
 
 public class GameStateChangeListener implements Listener {
 
     @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull GameStateChangeEvent event) {
-        if (event.getGameState().equals(GameState.INGAME)) {
+        if (event.getGameState().equals(GameState.LOBBY)) {
+            event.setCancelled(true);
+        } else if (event.getGameState().equals(GameState.INGAME)) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.setGameMode(GameMode.ADVENTURE);
                 player.setAllowFlight(false);
@@ -38,8 +41,8 @@ public class GameStateChangeListener implements Listener {
                 player.setAllowFlight(true);
                 player.setFlying(true);
                 player.getInventory().clear();
-                player.sendTitlePart(TitlePart.TITLE, text("Das Spiel ist vorbei!", RED));
-                player.sendTitlePart(TitlePart.SUBTITLE, text("Du bist nun im Spectator-Modus.", GRAY));
+                player.sendTitlePart(TitlePart.TITLE, plain("Das Spiel ist vorbei!", RED));
+                player.sendTitlePart(TitlePart.SUBTITLE, plain("Du bist nun im Spectator-Modus.", GRAY));
                 player.sendTitlePart(TitlePart.TIMES, Title.Times.times(Duration.ZERO, Duration.ofMillis(2500), Duration.ZERO));
             }
             LobbyCountdown.forceStop();

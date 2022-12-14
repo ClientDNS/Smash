@@ -1,7 +1,7 @@
 package de.clientdns.smash.inventories;
 
-import de.clientdns.smash.builder.ItemStackBuilder;
-import de.clientdns.smash.character.Character;
+import de.clientdns.smash.api.builder.ItemStackBuilder;
+import de.clientdns.smash.api.character.Character;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,9 +10,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static de.clientdns.smash.config.Value.plain;
 import static net.kyori.adventure.text.Component.empty;
-import static net.kyori.adventure.text.Component.text;
-import static net.kyori.adventure.text.format.NamedTextColor.*;
+import static net.kyori.adventure.text.format.NamedTextColor.GOLD;
+import static net.kyori.adventure.text.format.NamedTextColor.GRAY;
 
 public class CharacterInventory {
 
@@ -21,7 +22,7 @@ public class CharacterInventory {
     }
 
     private static @NotNull Inventory create() {
-        Inventory inventory = Bukkit.createInventory(null, 27, text("Charaktere", GOLD));
+        Inventory inventory = Bukkit.createInventory(null, 27, plain("Charaktere", GOLD));
 
         new ItemStackBuilder(Material.PLAYER_HEAD, 1, Character.MARIO.getName()).make(mario -> inventory.setItem(1, mario));
 
@@ -35,7 +36,7 @@ public class CharacterInventory {
 
         new ItemStackBuilder(Material.PLAYER_HEAD, 1, Character.LINK.getName()).make(link -> inventory.setItem(7, link));
 
-        new ItemStackBuilder(Material.OAK_WALL_SIGN, 1, empty(), List.of(empty(), text("Jeder Character verfügt über anderen Fähigkeiten, wähle bedacht!", GRAY))).make(explanation -> inventory.setItem(22, explanation));
+        new ItemStackBuilder(Material.OAK_WALL_SIGN, 1, empty(), List.of(empty(), plain("Jeder Character verfügt über anderen Fähigkeiten, wähle bedacht!", GRAY))).make(explanation -> inventory.setItem(22, explanation));
 
         return inventory;
     }

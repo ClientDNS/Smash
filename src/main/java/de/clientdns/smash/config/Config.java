@@ -1,96 +1,67 @@
 package de.clientdns.smash.config;
 
-import de.clientdns.smash.SmashPlugin;
-import de.clientdns.smash.config.values.ConfigValues;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 
 public class Config {
 
-    public final String configFilePath = "plugins/Smash/";
-    public final String configFileName = "config.yml";
+    private static FileConfiguration config;
+    private final Logger logger;
     public File configFile;
-    public FileConfiguration config;
 
-    public Config() {
-        File configFolder = new File(this.configFilePath);
+    public Config(String fileName) {
+        logger = Logger.getLogger(Config.class.getName());
         try {
-            configFile = new File(configFolder, this.configFileName);
-            Logger logger = SmashPlugin.plugin().getLogger();
-            if (configFolder.mkdir()) {
-                logger.info("Created config folder");
+            this.configFile = new File("plugins/Smash/", fileName);
+            if (this.configFile.getParentFile().mkdirs()) {
+                logger.info("Created 'Smash' folder.");
             }
             if (this.configFile.createNewFile()) {
-                logger.info("Created config file");
+                logger.info("Created '" + fileName + "' file.");
             }
-            load();
-            setDefaultValues();
-            save();
+            config = YamlConfiguration.loadConfiguration(this.configFile);
         } catch (IOException e) {
             throw new RuntimeException("Could not create config file", e);
         }
     }
 
-    public <V> V get(String path) throws NullPointerException {
-        return get(path, null);
+    public boolean contains(String path) {
+        return config.contains(path);
     }
 
-    @SuppressWarnings("unchecked")
-    public <V> V get(String path, V defaultValue) throws NullPointerException {
-        return (V) config.get(path, defaultValue);
+    public <V> void setDefaultValue(@NotNull KeyValue<V> keyValue) {
+        if (!contains(keyValue.key()))
+            config.set(keyValue.key(), keyValue.value());
     }
 
-    public Set<String> getKeys(boolean deep) {
-        return config.getKeys(deep);
+    public String get(String path, String def) throws NullPointerException {
+        return config.getString(path, def);
     }
 
-    public boolean notContains(String path) {
-        return !config.contains(path);
+    public int get(String path, int def) throws NullPointerException {
+        return config.getInt(path, def);
     }
 
-    public <V> void set(@NotNull String key, @NotNull V value) {
-        if (notContains(key)) {
-            config.set(key, value);
-        }
+    public long get(String path, long def) throws NullPointerException {
+        return config.getLong(path, def);
     }
 
-    public <V> void set(@NotNull String key, @NotNull V value, String comment) {
-        if (notContains(key)) {
-            config.set(key, value);
-            config.setInlineComments(key, List.of(comment));
-        }
+    public double get(String path, double def) throws NullPointerException {
+        return config.getDouble(path, def);
     }
 
-    public void setDefaultValues() {
-        set("prefix", "<gold>Smash</gold> <dark_gray>|</dark_gray> ", "Only in MiniMessage format!");
-        set("unknown-command", "<red>Unbekannter Befehl. ($command)</red>", "Only in MiniMessage format!");
-        set("permission-required", "<red>Du hast keine Berechtigung, dies zu tun.</red>", "Only in MiniMessage format!");
-        set("player-required", "<red>Du musst ein Spieler sein, um dies zu tun.</red>", "Only in MiniMessage format!");
-        set("player-not-found", "<red>Der Spieler wurde nicht gefunden.</red>", "Only in MiniMessage format!");
-        set("cannot-switch-gamemode", "<red>Du kannst deinen Spielmodus nicht ändern, während du in einem Spiel bist.</red>", "Only in MiniMessage format!");
-        set("config-reloaded", "<green>Die Config wurde neu geladen.</green>", "Only in MiniMessage format!");
-        set("min-players", 2, "The minimum amount of players required to start a game.");
-    }
-
-    public void reload() {
-        ConfigValues.reset();
-        this.load();
-    }
-
-    private void load() {
-        this.config = YamlConfiguration.loadConfiguration(this.configFile);
+    public boolean get(String path, boolean def) throws NullPointerException {
+        return config.getBoolean(path, def);
     }
 
     public void save() {
         try {
-            this.config.save(this.configFile);
+            config.save(this.configFile);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

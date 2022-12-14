@@ -1,10 +1,9 @@
 package de.clientdns.smash.listeners;
 
-import de.clientdns.smash.SmashPlugin;
-import de.clientdns.smash.builder.ItemStackBuilder;
-import de.clientdns.smash.config.values.ConfigValues;
+import de.clientdns.smash.api.SmashApi;
+import de.clientdns.smash.api.builder.ItemStackBuilder;
 import de.clientdns.smash.countdown.LobbyCountdown;
-import de.clientdns.smash.util.PlayerUtil;
+import de.clientdns.smash.api.util.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -18,8 +17,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static de.clientdns.smash.config.Value.get;
+import static de.clientdns.smash.config.Value.plain;
 import static net.kyori.adventure.text.Component.empty;
-import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class PlayerJoinListener implements Listener {
@@ -34,7 +34,7 @@ public class PlayerJoinListener implements Listener {
         player.setExp(0);
         player.setLevel(0);
 
-        if (SmashPlugin.plugin().gameStateManager().isLobbyState()) {
+        if (SmashApi.gameStateManager().lobbyState()) {
             player.setGameMode(GameMode.SURVIVAL);
             player.setAllowFlight(false);
             player.setFlying(false);
@@ -43,32 +43,34 @@ public class PlayerJoinListener implements Listener {
 
             if (!player.getInventory().isEmpty()) player.getInventory().clear();
 
-            new ItemStackBuilder(Material.CHEST, 1, text("Charaktere", GOLD), List.of(empty(), text("Ändere deinen Charakter", GRAY), empty())).make(characters -> player.getInventory().setItem(2, characters));
-            new ItemStackBuilder(Material.MAP, 1, text("Maps", GOLD), List.of(empty(), text("Stimme für eine Map ab", GRAY), empty())).make(maps -> player.getInventory().setItem(6, maps));
+            new ItemStackBuilder(Material.CHEST, 1, plain("Charaktere", GOLD), List.of(empty(), plain("Ändere deinen Charakter", GRAY), empty())).make(characters -> player.getInventory().setItem(2, characters));
+            new ItemStackBuilder(Material.MAP, 1, plain("Maps", GOLD), List.of(empty(), plain("Stimme für eine Map ab", GRAY), empty())).make(maps -> player.getInventory().setItem(6, maps));
 
             int online = Bukkit.getOnlinePlayers().size();
-            int minPlayers = ConfigValues.minPlayers();
+            int minPlayers = get("min-players", 2);
 
-            PlayerUtil.broadcast(text(player.getName() + " ist dem Server beigetreten.", GREEN));
+            PlayerUtil.broadcast(plain(player.getName() + " ist dem Server beigetreten.", GREEN));
             if (online >= minPlayers) {
                 LobbyCountdown.start(); // Start countdown if minimum players are reached
             }
-        } else if (SmashPlugin.plugin().gameStateManager().isIngameState()) {
+        } else if (SmashApi.gameStateManager().ingameState()) {
             player.setGameMode(GameMode.SPECTATOR);
 
             setAttackSpeed(player);
 
             if (!player.getInventory().isEmpty()) player.getInventory().clear();
-            PlayerUtil.broadcastTo(text("[+]" + player.getName(), GREEN), GameMode.SPECTATOR);
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                if (onlinePlayer.getGameMode().equals(GameMode.SPECTATOR))
+                    onlinePlayer.sendMessage(plain("[+] " + player.getName(), GREEN));
+            }
         }
         event.joinMessage(empty());
     }
 
     private void setAttackSpeed(@NotNull Player player) {
         AttributeInstance attackSpeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
-        if (attackSpeed != null) {
+        if (attackSpeed != null)
             attackSpeed.setBaseValue(1024); // Remove 1.9+ cooldown
-        }
         player.saveData();
     }
 }
