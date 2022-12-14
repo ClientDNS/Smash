@@ -9,7 +9,7 @@
 Clone the repository:
 
 ```shell
-git clone https://github.com/ClientDNS/Smash
+git clone https://github.com/ClientDNS/Smash.git
 cd Smash
 ```
 
