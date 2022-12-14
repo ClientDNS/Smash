@@ -1,105 +1,82 @@
 package de.clientdns.smash;
 
-import de.clientdns.smash.commands.ConfigCommand;
 import de.clientdns.smash.commands.SetupCommand;
-import de.clientdns.smash.commands.UptimeCommand;
 import de.clientdns.smash.config.Config;
-import de.clientdns.smash.gamestate.GameStateManager;
 import de.clientdns.smash.listeners.*;
 import de.clientdns.smash.listeners.custom.CharacterChangeListener;
 import de.clientdns.smash.listeners.custom.GameStateChangeListener;
 import de.clientdns.smash.listeners.custom.SetupBeginListener;
 import de.clientdns.smash.listeners.custom.SetupFinishListener;
-import de.clientdns.smash.map.setup.SetupManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.World;
+import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.time.Instant;
-import java.util.Objects;
+import java.util.List;
 
 public final class SmashPlugin extends JavaPlugin {
 
     private static SmashPlugin plugin;
     private Config config;
-    private GameStateManager gameStateManager;
-    private SetupManager setupManager;
-    private Instant startTime;
 
     public static SmashPlugin plugin() {
         return plugin;
     }
 
     public Config configuration() {
-        return this.config;
-    }
-
-    public GameStateManager gameStateManager() {
-        return this.gameStateManager;
-    }
-
-    public SetupManager setupManager() {
-        return this.setupManager;
-    }
-
-    public Instant startTime() {
-        return this.startTime;
+        return config;
     }
 
     @Override
     public void onLoad() {
         plugin = this;
-        this.startTime = Instant.now();
-        this.config = new Config();
-        this.gameStateManager = new GameStateManager();
-        this.setupManager = new SetupManager();
+        config = new Config("config.yml");
     }
 
     @Override
     public void onEnable() {
-        this.checkJava();
-        this.initListeners();
-        this.initCommands();
-        this.setWorldProperties();
+        checkJava();
+        initListeners();
+        initCommands();
+        setWorldProperties();
+    }
+
+    @Override
+    public void onDisable() {
+        getLogger().info("Cancelling running/scheduled tasks...");
+        Bukkit.getScheduler().cancelTasks(this);
     }
 
     void initListeners() {
-        this.getServer().getPluginManager().registerEvents(new AsyncPlayerPreLoginListener(), this);
-        this.getServer().getPluginManager().registerEvents(new BlockBreakListener(), this);
-        this.getServer().getPluginManager().registerEvents(new BlockPlaceListener(), this);
-        this.getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
-        this.getServer().getPluginManager().registerEvents(new EntityPickupItemListener(), this);
-        this.getServer().getPluginManager().registerEvents(new FoodLevelChangeListener(), this);
-        this.getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
-        this.getServer().getPluginManager().registerEvents(new PlayerDropItemListener(), this);
-        this.getServer().getPluginManager().registerEvents(new PlayerGameModeChangeListener(), this);
-        this.getServer().getPluginManager().registerEvents(new GameStateChangeListener(), this);
-        this.getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
-        this.getServer().getPluginManager().registerEvents(new PlayerItemHeldListener(), this);
-        this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
-        this.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
+        getServer().getPluginManager().registerEvents(new AsyncPlayerPreLoginListener(), this);
+        getServer().getPluginManager().registerEvents(new BlockBreakListener(), this);
+        getServer().getPluginManager().registerEvents(new BlockPlaceListener(), this);
+        getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
+        getServer().getPluginManager().registerEvents(new EntityPickupItemListener(), this);
+        getServer().getPluginManager().registerEvents(new FoodLevelChangeListener(), this);
+        getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerDropItemListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerGameModeChangeListener(), this);
+        getServer().getPluginManager().registerEvents(new GameStateChangeListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerItemHeldListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
 
         // custom events
-        this.getServer().getPluginManager().registerEvents(new CharacterChangeListener(), this);
-        this.getServer().getPluginManager().registerEvents(new GameStateChangeListener(), this);
-        this.getServer().getPluginManager().registerEvents(new SetupBeginListener(), this);
-        this.getServer().getPluginManager().registerEvents(new SetupFinishListener(), this);
+        getServer().getPluginManager().registerEvents(new CharacterChangeListener(), this);
+        getServer().getPluginManager().registerEvents(new GameStateChangeListener(), this);
+        getServer().getPluginManager().registerEvents(new SetupBeginListener(), this);
+        getServer().getPluginManager().registerEvents(new SetupFinishListener(), this);
     }
 
     void initCommands() {
-        ConfigCommand configCommand = new ConfigCommand();
-        SetupCommand setupCommand = new SetupCommand();
-        UptimeCommand uptimeCommand = new UptimeCommand();
 
-        Objects.requireNonNull(this.getCommand("config")).setExecutor(configCommand);
-        Objects.requireNonNull(this.getCommand("setup")).setExecutor(setupCommand);
-        Objects.requireNonNull(this.getCommand("uptime")).setExecutor(uptimeCommand);
+        CommandMap map = Bukkit.getCommandMap();
 
-        // Tab completer
-        Objects.requireNonNull(this.getCommand("config")).setTabCompleter(configCommand);
-        Objects.requireNonNull(this.getCommand("setup")).setTabCompleter(setupCommand);
-        Objects.requireNonNull(this.getCommand("uptime")).setTabCompleter(uptimeCommand);
+        SetupCommand setupCommand = new SetupCommand("setup", "", "/", List.of());
+        map.register("smash", setupCommand);
     }
 
     void setWorldProperties() {
@@ -128,6 +105,6 @@ public final class SmashPlugin extends JavaPlugin {
 
     void checkJava() {
         if (Runtime.version().feature() < 17)
-            this.getLogger().severe("You are using an outdated java version (" + Runtime.version().feature() + ")! Please update to Java 17!");
+            getLogger().severe("You are using an outdated java version (" + Runtime.version().feature() + ")! Please update to Java 17!");
     }
 }
