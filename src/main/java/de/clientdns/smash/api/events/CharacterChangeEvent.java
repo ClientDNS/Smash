@@ -1,6 +1,6 @@
-package de.clientdns.smash.events;
+package de.clientdns.smash.api.events;
 
-import de.clientdns.smash.character.Character;
+import de.clientdns.smash.api.character.Character;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -13,30 +13,32 @@ public class CharacterChangeEvent extends Event implements Cancellable {
     private final Player player;
     private final Character character;
     private final boolean replaced;
+    private final boolean sameCharacter;
     private boolean cancelled;
 
-    public CharacterChangeEvent(Player player, Character character, boolean replaced) {
+    public CharacterChangeEvent(Player player, Character character, boolean replaced, boolean sameCharacter) {
         this.player = player;
         this.character = character;
         this.replaced = replaced;
+        this.sameCharacter = sameCharacter;
         this.cancelled = false;
     }
 
-    public boolean replaced() {
-        return this.replaced;
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    public boolean characterReplaced() {
+        return replaced;
+    }
+
+    public boolean sameCharacter() {
+        return sameCharacter;
     }
 
     @Override
     public boolean isCancelled() {
-        return this.cancelled;
-    }
-
-    public Player getPlayer() {
-        return this.player;
-    }
-
-    public Character getCharacter() {
-        return this.character;
+        return cancelled;
     }
 
     @Override
@@ -44,12 +46,16 @@ public class CharacterChangeEvent extends Event implements Cancellable {
         this.cancelled = cancel;
     }
 
-    @Override
-    public @NotNull HandlerList getHandlers() {
-        return handlers;
+    public Player getPlayer() {
+        return player;
     }
 
-    public static HandlerList getHandlerList() {
+    public Character getCharacter() {
+        return character;
+    }
+
+    @Override
+    public @NotNull HandlerList getHandlers() {
         return handlers;
     }
 }

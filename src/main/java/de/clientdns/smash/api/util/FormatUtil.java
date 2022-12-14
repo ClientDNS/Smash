@@ -1,4 +1,4 @@
-package de.clientdns.smash.util;
+package de.clientdns.smash.api.util;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

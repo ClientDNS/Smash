@@ -1,6 +1,6 @@
 package de.clientdns.smash.api.gamestate;
 
-import de.clientdns.smash.events.GameStateChangeEvent;
+import de.clientdns.smash.api.events.GameStateChangeEvent;
 import org.bukkit.Bukkit;
 
 public class GameStateManager {

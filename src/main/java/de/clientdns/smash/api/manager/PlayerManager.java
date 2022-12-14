@@ -1,7 +1,7 @@
 package de.clientdns.smash.api.manager;
 
 import de.clientdns.smash.api.character.Character;
-import de.clientdns.smash.events.CharacterChangeEvent;
+import de.clientdns.smash.api.events.CharacterChangeEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;

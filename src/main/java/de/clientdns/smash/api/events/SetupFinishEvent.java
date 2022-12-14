@@ -1,6 +1,6 @@
-package de.clientdns.smash.events;
+package de.clientdns.smash.api.events;
 
-import de.clientdns.smash.map.setup.MapSetup;
+import de.clientdns.smash.api.map.setup.MapSetup;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -25,11 +25,11 @@ public class SetupFinishEvent extends Event implements Cancellable {
     }
 
     public Player getPlayer() {
-        return this.player;
+        return player;
     }
 
     public MapSetup getSetup() {
-        return this.setup;
+        return setup;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class SetupFinishEvent extends Event implements Cancellable {
 
     @Override
     public boolean isCancelled() {
-        return this.cancelled;
+        return cancelled;
     }
 
     @Override

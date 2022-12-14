@@ -1,8 +1,8 @@
 package de.clientdns.smash.api.map.setup;
 
 import de.clientdns.smash.api.exceptions.SetupFailedException;
-import de.clientdns.smash.events.SetupBeginEvent;
-import de.clientdns.smash.events.SetupFinishEvent;
+import de.clientdns.smash.api.events.SetupBeginEvent;
+import de.clientdns.smash.api.events.SetupFinishEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
