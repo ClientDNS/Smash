@@ -2,7 +2,8 @@ package de.clientdns.smash.listeners;
 
 import de.clientdns.smash.api.SmashApi;
 import de.clientdns.smash.api.character.Character;
-import de.clientdns.smash.api.manager.PlayerManager;
+import de.clientdns.smash.api.gamestate.GameState;
+import de.clientdns.smash.api.player.PlayerManager;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,26 +22,23 @@ public class InventoryClickListener implements Listener {
             event.setCancelled(true);
             return;
         }
-
         if (event.getCurrentItem() == null) {
             event.setCancelled(true);
             return;
         }
-        ItemStack item = event.getCurrentItem();
-
-        if (item.getItemMeta() == null) {
+        if (event.getCurrentItem().getItemMeta() == null) {
             event.setCancelled(true);
             return;
         }
-        Component displayName = item.getItemMeta().displayName();
-
         if (event.getClick() != ClickType.LEFT) {
             event.setCancelled(true);
             return;
         }
 
-        if (SmashApi.gameStateManager().lobbyState()) {
+        if (SmashApi.getGameStateManager().getGameState().equals(GameState.LOBBY)) {
             Player player = (Player) event.getWhoClicked();
+            ItemStack item = event.getCurrentItem();
+            Component displayName = item.getItemMeta().displayName();
             if (Character.MARIO.getName().equals(displayName)) {
                 PlayerManager.set(player, Character.MARIO);
             } else if (Character.DONKEY_KONG.getName().equals(displayName)) {
@@ -56,10 +54,10 @@ public class InventoryClickListener implements Listener {
             }
             event.setCancelled(true);
             return;
-        } else if (SmashApi.gameStateManager().ingameState()) {
+        } else if (SmashApi.getGameStateManager().getGameState().equals(GameState.INGAME)) {
             event.setCancelled(true);
             return;
-        } else if (SmashApi.gameStateManager().endState()) {
+        } else if (SmashApi.getGameStateManager().getGameState().equals(GameState.END)) {
             event.setCancelled(true);
             return;
         }

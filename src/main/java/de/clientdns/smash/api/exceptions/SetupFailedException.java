@@ -5,7 +5,7 @@ import java.io.Serial;
 public class SetupFailedException extends Exception {
 
     @Serial
-    private static final long serialVersionUID = 9079657993037196984L;
+    private static final long serialVersionUID = 7953975321791470922L;
 
     public SetupFailedException() {
         super();

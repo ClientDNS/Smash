@@ -11,5 +11,6 @@ public class BlockPlaceListener implements Listener {
     @EventHandler
     void on(@NotNull BlockPlaceEvent event) {
         event.setCancelled(true);
+        event.setBuild(false);
     }
 }

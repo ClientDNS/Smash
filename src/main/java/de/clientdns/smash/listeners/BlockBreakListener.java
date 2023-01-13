@@ -11,5 +11,6 @@ public class BlockBreakListener implements Listener {
     @EventHandler
     void on(@NotNull BlockBreakEvent event) {
         event.setCancelled(true);
+        event.setDropItems(false);
     }
 }

@@ -1,22 +1,22 @@
 package de.clientdns.smash.api.character;
 
+import de.clientdns.smash.api.config.MiniMsg;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
 
-import java.security.SecureRandom;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
-import static de.clientdns.smash.config.Value.plain;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
 
-public enum Character {
+public enum Character implements Comparable<Character> {
 
-    MARIO(0, plain("Mario", RED), List.of(Ability.STAMP_ATTACK)),
-    DONKEY_KONG(1, plain("Donkey Kong", DARK_RED), List.of(Ability.STAMP_ATTACK)),
-    FLASH(2, plain("Flash", RED), List.of(Ability.SPEED)),
-    PIKACHU(3, plain("Pikachu", YELLOW), List.of(Ability.STAMP_ATTACK)),
-    SUPERMAN(4, plain("Superman", RED), List.of(Ability.STAMP_ATTACK)),
-    LINK(5, plain("Link", DARK_GREEN), List.of(Ability.JUMPBOOST, Ability.SPEED));
+    MARIO(0, MiniMsg.plain("Mario", RED), List.of(Ability.STAMP_ATTACK)),
+    DONKEY_KONG(1, MiniMsg.plain("Donkey Kong", DARK_RED), List.of(Ability.STAMP_ATTACK)),
+    FLASH(2, MiniMsg.plain("Flash", RED), List.of(Ability.SPEED)),
+    PIKACHU(3, MiniMsg.plain("Pikachu", YELLOW), List.of(Ability.STAMP_ATTACK)),
+    SUPERMAN(4, MiniMsg.plain("Superman", RED), List.of(Ability.STAMP_ATTACK)),
+    LINK(5, MiniMsg.plain("Link", DARK_GREEN), List.of(Ability.JUMPBOOST, Ability.SPEED));
 
     private final int id;
     private final Component name;
@@ -28,15 +28,16 @@ public enum Character {
         this.abilities = abilities;
     }
 
-    public static Character random() {
-        SecureRandom random = new SecureRandom();
-        return Character.values()[random.nextInt(Character.values().length)];
+    public static Character getRandom() {
+        return values()[ThreadLocalRandom.current().nextInt(values().length)];
     }
 
     public static @Nullable Character findByName(Component name) {
-        for (Character character : Character.values())
-            if (character.getName().equals(name))
+        for (Character character : Character.values()) {
+            if (character.getName().equals(name)) {
                 return character;
+            }
+        }
         return null;
     }
 

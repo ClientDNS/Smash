@@ -1,18 +1,23 @@
 package de.clientdns.smash.api;
 
 import de.clientdns.smash.api.gamestate.GameStateManager;
-import de.clientdns.smash.api.map.setup.SetupManager;
+import de.clientdns.smash.api.map.setup.MapSetup;
+import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SmashApi {
 
-    private static final GameStateManager gameStateManager = new GameStateManager();
-    private static final SetupManager setupManager = new SetupManager();
+    private static final Map<Player, MapSetup> setups = new HashMap<>();
 
-    public static GameStateManager gameStateManager() {
+    private static final GameStateManager gameStateManager = new GameStateManager();
+
+    public static GameStateManager getGameStateManager() {
         return gameStateManager;
     }
 
-    public static SetupManager setupManager() {
-        return setupManager;
+    public static Map<Player, MapSetup> getSetups() {
+        return setups;
     }
 }

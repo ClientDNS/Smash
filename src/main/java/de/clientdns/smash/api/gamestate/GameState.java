@@ -4,5 +4,5 @@ public enum GameState {
 
     LOBBY,
     INGAME,
-    END
+    END;
 }

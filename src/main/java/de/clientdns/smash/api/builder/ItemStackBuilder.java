@@ -30,16 +30,6 @@ public class ItemStackBuilder {
     }
 
     /**
-     * Creates a new ItemStackBuilder with the given {@link Material} and amount.
-     *
-     * @param material The material of the item.
-     * @param amount   The amount of the item.
-     */
-    public ItemStackBuilder(Material material, int amount) {
-        this(material, amount, null);
-    }
-
-    /**
      * Creates a new ItemStackBuilder with the given {@link Material}, amount and display name.
      *
      * @param material    The material of the item.
@@ -59,7 +49,7 @@ public class ItemStackBuilder {
      * @param lore        The lore of them item.
      */
     public ItemStackBuilder(Material material, int amount, Component displayName, List<Component> lore) {
-        if (material == null) throw new NullPointerException("Material must not be null.");
+        if (material == null) throw new NullPointerException("Material cannot be null.");
         else {
             this.itemStack = new ItemStack(material, amount);
             this.itemMeta = this.itemStack.getItemMeta();
@@ -112,7 +102,7 @@ public class ItemStackBuilder {
      *
      * @return The material of the item.
      */
-    public Material material() {
+    public Material type() {
         return itemStack.getType();
     }
 
@@ -122,7 +112,7 @@ public class ItemStackBuilder {
      * @param material The material of the item.
      * @return The material of the item.
      */
-    public ItemStackBuilder material(Material material) {
+    public ItemStackBuilder type(Material material) {
         itemStack.setType(material);
         return this;
     }
@@ -153,8 +143,8 @@ public class ItemStackBuilder {
      * @param lines The lines of the lore.
      * @return The ItemStackBuilder instance.
      */
-    public ItemStackBuilder loreLines(Component... lines) {
-        itemMeta.lore(List.of(lines));
+    public ItemStackBuilder loreLines(List<Component> lines) {
+        itemMeta.lore(lines);
         return this;
     }
 
@@ -185,8 +175,9 @@ public class ItemStackBuilder {
      * @return The ItemStackBuilder instance.
      */
     public ItemStackBuilder enchants(@NotNull Map<Enchantment, Integer> enchantments) {
-        for (Enchantment enchantment : enchantments.keySet())
+        for (Enchantment enchantment : enchantments.keySet()) {
             itemMeta.addEnchant(enchantment, enchantments.get(enchantment), true);
+        }
         return this;
     }
 
@@ -221,11 +212,13 @@ public class ItemStackBuilder {
 
     /**
      * Builds the item and returns it.
-     *
-     * @param consumer
      */
-    public void make(@NotNull Consumer<ItemStack> consumer) {
+    public ItemStack make() {
         itemStack.setItemMeta(itemMeta);
-        consumer.accept(itemStack);
+        return itemStack;
+    }
+
+    public void make(@NotNull Consumer<ItemStack> item) {
+        item.accept(make());
     }
 }

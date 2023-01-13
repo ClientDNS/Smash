@@ -1,54 +1,54 @@
 package de.clientdns.smash.api.map.setup;
 
-import de.clientdns.smash.api.exceptions.SetupFailedException;
-import de.clientdns.smash.api.events.SetupBeginEvent;
-import de.clientdns.smash.api.events.SetupFinishEvent;
-import org.bukkit.Bukkit;
+import de.clientdns.smash.api.SmashApi;
+import de.clientdns.smash.api.map.Map;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MapSetup {
 
     private final Player player;
     private final String mapName;
-    private final List<Location> spawnLocations;
+    private final Location[] spawnLocations;
+    private final int indexSize;
 
-    public MapSetup(Player player, String mapName) {
+    public MapSetup(Player player, String mapName, int indexSize) {
         this.player = player;
         this.mapName = mapName;
-        this.spawnLocations = new ArrayList<>();
+        this.indexSize = indexSize;
+        this.spawnLocations = new Location[indexSize];
+        SmashApi.getSetups().put(player, this);
     }
 
-    public void start() {
-        Bukkit.getPluginManager().callEvent(new SetupBeginEvent(player, this));
+    public Map finish(boolean abort) {
+        SmashApi.getSetups().remove(player);
+        return !abort ? new Map(mapName, spawnLocations) : null;
     }
 
-    public boolean save() throws SetupFailedException {
-        if (spawnLocations.size() < 2)
-            throw new SetupFailedException("Not enough spawn locations. (min: 2, current: " + spawnLocations.size() + ")");
-        return true;
+    public void setSpawnLocation(int index, Location location) {
+        spawnLocations[index] = location;
+        player.sendMessage("Index #" + index + " -> " + location);
     }
 
-    public void finish() {
-        Bukkit.getPluginManager().callEvent(new SetupFinishEvent(player, this));
-    }
-
-    public void addSpawnLocation(Location location) {
-        spawnLocations.add(location);
-    }
-
-    public List<Location> getSpawnLocations() {
-        return spawnLocations;
+    public Player getPlayer() {
+        return player;
     }
 
     public String getMapName() {
         return mapName;
     }
 
-    public Player getPlayer() {
-        return player;
+    public int getIndexSize() {
+        return indexSize;
+    }
+
+    public int countNonNullArrayValues() {
+        int count = 0;
+        for (Location location : spawnLocations) {
+            if (location != null) {
+                count++;
+            }
+        }
+        return count;
     }
 }
