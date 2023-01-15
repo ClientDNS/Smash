@@ -42,7 +42,7 @@ public class MapSetup {
         return indexSize;
     }
 
-    public int countNonNullArrayValues() {
+    public int countLocations() {
         int count = 0;
         for (Location location : spawnLocations) {
             if (location != null) {
