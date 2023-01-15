@@ -19,7 +19,7 @@ public class CharacterChangeListener implements Listener {
         Character character = event.getCharacter();
         boolean characterReplaced = event.isReplaced();
         if (characterReplaced) {
-            if (!character.equals(before)) {
+            if (!character.equals(before)) { // Not same character as before
                 player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Dein Charakter wurde auf ", GREEN).append(character.getName()).append(MiniMsg.plain(" gesetzt!", GREEN))));
             }
         } else {
