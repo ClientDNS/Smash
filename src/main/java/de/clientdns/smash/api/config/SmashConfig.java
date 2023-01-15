@@ -3,6 +3,7 @@ package de.clientdns.smash.api.config;
 import de.clientdns.smash.SmashPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -21,7 +22,7 @@ public class SmashConfig {
      *
      * @param fileName The name to create a file under it.
      */
-    public SmashConfig(@NotNull String fileName) {
+    public SmashConfig(@NotNull @Pattern("[a-z_\\-.]+") String fileName) {
         this.fileName = fileName;
         this.logger = SmashPlugin.getPlugin().getLogger();
         this.configFile = new File("plugins/Smash/", fileName);
