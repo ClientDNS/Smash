@@ -23,7 +23,6 @@ public class Map implements Serializable {
     public Map(String name, Location @NotNull [] spawnLocations) {
         this.name = name;
         this.spawnLocations = new Location[spawnLocations.length];
-        Bukkit.getLogger().info("Detected map creation '" + name + "'!");
     }
 
     public String getName() {
