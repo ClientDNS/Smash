@@ -69,8 +69,8 @@ public class SetupCommand extends Command {
                             return false;
                         }
                         MapSetup mapSetup = SmashApi.getSetups().get(player);
-                        if (mapSetup.countNonNullArrayValues() < mapSetup.getIndexSize()) {
-                            int current = mapSetup.countNonNullArrayValues();
+                        int current = mapSetup.countLocations();
+                        if (current < mapSetup.getIndexSize()) {
                             int max = mapSetup.getIndexSize();
                             player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Nicht genug Spawn-Positionen! (" + current + "/" + max + ")", RED)));
                             return false;
