@@ -1,10 +1,9 @@
 package de.clientdns.smash.countdown;
 
 import de.clientdns.smash.SmashPlugin;
-import de.clientdns.smash.api.SmashApi;
-import de.clientdns.smash.api.config.MiniMsg;
-import de.clientdns.smash.api.gamestate.GameState;
-import de.clientdns.smash.api.util.PlayerUtil;
+import de.clientdns.smash.config.MiniMsg;
+import de.clientdns.smash.gamestate.GameState;
+import de.clientdns.smash.util.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -16,7 +15,7 @@ public class LobbyCountdown {
     private static int seconds;
 
     public static void start() {
-        if (!SmashApi.getGameStateManager().getGameState().equals(GameState.LOBBY)) {
+        if (!SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.LOBBY)) {
             throw new IllegalStateException("LobbyCountdown can only be started in LOBBY state.");
         }
         seconds = 15;
@@ -27,7 +26,7 @@ public class LobbyCountdown {
                 case 1 -> PlayerUtil.broadcast(MiniMsg.plain("Das Spiel startet in einer Sekunde.", YELLOW));
                 case 0 -> {
                     forceStop();
-                    SmashApi.getGameStateManager().setGameState(GameState.INGAME);
+                    SmashPlugin.getPlugin().getGameStateManager().setGameState(GameState.INGAME);
                     return;
                 }
             }

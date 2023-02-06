@@ -1,21 +1,27 @@
 package de.clientdns.smash;
 
-import de.clientdns.smash.api.config.SmashConfig;
-import de.clientdns.smash.api.player.PlayerManager;
 import de.clientdns.smash.commands.SetupCommand;
+import de.clientdns.smash.config.SmashConfig;
+import de.clientdns.smash.gamestate.GameStateManager;
 import de.clientdns.smash.listeners.*;
-import de.clientdns.smash.listeners.custom.CharacterChangeListener;
 import de.clientdns.smash.listeners.custom.GameStateChangeListener;
+import de.clientdns.smash.map.setup.MapSetup;
+import de.clientdns.smash.player.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.GameRule;
 import org.bukkit.World;
-import org.bukkit.command.CommandMap;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public final class SmashPlugin extends JavaPlugin {
 
     private static SmashPlugin plugin;
+    private GameStateManager gameStateManager;
+    private Map<Player, MapSetup> setups;
     private SmashConfig smashConfig;
 
     public static SmashPlugin getPlugin() {
@@ -25,11 +31,12 @@ public final class SmashPlugin extends JavaPlugin {
     @Override
     public void onLoad() {
         plugin = this;
-        if (Runtime.version().feature() < 17) {
-            getLogger().severe("You are using an outdated java version (" + Runtime.version().feature() + ")! Please update to Java 17!");
-            return;
+        double classVersion = Double.parseDouble(System.getProperty("java.class.version"));
+        if (classVersion < 61.0) {
+            getLogger().warning("You are using an unsupported java version (" + classVersion + ")!");
+            getLogger().warning("Please update to Java 17 (61).");
+            getServer().getPluginManager().disablePlugin(this);
         }
-        smashConfig = new SmashConfig("smash.yml");
     }
 
     @Override
@@ -37,18 +44,18 @@ public final class SmashPlugin extends JavaPlugin {
         initListeners();
         initCommands();
         setWorldProperties();
+        gameStateManager = new GameStateManager();
+        setups = new HashMap<>();
+        smashConfig = new SmashConfig("smash.yml");
     }
 
     @Override
     public void onDisable() {
-        if (PlayerManager.reset()) {
-            getLogger().info("Successfully cleared player character cache.");
-        }
+        PlayerManager.clearCharacters();
     }
 
     void initListeners() {
         // custom events
-        getServer().getPluginManager().registerEvents(new CharacterChangeListener(), this);
         getServer().getPluginManager().registerEvents(new GameStateChangeListener(), this);
 
         getServer().getPluginManager().registerEvents(new AsyncPlayerPreLoginListener(), this);
@@ -64,12 +71,12 @@ public final class SmashPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerItemHeldListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
     }
 
     void initCommands() {
-        CommandMap map = Bukkit.getCommandMap();
-        map.register("smash", new SetupCommand("setup"));
+        getServer().getCommandMap().register("smash", new SetupCommand("setup"));
     }
 
     void setWorldProperties() {
@@ -96,6 +103,14 @@ public final class SmashPlugin extends JavaPlugin {
             world.setGameRule(GameRule.UNIVERSAL_ANGER, false);
             world.setGameRule(GameRule.MAX_ENTITY_CRAMMING, 8);
         }
+    }
+
+    public GameStateManager getGameStateManager() {
+        return gameStateManager;
+    }
+
+    public Map<Player, MapSetup> getSetups() {
+        return setups;
     }
 
     public SmashConfig getSmashConfig() {

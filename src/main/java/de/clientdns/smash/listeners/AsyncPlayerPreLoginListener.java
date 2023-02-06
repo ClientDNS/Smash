@@ -1,8 +1,8 @@
 package de.clientdns.smash.listeners;
 
-import de.clientdns.smash.api.SmashApi;
-import de.clientdns.smash.api.config.MiniMsg;
-import de.clientdns.smash.api.gamestate.GameState;
+import de.clientdns.smash.SmashPlugin;
+import de.clientdns.smash.config.MiniMsg;
+import de.clientdns.smash.gamestate.GameState;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -20,9 +20,9 @@ public class AsyncPlayerPreLoginListener implements Listener {
         int online = Bukkit.getOnlinePlayers().size();
         int max = Bukkit.getMaxPlayers();
         if (online >= max) {
-            if (SmashApi.getGameStateManager().getGameState().equals(GameState.LOBBY)) {
+            if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.LOBBY)) {
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, MiniMsg.plain("Der Server ist schon voll!", RED));
-            } else if (SmashApi.getGameStateManager().getGameState().equals(GameState.INGAME)) {
+            } else if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.INGAME)) {
                 event.allow();
                 Player player = Bukkit.getPlayer(event.getUniqueId());
                 if (player != null) {

@@ -1,10 +1,10 @@
 package de.clientdns.smash.listeners.custom;
 
-import de.clientdns.smash.api.config.MiniMsg;
-import de.clientdns.smash.api.events.GameStateChangeEvent;
-import de.clientdns.smash.api.gamestate.GameState;
+import de.clientdns.smash.SmashPlugin;
+import de.clientdns.smash.config.MiniMsg;
 import de.clientdns.smash.countdown.EndCountdown;
 import de.clientdns.smash.countdown.LobbyCountdown;
+import de.clientdns.smash.events.GameStateChangeEvent;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.TitlePart;
 import org.bukkit.Bukkit;
@@ -24,27 +24,31 @@ public class GameStateChangeListener implements Listener {
     @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull GameStateChangeEvent event) {
-        if (event.getGameState().equals(GameState.INGAME)) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                player.setGameMode(GameMode.ADVENTURE);
-                player.setAllowFlight(false);
-                player.setFlying(false);
-                player.getInventory().clear();
-                // TODO: Give items and teleport to voted map locations
+        switch (event.getGameState()) {
+            case INGAME -> {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    player.setGameMode(GameMode.ADVENTURE);
+                    player.setAllowFlight(false);
+                    player.setFlying(false);
+                    player.getInventory().clear();
+                    // TODO: Give items and teleport to voted map locations
+                }
+                LobbyCountdown.forceStop();
             }
-            LobbyCountdown.forceStop();
-        } else if (event.getGameState().equals(GameState.END)) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                player.setGameMode(GameMode.SPECTATOR);
-                player.setAllowFlight(true);
-                player.setFlying(true);
-                player.getInventory().clear();
-                player.sendTitlePart(TitlePart.TITLE, MiniMsg.plain("Das Spiel ist vorbei!", RED));
-                player.sendTitlePart(TitlePart.SUBTITLE, MiniMsg.plain("Du schaust nun zu.", GRAY));
-                player.sendTitlePart(TitlePart.TIMES, Title.Times.times(Duration.ZERO, Duration.ofMillis(2500), Duration.ZERO));
+            case END -> {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    player.setGameMode(GameMode.SPECTATOR);
+                    player.setAllowFlight(true);
+                    player.setFlying(true);
+                    player.getInventory().clear();
+                    player.sendTitlePart(TitlePart.TITLE, MiniMsg.plain("Das Spiel ist vorbei!", RED));
+                    player.sendTitlePart(TitlePart.SUBTITLE, MiniMsg.plain("Du schaust nun zu.", GRAY));
+                    player.sendTitlePart(TitlePart.TIMES, Title.Times.times(Duration.ZERO, Duration.ofMillis(2500), Duration.ZERO));
+                }
+                LobbyCountdown.forceStop();
+                EndCountdown.start();
             }
-            LobbyCountdown.forceStop();
-            EndCountdown.start();
         }
+        SmashPlugin.getPlugin().getLogger().info("Detected game state change to " + event.getGameState());
     }
 }

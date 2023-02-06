@@ -1,10 +1,9 @@
 package de.clientdns.smash.countdown;
 
 import de.clientdns.smash.SmashPlugin;
-import de.clientdns.smash.api.SmashApi;
-import de.clientdns.smash.api.config.MiniMsg;
-import de.clientdns.smash.api.gamestate.GameState;
-import de.clientdns.smash.api.util.PlayerUtil;
+import de.clientdns.smash.config.MiniMsg;
+import de.clientdns.smash.gamestate.GameState;
+import de.clientdns.smash.util.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -15,8 +14,8 @@ public class EndCountdown {
     private static int seconds;
 
     public static void start() {
-        if (!SmashApi.getGameStateManager().getGameState().equals(GameState.END)) {
-            throw new IllegalStateException("EndCountdown can only be started in END state.");
+        if (!SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.END)) {
+            return;
         }
         seconds = 15;
         Bukkit.getScheduler().scheduleSyncRepeatingTask(SmashPlugin.getPlugin(), () -> {

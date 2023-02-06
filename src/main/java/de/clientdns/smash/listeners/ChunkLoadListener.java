@@ -12,11 +12,7 @@ public class ChunkLoadListener implements Listener {
     @EventHandler
     void on(@NotNull ChunkLoadEvent event) {
         for (LivingEntity entity : event.getWorld().getLivingEntities()) {
-            if (entity.getType().equals(EntityType.DROPPED_ITEM)) {
-                if (!entity.isDead()) {
-                    entity.remove();
-                }
-            }
+            if (entity.getType().equals(EntityType.DROPPED_ITEM)) entity.remove();
         }
     }
 }

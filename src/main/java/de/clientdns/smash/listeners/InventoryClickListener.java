@@ -1,9 +1,9 @@
 package de.clientdns.smash.listeners;
 
-import de.clientdns.smash.api.SmashApi;
-import de.clientdns.smash.api.character.Character;
-import de.clientdns.smash.api.gamestate.GameState;
-import de.clientdns.smash.api.player.PlayerManager;
+import de.clientdns.smash.SmashPlugin;
+import de.clientdns.smash.character.Character;
+import de.clientdns.smash.gamestate.GameState;
+import de.clientdns.smash.player.PlayerManager;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,12 +30,12 @@ public class InventoryClickListener implements Listener {
             event.setCancelled(true);
             return;
         }
-        if (event.getClick() != ClickType.LEFT) {
+        if (!event.getClick().equals(ClickType.LEFT)) {
             event.setCancelled(true);
             return;
         }
 
-        if (SmashApi.getGameStateManager().getGameState().equals(GameState.LOBBY)) {
+        if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.LOBBY)) {
             Player player = (Player) event.getWhoClicked();
             ItemStack item = event.getCurrentItem();
             Component displayName = item.getItemMeta().displayName();
@@ -52,14 +52,6 @@ public class InventoryClickListener implements Listener {
             } else if (Character.LINK.getName().equals(displayName)) {
                 PlayerManager.set(player, Character.LINK);
             }
-            event.setCancelled(true);
-            return;
-        } else if (SmashApi.getGameStateManager().getGameState().equals(GameState.INGAME)) {
-            event.setCancelled(true);
-            return;
-        } else if (SmashApi.getGameStateManager().getGameState().equals(GameState.END)) {
-            event.setCancelled(true);
-            return;
         }
         event.setCancelled(true);
     }

@@ -1,7 +1,7 @@
 package de.clientdns.smash.listeners;
 
-import de.clientdns.smash.api.SmashApi;
-import de.clientdns.smash.api.gamestate.GameState;
+import de.clientdns.smash.SmashPlugin;
+import de.clientdns.smash.gamestate.GameState;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,7 +15,7 @@ public class PlayerItemHeldListener implements Listener {
     @EventHandler
     void on(@NotNull PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
-        if (SmashApi.getGameStateManager().getGameState().equals(GameState.INGAME)) {
+        if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.INGAME)) {
             if (player.getGameMode().equals(GameMode.SPECTATOR)) {
                 event.setCancelled(false);
             }

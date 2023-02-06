@@ -1,7 +1,7 @@
 package de.clientdns.smash.listeners;
 
 import de.clientdns.smash.SmashPlugin;
-import de.clientdns.smash.api.config.MiniMsg;
+import de.clientdns.smash.config.MiniMsg;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;

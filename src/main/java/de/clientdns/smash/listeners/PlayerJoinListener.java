@@ -1,12 +1,11 @@
 package de.clientdns.smash.listeners;
 
 import de.clientdns.smash.SmashPlugin;
-import de.clientdns.smash.api.SmashApi;
-import de.clientdns.smash.api.builder.ItemStackBuilder;
-import de.clientdns.smash.api.config.MiniMsg;
-import de.clientdns.smash.api.gamestate.GameState;
-import de.clientdns.smash.api.util.PlayerUtil;
+import de.clientdns.smash.builder.Item;
+import de.clientdns.smash.config.MiniMsg;
 import de.clientdns.smash.countdown.LobbyCountdown;
+import de.clientdns.smash.gamestate.GameState;
+import de.clientdns.smash.util.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -38,7 +37,7 @@ public class PlayerJoinListener implements Listener {
         player.setExp(0);
         player.setLevel(0);
 
-        if (SmashApi.getGameStateManager().getGameState().equals(GameState.LOBBY)) {
+        if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.LOBBY)) {
             player.setGameMode(GameMode.SURVIVAL);
             player.setAllowFlight(false);
             player.setFlying(false);
@@ -47,8 +46,8 @@ public class PlayerJoinListener implements Listener {
 
             if (!player.getInventory().isEmpty()) player.getInventory().clear();
 
-            new ItemStackBuilder(Material.CHEST, 1, MiniMsg.plain("Charaktere", GOLD), List.of(empty(), MiniMsg.plain("Ändere deinen Charakter", GRAY), empty())).make(characters -> player.getInventory().setItem(2, characters));
-            new ItemStackBuilder(Material.MAP, 1, MiniMsg.plain("Maps", GOLD), List.of(empty(), MiniMsg.plain("Stimme für eine Map ab", GRAY), empty())).make(maps -> player.getInventory().setItem(6, maps));
+            new Item(Material.CHEST, 1, MiniMsg.plain("Charaktere", GOLD), List.of(empty(), MiniMsg.plain("Ändere deinen Charakter", GRAY), empty())).build(characters -> player.getInventory().setItem(2, characters));
+            new Item(Material.MAP, 1, MiniMsg.plain("Maps", GOLD), List.of(empty(), MiniMsg.plain("Stimme für eine Map ab", GRAY), empty())).build(maps -> player.getInventory().setItem(6, maps));
 
             PersistentDataContainer pdc = player.getPersistentDataContainer();
 
@@ -64,7 +63,7 @@ public class PlayerJoinListener implements Listener {
             if (online >= minPlayers) {
                 LobbyCountdown.start(); // Start countdown if minimum players are reached
             }
-        } else if (SmashApi.getGameStateManager().getGameState().equals(GameState.INGAME)) {
+        } else if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.INGAME)) {
             player.setGameMode(GameMode.SPECTATOR);
 
             setAttackSpeed(player);
