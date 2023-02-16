@@ -15,11 +15,11 @@ public class MiniMsg {
         return MINI_MESSAGE.deserialize(SMASH_CONFIG.getString(path));
     }
 
-    public static <R> @NotNull Component plain(R message) {
-        return plain(message, null);
+    public static <R extends String> @NotNull Component plain(R message) {
+        return MINI_MESSAGE.deserialize(message);
     }
 
-    public static <R> @NotNull Component plain(R message, TextColor color) {
-        return MINI_MESSAGE.deserialize((String) message).color(color);
+    public static <R extends String> @NotNull Component plain(R message, TextColor color) {
+        return MINI_MESSAGE.deserialize(message).color(color);
     }
 }
