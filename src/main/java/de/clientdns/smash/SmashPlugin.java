@@ -33,8 +33,8 @@ public final class SmashPlugin extends JavaPlugin {
         plugin = this;
         double classVersion = Double.parseDouble(System.getProperty("java.class.version"));
         if (classVersion < 61.0) {
-            getLogger().warning("You are using an unsupported java version (" + classVersion + ")!");
-            getLogger().warning("Please update to Java 17 (61).");
+            getLogger().warning("You are using an unsupported java version (class: " + classVersion + ")!");
+            getLogger().warning("Please update to Java 17 (class: 61).");
             getServer().getPluginManager().disablePlugin(this);
         }
     }
@@ -66,6 +66,7 @@ public final class SmashPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EntityPickupItemListener(), this);
         getServer().getPluginManager().registerEvents(new FoodLevelChangeListener(), this);
         getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDropItemListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerGameModeChangeListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
