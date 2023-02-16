@@ -106,12 +106,15 @@ public class SetupCommand extends Command {
                 if (args[0].equalsIgnoreCase("start")) {
                     String mapName = args[1];
                     String builderName = args[2];
+                    int actual;
                     if (mapName.length() > 16) {
-                        player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Der Name der Map darf nicht länger als 16 Zeichen sein. ('" + mapName + "')", RED)));
+                        actual = mapName.length();
+                        player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Der Name der Map darf nicht länger als 16 Zeichen sein. ('" + mapName + "': " + actual + ")", RED)));
                         return false;
                     }
                     if (builderName.length() > 32) {
-                        player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Der Name der Map darf nicht länger als 32 Zeichen sein. ('" + builderName + "')", RED)));
+                        actual = builderName.length();
+                        player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Der Name des Erbauers darf nicht länger als 32 Zeichen sein. ('" + builderName + "': " + actual + ")", RED)));
                         return false;
                     }
                     if (SmashPlugin.getPlugin().getSetups().get(player) != null) {
