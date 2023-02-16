@@ -13,7 +13,6 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.24")
     annotationProcessor("org.projectlombok:lombok:1.18.24")
     compileOnly("io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT")
-    implementation("de.chojo.sadu:sadu:1.2.0") // sql utilities
     compileOnly("com.google.code.gson:gson:2.10")
 }
 
