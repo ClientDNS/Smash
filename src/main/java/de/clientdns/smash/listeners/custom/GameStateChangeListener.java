@@ -33,7 +33,7 @@ public class GameStateChangeListener implements Listener {
                     player.getInventory().clear();
                     // TODO: Give items and teleport to voted map locations
                 }
-                LobbyCountdown.forceStop();
+                LobbyCountdown.forceStopScheduler();
             }
             case END -> {
                 for (Player player : Bukkit.getOnlinePlayers()) {
@@ -45,7 +45,7 @@ public class GameStateChangeListener implements Listener {
                     player.sendTitlePart(TitlePart.SUBTITLE, MiniMsg.plain("Du schaust nun zu.", GRAY));
                     player.sendTitlePart(TitlePart.TIMES, Title.Times.times(Duration.ZERO, Duration.ofMillis(2500), Duration.ZERO));
                 }
-                LobbyCountdown.forceStop();
+                LobbyCountdown.forceStopScheduler();
                 EndCountdown.start();
             }
         }
