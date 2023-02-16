@@ -7,7 +7,6 @@ import de.clientdns.smash.countdown.LobbyCountdown;
 import de.clientdns.smash.gamestate.GameState;
 import de.clientdns.smash.util.PlayerUtil;
 import de.clientdns.smash.util.UUIDUtil;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -65,9 +64,6 @@ public class PlayerJoinListener implements Listener {
             if (online >= minPlayers) {
                 LobbyCountdown.start(); // Start countdown if minimum players are reached
             }
-            UUIDUtil.uuid(player.getName()).ifPresent(uuid -> {
-                player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("UUID: <rainbow>" + uuid + "</rainbow>")));
-            });
         } else if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.INGAME)) {
             player.setGameMode(GameMode.SPECTATOR);
 
