@@ -21,8 +21,8 @@ public class EndCountdown {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(SmashPlugin.getPlugin(), () -> {
             switch (seconds) {
                 case 15, 10, 5, 4, 3, 2 ->
-                        PlayerUtil.broadcast(MiniMsg.plain("Der Server startet in " + seconds + " Sekunden neu.", YELLOW));
-                case 1 -> PlayerUtil.broadcast(MiniMsg.plain("Der Server startet in einer Sekunde neu...", YELLOW));
+                        PlayerUtil.broadcast(MiniMsg.mini("prefix").append(MiniMsg.plain("Der Server startet in " + seconds + " Sekunden neu.", YELLOW)));
+                case 1 -> PlayerUtil.broadcast(MiniMsg.mini("prefix").append(MiniMsg.plain("Der Server startet in einer Sekunde neu...", YELLOW)));
                 case 0 -> {
                     Bukkit.shutdown();
                     return;
