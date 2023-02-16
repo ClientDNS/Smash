@@ -7,6 +7,7 @@ import de.clientdns.smash.util.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import static net.kyori.adventure.text.format.NamedTextColor.GREEN;
 import static net.kyori.adventure.text.format.NamedTextColor.YELLOW;
 
 public class LobbyCountdown {
@@ -21,11 +22,18 @@ public class LobbyCountdown {
         seconds = 15;
         taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(SmashPlugin.getPlugin(), () -> {
             switch (seconds) {
-                case 15, 10, 5, 4, 3, 2 ->
-                        PlayerUtil.broadcast(MiniMsg.plain("Das Spiel startet in " + seconds + " Sekunden.", YELLOW));
-                case 1 -> PlayerUtil.broadcast(MiniMsg.plain("Das Spiel startet in einer Sekunde.", YELLOW));
+                case 15, 10, 5, 4, 3, 2 -> {
+                    if (seconds == 3) {
+                        for (Player player : Bukkit.getOnlinePlayers()) {
+                            player.getInventory().clear();
+                        }
+                    }
+                    PlayerUtil.broadcast(MiniMsg.mini("prefix").append(MiniMsg.plain("Das Spiel startet in " + seconds + " Sekunden.", YELLOW)));
+                }
+                case 1 -> PlayerUtil.broadcast(MiniMsg.mini("prefix").append(MiniMsg.plain("Das Spiel startet in einer Sekunde.", YELLOW)));
                 case 0 -> {
-                    forceStop();
+                    PlayerUtil.broadcast(MiniMsg.mini("prefix").append(MiniMsg.plain("Das Spiel kann beginnen!", GREEN)));
+                    forceStopScheduler();
                     SmashPlugin.getPlugin().getGameStateManager().setGameState(GameState.INGAME);
                     return;
                 }
@@ -38,7 +46,7 @@ public class LobbyCountdown {
         }, 0L, 20L);
     }
 
-    public static void forceStop() {
+    public static void forceStopScheduler() {
         if (taskId != -1) {
             Bukkit.getScheduler().cancelTask(taskId);
             taskId = -1; // taskId will be set to -1 when scheduling fails and I guess, would set it back to it when the
