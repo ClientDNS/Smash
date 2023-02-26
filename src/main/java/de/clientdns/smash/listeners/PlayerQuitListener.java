@@ -25,12 +25,17 @@ public class PlayerQuitListener implements Listener {
     void on(@NotNull PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
+        // Delete damage count from player
+        PersistentDataContainer pdc = player.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(SmashPlugin.getPlugin(), "damageCount");
+        if (pdc.has(key)) {
+            pdc.remove(key); // Delete key from data container
+        }
+
         // Remove player's setup when running.
         if (SmashPlugin.getPlugin().getSetups().get(player) != null) {
             MapSetup mapSetup = SmashPlugin.getPlugin().getSetups().get(player);
-            if (mapSetup.finish(true).isPresent()) {
-                SmashPlugin.getPlugin().getSetups().remove(player);
-            }
+            mapSetup.delete();
         }
 
         int online = Bukkit.getOnlinePlayers().size() - 1;
@@ -44,27 +49,18 @@ public class PlayerQuitListener implements Listener {
             }
         } else if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.INGAME)) {
             // in-game state
-            if (online == 0) {
-                stopServer(player);
-            }
+            stopServer(online);
         } else {
             // end state
-            if (online == 0) {
-                stopServer(player);
-            }
+            stopServer(online);
         }
         event.quitMessage(empty());
     }
 
-    private void stopServer(@NotNull Player player) {
+    private void stopServer(int count) {
         // Stop server if no players are online
-        Bukkit.shutdown();
-
-        // Delete damage count from player
-        PersistentDataContainer pdc = player.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(SmashPlugin.getPlugin(), "damageCount");
-        if (pdc.has(key)) {
-            pdc.remove(key);
+        if (count == 0) {
+            Bukkit.shutdown();
         }
     }
 }

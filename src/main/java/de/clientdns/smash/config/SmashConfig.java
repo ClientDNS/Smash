@@ -1,6 +1,8 @@
 package de.clientdns.smash.config;
 
 import de.clientdns.smash.SmashPlugin;
+import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.intellij.lang.annotations.Pattern;
@@ -8,14 +10,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 public class SmashConfig {
 
     private final Logger logger;
     private final File configFile;
-    private final String fileName;
     private FileConfiguration fileConfiguration;
 
     /**
@@ -24,14 +27,28 @@ public class SmashConfig {
      * @param fileName The name to create a file under it.
      */
     public SmashConfig(@NotNull @Pattern("[a-z_\\-.]+") String fileName) {
-        this.fileName = fileName;
         this.logger = SmashPlugin.getPlugin().getLogger();
         this.configFile = new File("plugins/Smash/", fileName);
         try {
-            load();
+            if (configFile.getParentFile().mkdirs()) {
+                logger.info(String.format("Created '%s' folder.", configFile.getParentFile().getName()));
+            }
+            if (configFile.createNewFile()) {
+                logger.info(String.format("Created '%s' file.", fileName));
+            }
         } catch (IOException e) {
             throw new RuntimeException("Failed to create file", e);
         }
+    }
+
+    public void set(@NotNull String path, Object value) {
+        if (fileConfiguration.contains(path)) {
+            return;
+        }
+        fileConfiguration.set(path, value);
+    }
+
+    public void reset() {
         set("deny-gamemode-switch", true);
         set("min-players", 2);
         set("prefix", "<gold>Smash</gold> <dark_gray>|</dark_gray> ");
@@ -43,53 +60,103 @@ public class SmashConfig {
         set("player-not-found", "<red>Der Spieler wurde nicht gefunden.</red>");
         set("switch-gamemode", "<red>Du kannst deinen Spielmodus nicht ändern.</red>");
         set("maps", List.of());
-        save();
     }
 
-    public void set(@NotNull String path, Object value) {
-        if (fileConfiguration.contains(path)) {
-            return;
+    public String getStr(String path) {
+        return getStr(path, null);
+    }
+
+    public String getStr(String path, String def) {
+        return fileConfiguration.getString(path, def);
+    }
+
+    public int getInt(String path) {
+        return getInt(path, 0);
+    }
+
+    public int getInt(String path, int def) {
+        return fileConfiguration.getInt(path, def);
+    }
+
+    public boolean getBool(String path) {
+        return getBool(path, false);
+    }
+
+    public boolean getBool(String path, boolean def) {
+        return fileConfiguration.getBoolean(path, def);
+    }
+
+    public List<String> getStrList(String path) {
+        return fileConfiguration.getStringList(path);
+    }
+
+    public List<Integer> getIntList(String path) {
+        return fileConfiguration.getIntegerList(path);
+    }
+
+    public List<Boolean> getBoolList(String path) {
+        return fileConfiguration.getBooleanList(path);
+    }
+
+    public Location[] getLocs(String path) {
+        List<?> configList = getList(path);
+        List<Location> locs = new ArrayList<>();
+        if (configList != null) {
+            for (Object object : configList) {
+                if (object instanceof Location location) {
+                    locs.add(location);
+                }
+            }
         }
-        fileConfiguration.set(path, value);
-    }
 
-    public String getString(@NotNull String path) {
-        return fileConfiguration.getString(path);
-    }
+        Location[] locationArray = new Location[locs.size()];
 
-    public int getInt(@NotNull String path) {
-        return fileConfiguration.getInt(path);
-    }
-
-    public boolean getBoolean(@NotNull String path) {
-        return fileConfiguration.getBoolean(path);
+        int i = 0;
+        for (Location location : locs) {
+            locationArray[i] = location;
+            i++;
+        }
+        return locationArray;
     }
 
     public List<?> getList(String path) {
         return fileConfiguration.getList(path);
     }
 
-    public List<String> getStringList(String path) {
-        return fileConfiguration.getStringList(path);
+    public ConfigurationSection getSection(String path) {
+        return fileConfiguration.getConfigurationSection(path);
     }
 
-    public boolean save() {
+    public void save(@NotNull Consumer<IOException> consumer) {
         try {
             fileConfiguration.save(configFile);
-            return true;
+            consumer.accept(null);
         } catch (IOException exception) {
-            exception.printStackTrace();
+            consumer.accept(exception);
         }
-        return false;
     }
 
-    public void load() throws IOException {
-        if (configFile.getParentFile().mkdirs()) {
-            logger.info(String.format("Created '%s' folder.", configFile.getParentFile().getName()));
-        }
-        if (configFile.createNewFile()) {
-            logger.info(String.format("Created '%s' file.", fileName));
-        }
+    public boolean contains(String path) {
+        return fileConfiguration.contains(path);
+    }
+
+    public boolean isSection(String path) {
+        return fileConfiguration.isConfigurationSection(path);
+    }
+
+    public boolean isList(String path) {
+        return fileConfiguration.isList(path);
+    }
+
+    public boolean exists() {
+        return configFile.exists();
+    }
+
+    public boolean empty() {
+        return fileConfiguration.getKeys(true).isEmpty();
+    }
+
+    public void load() {
         fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
     }
 }

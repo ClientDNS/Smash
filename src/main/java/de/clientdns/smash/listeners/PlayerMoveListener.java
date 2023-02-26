@@ -1,5 +1,6 @@
 package de.clientdns.smash.listeners;
 
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
@@ -16,7 +17,8 @@ public class PlayerMoveListener implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        Location loc = player.getLocation().clone().subtract(0, 1, 0);
-        player.getWorld().spawnParticle(Particle.FLAME, loc, 1, 0, 0, 0, 0);
+        Location loc = player.getLocation();
+        Particle.DustTransition dustTransition = new Particle.DustTransition(Color.BLUE, Color.PURPLE, 1.0F);
+        player.getWorld().spawnParticle(Particle.DUST_COLOR_TRANSITION, loc.x(), loc.y() + 0.5, loc.z(), 25, dustTransition);
     }
 }

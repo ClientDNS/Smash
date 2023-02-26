@@ -5,12 +5,11 @@ import de.clientdns.smash.config.SmashConfig;
 import de.clientdns.smash.gamestate.GameStateManager;
 import de.clientdns.smash.listeners.*;
 import de.clientdns.smash.listeners.custom.GameStateChangeListener;
+import de.clientdns.smash.map.MapLoader;
 import de.clientdns.smash.map.setup.MapSetup;
 import de.clientdns.smash.player.PlayerManager;
-import org.bukkit.Bukkit;
-import org.bukkit.Difficulty;
-import org.bukkit.GameRule;
-import org.bukkit.World;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -30,8 +29,13 @@ public final class SmashPlugin extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        plugin = this;
-        double classVersion = Double.parseDouble(System.getProperty("java.class.version"));
+        if (plugin == null) {
+            plugin = this;
+        } else {
+            getLogger().severe("Cannot assign another plugin instance, disabling.");
+            getServer().getPluginManager().disablePlugin(this);
+        }
+        double classVersion = NumberUtils.toDouble(System.getProperty("java.class.version"));
         if (classVersion < 61.0) {
             getLogger().warning("You are using an unsupported java version (class: " + classVersion + ")!");
             getLogger().warning("Please update to Java 17 (class: 61).");
@@ -41,12 +45,37 @@ public final class SmashPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        smashConfig = new SmashConfig("smash.yml");
+        if (!smashConfig.exists()) {
+            getLogger().severe("Could not find config file, disabling.");
+            getServer().getPluginManager().disablePlugin(this);
+        } else {
+            smashConfig.load();
+            if (smashConfig.empty()) {
+                smashConfig.reset();
+                smashConfig.save(exception -> {
+                    if (exception != null) {
+                        getLogger().severe("Config is empty (could not save default values), disabling.");
+                        getServer().getPluginManager().disablePlugin(this);
+                    }
+                });
+            } else {
+                smashConfig.load();
+                getLogger().info("Successfully loaded configuration.");
+            }
+        }
+        for (String mapKey : getSmashConfig().getSection("maps").getKeys(false)) {
+            de.clientdns.smash.map.Map map = MapLoader.loadMap(mapKey);
+            if (map != null) {
+                Location[] locations = getSmashConfig().getLocs("maps." + mapKey + ".spawnLocations");
+                getLogger().info("Loaded " + map.name() + " with builder " + map.builder() + " and " + locations.length + " spawn locations.");
+            }
+        }
         initListeners();
         initCommands();
         setWorldProperties();
         gameStateManager = new GameStateManager();
         setups = new HashMap<>();
-        smashConfig = new SmashConfig("smash.yml");
     }
 
     @Override

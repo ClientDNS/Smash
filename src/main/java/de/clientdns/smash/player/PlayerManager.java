@@ -25,11 +25,11 @@ public class PlayerManager {
             characters.put(player, character);
         }
         if (before == null) {
-            player.sendActionBar(MiniMsg.mini("prefix").append(MiniMsg.plain("Dein Charakter wurde auf ", NamedTextColor.GREEN).append(PlayerManager.get(player).getName()).append(MiniMsg.plain(" gesetzt.", NamedTextColor.GREEN))));
+            player.sendActionBar(MiniMsg.mini("prefix").append(MiniMsg.plain("Dein Charakter wurde auf ", NamedTextColor.GREEN).append(PlayerManager.get(player).getData().getName()).append(MiniMsg.plain(" gesetzt.", NamedTextColor.GREEN))));
             return;
         }
         if (before != character) {
-            player.sendActionBar(MiniMsg.mini("prefix").append(MiniMsg.plain("Dein Charakter wurde zu ", NamedTextColor.GREEN).append(PlayerManager.get(player).getName()).append(MiniMsg.plain(" geändert.", NamedTextColor.GREEN))));
+            player.sendActionBar(MiniMsg.mini("prefix").append(MiniMsg.plain("Dein Charakter wurde zu ", NamedTextColor.GREEN).append(PlayerManager.get(player).getData().getName()).append(MiniMsg.plain(" geändert.", NamedTextColor.GREEN))));
         }
     }
 

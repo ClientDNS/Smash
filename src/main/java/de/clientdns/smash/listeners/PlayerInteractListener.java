@@ -5,6 +5,8 @@ import de.clientdns.smash.builder.Skull;
 import de.clientdns.smash.character.Character;
 import de.clientdns.smash.config.MiniMsg;
 import de.clientdns.smash.inventory.InventoryCreator;
+import de.clientdns.smash.map.Map;
+import de.clientdns.smash.map.MapLoader;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -20,6 +22,7 @@ import java.util.List;
 
 import static net.kyori.adventure.text.Component.empty;
 import static net.kyori.adventure.text.format.NamedTextColor.GRAY;
+import static net.kyori.adventure.text.format.NamedTextColor.GREEN;
 
 public class PlayerInteractListener implements Listener {
 
@@ -35,7 +38,7 @@ public class PlayerInteractListener implements Listener {
             case CHEST -> {
                 List<ItemStack> items = new ArrayList<>(List.of());
                 for (Character character : Character.values()) {
-                    items.add(new Skull(1, character.getName()).build());
+                    new Skull(1, character.getData().getName()).build().ifPresent(items::add);
                 }
                 Item explanation = new Item(Material.OAK_WALL_SIGN, 1, empty(), List.of(empty(), MiniMsg.plain("Jeder Character verfügt über anderen Fähigkeiten, wähle bedacht!", GRAY)));
                 new InventoryCreator(3, MiniMsg.plain("Maps", NamedTextColor.GOLD)).edit(editor -> {
@@ -47,7 +50,16 @@ public class PlayerInteractListener implements Listener {
                 event.setCancelled(true);
             }
             case MAP -> {
-                new InventoryCreator(3, MiniMsg.plain("Maps", NamedTextColor.GOLD)).accept(player::openInventory);
+                new InventoryCreator(1, MiniMsg.plain("Maps", NamedTextColor.GOLD)).edit(editor -> {
+                    for (Map map : MapLoader.getMaps()) {
+                        editor.add(new Item(Material.GRASS_BLOCK, 1, MiniMsg.plain(map.name(), GREEN))
+                                .lore(List.of(
+                                        empty(),
+                                        MiniMsg.plain("Erbauer => " + map.builder(), GREEN),
+                                        empty()
+                                )).build());
+                    }
+                }).accept(player::openInventory);
                 event.setCancelled(true);
             }
             default -> event.setCancelled(true);

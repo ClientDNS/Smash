@@ -4,14 +4,15 @@ import de.clientdns.smash.SmashPlugin;
 import de.clientdns.smash.config.MiniMsg;
 import de.clientdns.smash.gamestate.GameState;
 import de.clientdns.smash.map.Map;
+import de.clientdns.smash.map.MapLoader;
 import de.clientdns.smash.map.setup.MapSetup;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static net.kyori.adventure.text.format.NamedTextColor.*;
@@ -40,7 +41,7 @@ public class SetupCommand extends Command {
             }
             if (args.length == 1) {
                 if (!SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.LOBBY)) {
-                    player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Das Setup ist während des Spiels nicht möglich.", GRAY)));
+                    player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Das Setup ist während des Spiels nicht möglich.", RED)));
                     return false;
                 }
                 switch (args[0].toLowerCase()) {
@@ -50,8 +51,9 @@ public class SetupCommand extends Command {
                             return false;
                         }
                         MapSetup mapSetup = SmashPlugin.getPlugin().getSetups().get(player);
-                        mapSetup.finish(true);
+                        mapSetup.delete();
                         player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Du hast die Map-Erstellung abgebrochen.", RED)));
+                        return true;
                     }
                     case "finish" -> {
                         if (SmashPlugin.getPlugin().getSetups().get(player) == null) {
@@ -59,18 +61,16 @@ public class SetupCommand extends Command {
                             return false;
                         }
                         MapSetup mapSetup = SmashPlugin.getPlugin().getSetups().get(player);
-                        int current = mapSetup.countLocations();
-                        if (current < mapSetup.getIndexSize()) {
-                            int max = mapSetup.getIndexSize();
-                            player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Nicht genug Spawn-Positionen! (" + current + "/" + max + ")", RED)));
+                        if (mapSetup.countLocations() < mapSetup.getIndexSize()) {
+                            player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Nicht genug Spawn-Positionen! (" + mapSetup.countLocations() + "/" + mapSetup.getIndexSize() + ")", RED)));
                             return false;
                         }
-                        Optional<Map> finishedSetup = mapSetup.finish(false); // 'false' prevents the method to abort the setup.
-                        finishedSetup.ifPresent(map -> map.save(finished -> {
-                            if (finished) {
-                                player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Du hast die Map '" + mapSetup.getMapName() + "' erstellt.", GREEN)));
-                            }
-                        }));
+                        Map map = mapSetup.finish();
+                        player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Setup abgeschlossen, speichern...", GREEN)));
+                        if (map.save()) {
+                            player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Map '" + map.name() + "' gespeichert.", GREEN)));
+                            player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Starte den Server neu, damit keine Fehler auftreten.", YELLOW)));
+                        }
                         return true;
                     }
                     default ->
@@ -83,24 +83,24 @@ public class SetupCommand extends Command {
                         return false;
                     }
                     MapSetup mapSetup = SmashPlugin.getPlugin().getSetups().get(player);
-                    try {
-                        int index = Integer.parseInt(args[1]);
-                        if (index < 0) {
-                            player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Es sind keine negativen Positionen erlaubt.", RED)));
-                            return false;
-                        }
-                        if (index >= mapSetup.getIndexSize()) {
-                            player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Es dürfen nur " + mapSetup.getIndexSize() + " Positionen gesetzt werden.", RED)));
-                            return false;
-                        }
-                        mapSetup.setSpawnLocation(index, player.getLocation());
-                        mapSetup.update();
-                        player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Position beim Index '" + index + "' gesetzt.", GREEN)));
-                    } catch (NumberFormatException e) {
-                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Position '" + args[1] + "' ist keine Zahl.", RED)));
+                    if (!NumberUtils.isParsable(args[1])) {
+                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("'" + args[1] + "' ist keine valide Zahl.", RED)));
+                        return false;
                     }
+                    int index = NumberUtils.toInt(args[1]);
+                    if (index < 0) {
+                        player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Es sind keine Positionen unter 0 erlaubt.", RED)));
+                        return false;
+                    }
+                    if (index >= mapSetup.getIndexSize()) {
+                        player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Es dürfen nur " + mapSetup.getIndexSize() + " Positionen gesetzt werden.", RED)));
+                        return false;
+                    }
+                    mapSetup.setSpawnLocation(index, player.getLocation());
+                    player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Position beim Index '" + index + "' gesetzt.", GREEN)));
                 } else {
                     sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.mini("unknown-command").replaceText(builder -> builder.matchLiteral("$command").replacement(args[0]))));
+                    return false;
                 }
             } else if (args.length == 4) {
                 if (args[0].equalsIgnoreCase("start")) {
@@ -117,22 +117,29 @@ public class SetupCommand extends Command {
                         player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Der Name des Erbauers darf nicht länger als 32 Zeichen sein. ('" + builderName + "': " + actual + ")", RED)));
                         return false;
                     }
-                    if (SmashPlugin.getPlugin().getSetups().get(player) != null) {
-                        MapSetup mapSetup = SmashPlugin.getPlugin().getSetups().get(player);
-                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Deine Map-Erstellung '" + mapSetup.getMapName() + "' läuft bereits.", RED)));
+                    if (MapLoader.contains(mapName)) {
+                        player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Map '" + mapName + "' existiert bereits.", RED)));
                         return false;
                     }
-                    try {
-                        int indexSize = Integer.parseInt(args[3]);
-                        MapSetup setup = new MapSetup(player, mapName, builderName, indexSize);
-                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Map-Erstellung '" + setup.getMapName() + "' gestartet.", GREEN)));
-                    } catch (NumberFormatException e) {
-                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("'" + args[3] + "' ist keine valide Zahl.", GREEN)));
+                    if (SmashPlugin.getPlugin().getSetups().get(player) != null) {
+                        MapSetup mapSetup = SmashPlugin.getPlugin().getSetups().get(player);
+                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Map-Erstellung '" + mapSetup.getName() + "' läuft bereits. ('" + mapName + "')", YELLOW)));
+                        return false;
                     }
+                    if (!NumberUtils.isParsable(args[3])) {
+                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("'" + args[3] + "' ist keine valide Zahl.", RED)));
+                        return false;
+                    }
+                    int indexSize = NumberUtils.toInt(args[3]);
+                    MapSetup setup = new MapSetup(player, mapName, builderName, indexSize);
+                    sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Map-Erstellung '" + setup.getName() + "' gestartet.", GREEN)));
                 } else {
                     player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.mini("unknown-command").replaceText(builder -> builder.matchLiteral("$command").replacement(args[0]))));
                     return false;
                 }
+            } else {
+                player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("")));
+                return false;
             }
         } else {
             sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.mini("player-required")));

@@ -6,7 +6,6 @@ import de.clientdns.smash.config.MiniMsg;
 import de.clientdns.smash.countdown.LobbyCountdown;
 import de.clientdns.smash.gamestate.GameState;
 import de.clientdns.smash.util.PlayerUtil;
-import de.clientdns.smash.util.UUIDUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -43,17 +42,20 @@ public class PlayerJoinListener implements Listener {
             player.setAllowFlight(false);
             player.setFlying(false);
 
-            setAttackSpeed(player);
+            AttributeInstance attackSpeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
+            if (attackSpeed != null && attackSpeed.getValue() != 1024) {
+                attackSpeed.setBaseValue(1024); // Remove 1.9+ cooldown
+            }
 
             if (!player.getInventory().isEmpty()) player.getInventory().clear();
 
-            new Item(Material.CHEST, 1, MiniMsg.plain("Charaktere", GOLD), List.of(empty(), MiniMsg.plain("Ändere deinen Charakter", GRAY), empty())).build(characters -> player.getInventory().setItem(2, characters));
-            new Item(Material.MAP, 1, MiniMsg.plain("Maps", GOLD), List.of(empty(), MiniMsg.plain("Stimme für eine Map ab", GRAY), empty())).build(maps -> player.getInventory().setItem(6, maps));
+            new Item(Material.CHEST, 1, MiniMsg.plain("Charaktere", GOLD), List.of(empty(), MiniMsg.plain("Choose your character", GRAY), empty())).build(characters -> player.getInventory().setItem(2, characters));
+            new Item(Material.MAP, 1, MiniMsg.plain("Maps", GOLD), List.of(empty(), MiniMsg.plain("Vote for a map", GRAY), empty())).build(maps -> player.getInventory().setItem(6, maps));
 
             PersistentDataContainer pdc = player.getPersistentDataContainer();
+            NamespacedKey key = new NamespacedKey(SmashPlugin.getPlugin(), "damageCount");
 
-            if (!pdc.has(new NamespacedKey(SmashPlugin.getPlugin(), "damageCount"))) {
-                NamespacedKey key = new NamespacedKey(SmashPlugin.getPlugin(), "damageCount");
+            if (!pdc.has(key)) {
                 pdc.set(key, PersistentDataType.INTEGER, 0);
             }
 
@@ -67,8 +69,6 @@ public class PlayerJoinListener implements Listener {
         } else if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.INGAME)) {
             player.setGameMode(GameMode.SPECTATOR);
 
-            setAttackSpeed(player);
-
             if (!player.getInventory().isEmpty()) player.getInventory().clear();
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 if (onlinePlayer.getGameMode().equals(GameMode.SPECTATOR)) {
@@ -77,13 +77,5 @@ public class PlayerJoinListener implements Listener {
             }
         }
         event.joinMessage(empty());
-    }
-
-    private void setAttackSpeed(@NotNull Player player) {
-        AttributeInstance attackSpeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
-        if (attackSpeed != null) {
-            attackSpeed.setBaseValue(1024); // Remove 1.9+ cooldown
-        }
-        player.saveData();
     }
 }

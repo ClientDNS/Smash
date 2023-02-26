@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -33,6 +34,15 @@ public class Skull {
         this.skullMeta = (SkullMeta) itemStack.getItemMeta();
         if (displayName != null) this.skullMeta.displayName(displayName);
         if (lore != null) this.skullMeta.lore(lore);
+    }
+
+    public List<Component> lore() {
+        return skullMeta.lore();
+    }
+
+    public Skull lore(List<Component> lore) {
+        skullMeta.lore(lore);
+        return this;
     }
 
     /**
@@ -79,8 +89,7 @@ public class Skull {
      * Builds the item and returns it with a {@link Consumer <ItemStack>}.
      */
     public void build(@NotNull Consumer<ItemStack> item) {
-        ;
-        item.accept(build());
+        build().ifPresent(item);
     }
 
     /**
@@ -88,8 +97,8 @@ public class Skull {
      *
      * @return The final ItemStack result.
      */
-    public ItemStack build() {
+    public Optional<ItemStack> build() {
         itemStack.setItemMeta(skullMeta);
-        return itemStack;
+        return Optional.of(itemStack);
     }
 }

@@ -22,7 +22,7 @@ public class InventoryCreator {
         // If factor is more than 6, use 6 as factor. When less than 6, use the factor size provided.
         this.slots = factor > 6 ? slots * 6 : slots * factor;
         this.name = name;
-        this.inventory = Bukkit.createInventory(null, this.slots, this.name);
+        this.inventory = Bukkit.createInventory(null, slots, name);
         this.editor = new InventoryEditor(this);
     }
 
@@ -44,7 +44,9 @@ public class InventoryCreator {
     }
 
     /**
-     * @param creator The instance of the inventory creator ({@link InventoryCreator}) to manage items in it.
+     * A record for an inventory edit instance.
+     *
+     * @param creator The instance of the inventory creator ({@link InventoryCreator}) to manage items in inventories.
      */
     public record InventoryEditor(InventoryCreator creator) {
 

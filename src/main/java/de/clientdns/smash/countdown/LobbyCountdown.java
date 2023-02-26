@@ -30,7 +30,8 @@ public class LobbyCountdown {
                     }
                     PlayerUtil.broadcast(MiniMsg.mini("prefix").append(MiniMsg.plain("Das Spiel startet in " + seconds + " Sekunden.", YELLOW)));
                 }
-                case 1 -> PlayerUtil.broadcast(MiniMsg.mini("prefix").append(MiniMsg.plain("Das Spiel startet in einer Sekunde.", YELLOW)));
+                case 1 ->
+                        PlayerUtil.broadcast(MiniMsg.mini("prefix").append(MiniMsg.plain("Das Spiel startet in einer Sekunde.", YELLOW)));
                 case 0 -> {
                     PlayerUtil.broadcast(MiniMsg.mini("prefix").append(MiniMsg.plain("Das Spiel kann beginnen!", GREEN)));
                     forceStopScheduler();

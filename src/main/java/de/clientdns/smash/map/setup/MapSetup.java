@@ -5,32 +5,30 @@ import de.clientdns.smash.map.Map;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.Optional;
-
 public class MapSetup {
 
     private final Player player;
-    private final String mapName;
-    private final String mapBuilder;
+    private final String name;
+    private final String builder;
     private final Location[] spawnLocations;
     private final int indexSize;
 
-    public MapSetup(Player player, String mapName, String mapBuilder, int indexSize) {
+    public MapSetup(Player player, String name, String builder, int indexSize) {
         this.player = player;
-        this.mapName = mapName;
-        this.mapBuilder = mapBuilder;
+        this.name = name;
+        this.builder = builder;
         this.indexSize = indexSize;
         this.spawnLocations = new Location[indexSize];
         SmashPlugin.getPlugin().getSetups().put(player, this);
     }
 
-    public void update() {
-        SmashPlugin.getPlugin().getSetups().put(player, this); // Old setup will be replaced.
+    public void delete() {
+        SmashPlugin.getPlugin().getSetups().remove(player);
     }
 
-    public Optional<Map> finish(boolean abort) {
-        SmashPlugin.getPlugin().getSetups().remove(player);
-        return !abort ? Optional.of(new Map(mapName, mapBuilder, spawnLocations)) : Optional.empty();
+    public Map finish() {
+        delete();
+        return new Map(name, builder, spawnLocations);
     }
 
     public void setSpawnLocation(int index, Location location) {
@@ -41,12 +39,12 @@ public class MapSetup {
         return player;
     }
 
-    public String getMapName() {
-        return mapName;
+    public String getName() {
+        return name;
     }
 
-    public String getMapBuilder() {
-        return mapBuilder;
+    public String getBuilder() {
+        return builder;
     }
 
     public int getIndexSize() {

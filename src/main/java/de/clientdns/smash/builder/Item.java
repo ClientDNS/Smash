@@ -51,7 +51,7 @@ public class Item {
             this.itemStack = new ItemStack(material, amount);
             this.itemMeta = itemStack.getItemMeta();
             if (displayName != null) this.itemMeta.displayName(displayName);
-            if (lore != null) this.itemMeta.lore(lore);
+            if (lore != null && !lore.isEmpty()) this.itemMeta.lore(lore);
         }
     }
 
@@ -72,6 +72,15 @@ public class Item {
      */
     public Item name(Component name) {
         itemMeta.displayName(name);
+        return this;
+    }
+
+    public List<Component> lore() {
+        return itemMeta.lore();
+    }
+
+    public Item lore(List<Component> lore) {
+        itemMeta.lore(lore);
         return this;
     }
 
@@ -174,10 +183,6 @@ public class Item {
         return this;
     }
 
-    public boolean isValid() {
-        return itemStack != null && itemMeta != null;
-    }
-
     /**
      * Builds the item and returns it with a {@link Consumer<ItemStack>}.
      */
@@ -191,7 +196,10 @@ public class Item {
      * @return The final ItemStack result.
      */
     public ItemStack build() {
-        itemStack.setItemMeta(itemMeta);
-        return itemStack;
+        if (itemStack != null && itemMeta != null) {
+            itemStack.setItemMeta(itemMeta);
+            return itemStack;
+        }
+        return null;
     }
 }

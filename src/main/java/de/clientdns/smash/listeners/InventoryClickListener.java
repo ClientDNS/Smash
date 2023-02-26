@@ -39,17 +39,17 @@ public class InventoryClickListener implements Listener {
             Player player = (Player) event.getWhoClicked();
             ItemStack item = event.getCurrentItem();
             Component displayName = item.getItemMeta().displayName();
-            if (Character.MARIO.getName().equals(displayName)) {
+            if (Character.MARIO.getData().getName().equals(displayName)) {
                 PlayerManager.set(player, Character.MARIO);
-            } else if (Character.DONKEY_KONG.getName().equals(displayName)) {
+            } else if (Character.DONKEY_KONG.getData().getName().equals(displayName)) {
                 PlayerManager.set(player, Character.DONKEY_KONG);
-            } else if (Character.FLASH.getName().equals(displayName)) {
+            } else if (Character.FLASH.getData().getName().equals(displayName)) {
                 PlayerManager.set(player, Character.FLASH);
-            } else if (Character.PIKACHU.getName().equals(displayName)) {
+            } else if (Character.PIKACHU.getData().getName().equals(displayName)) {
                 PlayerManager.set(player, Character.PIKACHU);
-            } else if (Character.SUPERMAN.getName().equals(displayName)) {
+            } else if (Character.SUPERMAN.getData().getName().equals(displayName)) {
                 PlayerManager.set(player, Character.SUPERMAN);
-            } else if (Character.LINK.getName().equals(displayName)) {
+            } else if (Character.LINK.getData().getName().equals(displayName)) {
                 PlayerManager.set(player, Character.LINK);
             }
         }

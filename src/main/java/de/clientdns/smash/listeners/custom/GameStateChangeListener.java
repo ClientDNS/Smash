@@ -1,6 +1,5 @@
 package de.clientdns.smash.listeners.custom;
 
-import de.clientdns.smash.SmashPlugin;
 import de.clientdns.smash.config.MiniMsg;
 import de.clientdns.smash.countdown.EndCountdown;
 import de.clientdns.smash.countdown.LobbyCountdown;
@@ -49,6 +48,5 @@ public class GameStateChangeListener implements Listener {
                 EndCountdown.start();
             }
         }
-        SmashPlugin.getPlugin().getLogger().info("Detected game state change to " + event.getGameState());
     }
 }
