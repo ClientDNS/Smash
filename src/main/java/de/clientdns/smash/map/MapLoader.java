@@ -19,7 +19,7 @@ public class MapLoader {
         SmashConfig config = SmashPlugin.getPlugin().getSmashConfig();
         Set<Map> maps = new java.util.HashSet<>();
         for (String mapKey : config.getSection("maps").getKeys(false)) {
-            maps.add(MapLoader.loadMap(mapKey));
+            maps.add(loadMap(mapKey));
         }
         return maps;
     }
