@@ -71,19 +71,7 @@ public final class SmashPlugin extends JavaPlugin {
                 getLogger().info("Loaded " + map.name() + " with builder " + map.builder() + " and " + locations.length + " spawn locations.");
             }
         }
-        initListeners();
-        initCommands();
-        setWorldProperties();
-        gameStateManager = new GameStateManager();
-        setups = new HashMap<>();
-    }
 
-    @Override
-    public void onDisable() {
-        PlayerManager.clearCharacters();
-    }
-
-    void initListeners() {
         // custom events
         getServer().getPluginManager().registerEvents(new GameStateChangeListener(), this);
 
@@ -103,13 +91,9 @@ public final class SmashPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
-    }
 
-    void initCommands() {
         getServer().getCommandMap().register("smash", new SetupCommand("setup"));
-    }
 
-    void setWorldProperties() {
         for (World world : Bukkit.getWorlds()) {
             world.setDifficulty(Difficulty.PEACEFUL);
             world.getWorldBorder().reset();
@@ -133,6 +117,13 @@ public final class SmashPlugin extends JavaPlugin {
             world.setGameRule(GameRule.UNIVERSAL_ANGER, false);
             world.setGameRule(GameRule.MAX_ENTITY_CRAMMING, 8);
         }
+        gameStateManager = new GameStateManager();
+        setups = new HashMap<>();
+    }
+
+    @Override
+    public void onDisable() {
+        PlayerManager.clearCharacters();
     }
 
     public GameStateManager getGameStateManager() {
