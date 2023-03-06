@@ -32,7 +32,7 @@ public class Skull {
         this.itemStack = new ItemStack(Material.PLAYER_HEAD, amount);
         this.skullMeta = (SkullMeta) itemStack.getItemMeta();
         if (displayName != null) this.skullMeta.displayName(displayName);
-        if (lore != null) this.skullMeta.lore(lore);
+        if (lore != null && !lore.isEmpty()) this.skullMeta.lore(lore);
     }
 
     public List<Component> lore() {
