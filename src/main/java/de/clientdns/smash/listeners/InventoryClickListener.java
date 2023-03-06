@@ -39,11 +39,6 @@ public class InventoryClickListener implements Listener {
 
         if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.LOBBY)) {
             Player player = (Player) event.getWhoClicked();
-            String name = PlainTextComponentSerializer.plainText().serializeOrNull(displayName);
-            if (name != null) {
-                player.sendMessage(name);
-            }
-
             if (Character.MARIO.getData().getName().equals(displayName)) {
                 PlayerManager.set(player, Character.MARIO);
             } else if (Character.DONKEY_KONG.getData().getName().equals(displayName)) {
