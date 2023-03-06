@@ -15,7 +15,7 @@ public class EndCountdown {
 
     public static void start() {
         if (!SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.END)) {
-            return;
+            throw new IllegalStateException("Ending-Countdown darf nur im END-State gestartet werden.");
         }
         seconds = 15;
         Bukkit.getScheduler().scheduleSyncRepeatingTask(SmashPlugin.getPlugin(), () -> {
