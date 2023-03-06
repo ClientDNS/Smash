@@ -1,10 +1,12 @@
 package de.clientdns.smash;
 
+import de.clientdns.smash.commands.ConfigCommand;
 import de.clientdns.smash.commands.SetupCommand;
 import de.clientdns.smash.config.SmashConfig;
 import de.clientdns.smash.gamestate.GameStateManager;
 import de.clientdns.smash.listeners.*;
 import de.clientdns.smash.listeners.custom.GameStateChangeListener;
+import de.clientdns.smash.map.Map;
 import de.clientdns.smash.map.MapLoader;
 import de.clientdns.smash.map.setup.MapSetup;
 import de.clientdns.smash.player.PlayerManager;
@@ -13,14 +15,13 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class SmashPlugin extends JavaPlugin {
 
     private static SmashPlugin plugin;
     private GameStateManager gameStateManager;
-    private Map<Player, MapSetup> setups;
+    private ConcurrentHashMap<Player, MapSetup> setups;
     private SmashConfig smashConfig;
 
     public static SmashPlugin getPlugin() {
@@ -54,7 +55,9 @@ public final class SmashPlugin extends JavaPlugin {
             if (smashConfig.empty()) {
                 smashConfig.reset();
                 smashConfig.save(exception -> {
-                    if (exception != null) {
+                    if (exception == null) {
+                        getLogger().info("Saved default values to config.");
+                    } else {
                         getLogger().severe("Config is empty (could not save default values), disabling.");
                         getServer().getPluginManager().disablePlugin(this);
                     }
@@ -64,11 +67,16 @@ public final class SmashPlugin extends JavaPlugin {
                 getLogger().info("Successfully loaded configuration.");
             }
         }
-        for (String mapKey : getSmashConfig().getSection("maps").getKeys(false)) {
-            de.clientdns.smash.map.Map map = MapLoader.loadMap(mapKey);
-            if (map != null) {
-                Location[] locations = getSmashConfig().getLocs("maps." + mapKey + ".spawnLocations");
-                getLogger().info("Loaded " + map.name() + " with builder " + map.builder() + " and " + locations.length + " spawn locations.");
+
+        if (getSmashConfig().noMaps()) {
+            getLogger().warning("No maps found in config.");
+        } else {
+            for (String mapKey : getSmashConfig().getSection("maps").getKeys(false)) {
+                Map map = MapLoader.loadMap(mapKey);
+                if (map != null) {
+                    Location[] locations = getSmashConfig().getLocs("maps." + mapKey + ".spawnLocations");
+                    getLogger().info("Loaded " + map.name() + " with icon " + map.item() + " and " + locations.length + " spawn locations.");
+                }
             }
         }
 
@@ -92,6 +100,7 @@ public final class SmashPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
 
+        getServer().getCommandMap().register("smash", new ConfigCommand("config"));
         getServer().getCommandMap().register("smash", new SetupCommand("setup"));
 
         for (World world : Bukkit.getWorlds()) {
@@ -115,10 +124,11 @@ public final class SmashPlugin extends JavaPlugin {
             world.setGameRule(GameRule.KEEP_INVENTORY, false);
             world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
             world.setGameRule(GameRule.UNIVERSAL_ANGER, false);
+            world.setGameRule(GameRule.REDUCED_DEBUG_INFO, true);
             world.setGameRule(GameRule.MAX_ENTITY_CRAMMING, 8);
         }
         gameStateManager = new GameStateManager();
-        setups = new HashMap<>();
+        setups = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -130,7 +140,7 @@ public final class SmashPlugin extends JavaPlugin {
         return gameStateManager;
     }
 
-    public Map<Player, MapSetup> getSetups() {
+    public ConcurrentHashMap<Player, MapSetup> getSetups() {
         return setups;
     }
 

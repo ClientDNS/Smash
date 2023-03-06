@@ -1,5 +1,6 @@
 package de.clientdns.smash.listeners;
 
+import de.clientdns.smash.SmashPlugin;
 import de.clientdns.smash.builder.Item;
 import de.clientdns.smash.builder.Skull;
 import de.clientdns.smash.character.Character;
@@ -21,8 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static net.kyori.adventure.text.Component.empty;
-import static net.kyori.adventure.text.format.NamedTextColor.GRAY;
-import static net.kyori.adventure.text.format.NamedTextColor.GREEN;
+import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class PlayerInteractListener implements Listener {
 
@@ -38,10 +38,10 @@ public class PlayerInteractListener implements Listener {
             case CHEST -> {
                 List<ItemStack> items = new ArrayList<>(List.of());
                 for (Character character : Character.values()) {
-                    new Skull(1, character.getData().getName()).build().ifPresent(items::add);
+                    items.add(new Skull(1, character.getData().getName()).build());
                 }
-                Item explanation = new Item(Material.OAK_WALL_SIGN, 1, empty(), List.of(empty(), MiniMsg.plain("Jeder Character verfügt über anderen Fähigkeiten, wähle bedacht!", GRAY)));
-                new InventoryCreator(3, MiniMsg.plain("Maps", NamedTextColor.GOLD)).edit(editor -> {
+                Item explanation = new Item(Material.OAK_WALL_SIGN, 1, empty(), List.of(empty(), MiniMsg.plain("Jeder Charakter verfügt über anderen Fähigkeiten, wähle bedacht!", GRAY)));
+                new InventoryCreator(3, MiniMsg.plain("Charaktere", NamedTextColor.GOLD)).edit(editor -> {
                     for (int i = 0; i < items.size(); i++) {
                         editor.set(i, items.get(i));
                     }
@@ -49,19 +49,17 @@ public class PlayerInteractListener implements Listener {
                 }).accept(player::openInventory);
                 event.setCancelled(true);
             }
-            case MAP -> {
-                new InventoryCreator(1, MiniMsg.plain("Maps", NamedTextColor.GOLD)).edit(editor -> {
-                    for (Map map : MapLoader.getMaps()) {
-                        editor.add(new Item(Material.GRASS_BLOCK, 1, MiniMsg.plain(map.name(), GREEN))
-                                .lore(List.of(
-                                        empty(),
-                                        MiniMsg.plain("Erbauer => " + map.builder(), GREEN),
-                                        empty()
-                                )).build());
-                    }
-                }).accept(player::openInventory);
-                event.setCancelled(true);
-            }
+            case MAP -> new InventoryCreator(1, MiniMsg.plain("Maps", NamedTextColor.GOLD)).edit(editor -> {
+                if (SmashPlugin.getPlugin().getSmashConfig().noMaps()) {
+                    player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Es wurden keine Maps eingerichtet.", RED)));
+                    event.setCancelled(true);
+                    return;
+                }
+                for (Map map : MapLoader.getMaps()) {
+                    editor.add(new Item(map.item(), 1, MiniMsg.plain(map.name(), GREEN)).build());
+                    event.setCancelled(true);
+                }
+            }).accept(player::openInventory, !SmashPlugin.getPlugin().getSmashConfig().noMaps());
             default -> event.setCancelled(true);
         }
     }

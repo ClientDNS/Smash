@@ -11,7 +11,7 @@ public enum Character {
 
     MARIO(new CharacterData(MiniMsg.plain("Mario", RED), "", List.of(Ability.STAMP_ATTACK))), // Empty string
     DONKEY_KONG(new CharacterData(MiniMsg.plain("Donkey Kong", DARK_RED), "", List.of(Ability.STAMP_ATTACK))),
-    FLASH(new CharacterData(MiniMsg.plain("Flash", RED), "", List.of(Ability.SPEED))),
+    FLASH(new CharacterData(MiniMsg.plain("Flash", RED), "https://minotar.net/skin/Shlappeh", List.of(Ability.SPEED))),
     PIKACHU(new CharacterData(MiniMsg.plain("Pikachu", YELLOW), "", List.of(Ability.STAMP_ATTACK))),
     SUPERMAN(new CharacterData(MiniMsg.plain("Superman", RED), "", List.of(Ability.STAMP_ATTACK))),
     LINK(new CharacterData(MiniMsg.plain("Link", DARK_GREEN), "", List.of(Ability.JUMPBOOST, Ability.SPEED)));

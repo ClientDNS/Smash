@@ -20,6 +20,7 @@ public class SmashConfig {
     private final Logger logger;
     private final File configFile;
     private FileConfiguration fileConfiguration;
+    private boolean changed;
 
     /**
      * Creates a new instance of a SmashConfig class. It can be used to create a new file
@@ -29,6 +30,7 @@ public class SmashConfig {
     public SmashConfig(@NotNull @Pattern("[a-z_\\-.]+") String fileName) {
         this.logger = SmashPlugin.getPlugin().getLogger();
         this.configFile = new File("plugins/Smash/", fileName);
+        this.changed = false;
         try {
             if (configFile.getParentFile().mkdirs()) {
                 logger.info(String.format("Created '%s' folder.", configFile.getParentFile().getName()));
@@ -46,12 +48,13 @@ public class SmashConfig {
             return;
         }
         fileConfiguration.set(path, value);
+        changed = true;
     }
 
     public void reset() {
         set("deny-gamemode-switch", true);
         set("min-players", 2);
-        set("prefix", "<gold>Smash</gold> <dark_gray>|</dark_gray> ");
+        set("prefix", "<red>Smash</red> <dark_gray>|</dark_gray> ");
         set("unknown-command", "<red>Unbekannter Befehl. ($command)</red>");
         set("join-message", "<green>$name ist dem Server beigetreten.</green>");
         set("quit-message", "<red>$name hat den Server verlassen.</red>");
@@ -127,10 +130,29 @@ public class SmashConfig {
         return fileConfiguration.getConfigurationSection(path);
     }
 
+    public boolean noMaps() {
+        if (isSection("maps")) {
+            return getSection("maps").getKeys(false).isEmpty();
+        }
+        if (isList("maps")) {
+            return getList("maps").isEmpty();
+        }
+        return true;
+    }
+
+    public boolean isChanged() {
+        return changed;
+    }
+
     public void save(@NotNull Consumer<IOException> consumer) {
         try {
-            fileConfiguration.save(configFile);
-            consumer.accept(null);
+            if (changed) {
+                fileConfiguration.save(configFile);
+                changed = false;
+                consumer.accept(null);
+            } else {
+                logger.info("Detected config save but no changes made.");
+            }
         } catch (IOException exception) {
             consumer.accept(exception);
         }

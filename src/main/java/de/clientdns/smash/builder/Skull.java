@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -89,7 +88,7 @@ public class Skull {
      * Builds the item and returns it with a {@link Consumer <ItemStack>}.
      */
     public void build(@NotNull Consumer<ItemStack> item) {
-        build().ifPresent(item);
+        item.accept(build());
     }
 
     /**
@@ -97,8 +96,11 @@ public class Skull {
      *
      * @return The final ItemStack result.
      */
-    public Optional<ItemStack> build() {
-        itemStack.setItemMeta(skullMeta);
-        return Optional.of(itemStack);
+    public ItemStack build() {
+        if (itemStack != null && skullMeta != null) {
+            itemStack.setItemMeta(skullMeta);
+            return itemStack;
+        }
+        return null;
     }
 }

@@ -5,6 +5,7 @@ import de.clientdns.smash.character.Character;
 import de.clientdns.smash.gamestate.GameState;
 import de.clientdns.smash.player.PlayerManager;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,6 +31,7 @@ public class InventoryClickListener implements Listener {
             event.setCancelled(true);
             return;
         }
+        Component displayName = event.getCurrentItem().getItemMeta().displayName();
         if (!event.getClick().equals(ClickType.LEFT)) {
             event.setCancelled(true);
             return;
@@ -37,8 +39,11 @@ public class InventoryClickListener implements Listener {
 
         if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.LOBBY)) {
             Player player = (Player) event.getWhoClicked();
-            ItemStack item = event.getCurrentItem();
-            Component displayName = item.getItemMeta().displayName();
+            String name = PlainTextComponentSerializer.plainText().serializeOrNull(displayName);
+            if (name != null) {
+                player.sendMessage(name);
+            }
+
             if (Character.MARIO.getData().getName().equals(displayName)) {
                 PlayerManager.set(player, Character.MARIO);
             } else if (Character.DONKEY_KONG.getData().getName().equals(displayName)) {

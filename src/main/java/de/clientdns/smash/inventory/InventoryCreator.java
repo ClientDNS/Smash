@@ -30,6 +30,12 @@ public class InventoryCreator {
         consumer.accept(inventory);
     }
 
+    public void accept(@NotNull Consumer<Inventory> consumer, boolean condition) {
+        if (condition) {
+            consumer.accept(inventory);
+        }
+    }
+
     public InventoryCreator edit(@NotNull Consumer<InventoryEditor> consumer) {
         consumer.accept(editor);
         return this;

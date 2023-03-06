@@ -3,20 +3,21 @@ package de.clientdns.smash.map.setup;
 import de.clientdns.smash.SmashPlugin;
 import de.clientdns.smash.map.Map;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 public class MapSetup {
 
     private final Player player;
     private final String name;
-    private final String builder;
+    private final Material icon;
     private final Location[] spawnLocations;
     private final int indexSize;
 
-    public MapSetup(Player player, String name, String builder, int indexSize) {
+    public MapSetup(Player player, String name, Material icon, int indexSize) {
         this.player = player;
         this.name = name;
-        this.builder = builder;
+        this.icon = icon;
         this.indexSize = indexSize;
         this.spawnLocations = new Location[indexSize];
         SmashPlugin.getPlugin().getSetups().put(player, this);
@@ -28,7 +29,7 @@ public class MapSetup {
 
     public Map finish() {
         delete();
-        return new Map(name, builder, spawnLocations);
+        return new Map(name, icon, spawnLocations);
     }
 
     public void setSpawnLocation(int index, Location location) {
@@ -41,10 +42,6 @@ public class MapSetup {
 
     public String getName() {
         return name;
-    }
-
-    public String getBuilder() {
-        return builder;
     }
 
     public int getIndexSize() {
