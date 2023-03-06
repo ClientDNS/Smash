@@ -3,24 +3,17 @@ package de.clientdns.smash.map;
 import de.clientdns.smash.SmashPlugin;
 import de.clientdns.smash.config.SmashConfig;
 import org.bukkit.Location;
+import org.bukkit.Material;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
-public record Map(String name, String builder, Location[] spawnLocations) {
+public record Map(String name, Material item, Location[] spawnLocations) {
 
     public boolean save() {
-        AtomicBoolean success = new AtomicBoolean();
         if (spawnLocations.length < 2) {
-            return success.get();
+            return false;
         }
         SmashConfig config = SmashPlugin.getPlugin().getSmashConfig();
-        config.set("maps." + name + ".builder", builder);
+        config.set("maps." + name + ".material", item.name());
         config.set("maps." + name + ".spawnLocations", spawnLocations);
-        config.save(exception -> {
-            if (exception == null) {
-                success.set(true);
-            }
-        });
-        return success.get();
+        return true;
     }
 }
