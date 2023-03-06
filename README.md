@@ -1,4 +1,5 @@
 # Smash
+
 ![Status Badge](https://img.shields.io/github/actions/workflow/status/ClientDNS/Smash/build.yml?branch=master&style=for-the-badge)
 ![Code Size](https://img.shields.io/github/languages/code-size/ClientDNS/Smash?style=for-the-badge)
 ![Repo Size](https://img.shields.io/github/repo-size/ClientDNS/Smash?style=for-the-badge)
