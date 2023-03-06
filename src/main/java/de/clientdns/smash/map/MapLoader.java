@@ -3,9 +3,11 @@ package de.clientdns.smash.map;
 import de.clientdns.smash.SmashPlugin;
 import de.clientdns.smash.config.SmashConfig;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class MapLoader {
@@ -17,7 +19,7 @@ public class MapLoader {
 
     public static @NotNull Set<Map> getMaps() {
         SmashConfig config = SmashPlugin.getPlugin().getSmashConfig();
-        Set<Map> maps = new java.util.HashSet<>();
+        Set<Map> maps = new HashSet<>();
         for (String mapKey : config.getSection("maps").getKeys(false)) {
             maps.add(loadMap(mapKey));
         }
@@ -29,8 +31,8 @@ public class MapLoader {
         if (config.contains(name)) {
             return null;
         }
-        String builder = config.getStr("maps." + name + ".builder");
+        Material icon = Material.getMaterial(config.getStr("maps." + name + ".material"));
         Location[] locations = config.getLocs("maps." + name + ".spawnLocations");
-        return new Map(name, builder, locations);
+        return new Map(name, icon, locations);
     }
 }
