@@ -48,7 +48,8 @@ public class SmashConfig {
             return;
         }
         fileConfiguration.set(path, value);
-        changed = true;
+        if (!changed)
+            changed = true;
     }
 
     public void reset() {
