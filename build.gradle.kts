@@ -14,7 +14,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.26")
     annotationProcessor("org.projectlombok:lombok:1.18.26")
     compileOnly("io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT")
-    compileOnly("com.google.code.gson:gson:2.10")
+    compileOnly("com.google.code.gson:gson:2.10.1")
 }
 
 java {
