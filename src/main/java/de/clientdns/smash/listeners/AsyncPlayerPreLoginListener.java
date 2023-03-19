@@ -20,9 +20,9 @@ public class AsyncPlayerPreLoginListener implements Listener {
         int online = Bukkit.getOnlinePlayers().size();
         int max = Bukkit.getMaxPlayers();
         if (online >= max) {
-            if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.LOBBY)) {
+            if (SmashPlugin.getPlugin().getGameStateManager().getCurrentState().equals(GameState.LOBBY)) {
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, MiniMsg.plain("Der Server ist schon voll!", RED));
-            } else if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.INGAME)) {
+            } else if (SmashPlugin.getPlugin().getGameStateManager().getCurrentState().equals(GameState.INGAME)) {
                 event.allow();
                 Player player = Bukkit.getPlayer(event.getUniqueId());
                 if (player != null) {
@@ -30,7 +30,7 @@ public class AsyncPlayerPreLoginListener implements Listener {
                     player.setGameMode(GameMode.SPECTATOR);
                 }
             } else {
-                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, MiniMsg.plain("Der Server ist gerade nicht verfügbar!", RED));
+                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, MiniMsg.plain("Das Spiel ist bereits beendet!", RED));
             }
         }
     }

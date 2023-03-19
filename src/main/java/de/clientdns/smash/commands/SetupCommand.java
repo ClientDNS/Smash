@@ -44,7 +44,7 @@ public class SetupCommand extends Command {
             return false;
         }
         if (args.length == 1) {
-            if (!SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.LOBBY)) {
+            if (!SmashPlugin.getPlugin().getGameStateManager().getCurrentState().equals(GameState.LOBBY)) {
                 player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Das Setup ist während des Spiels nicht möglich.", RED)));
                 return false;
             }

@@ -16,7 +16,7 @@ public class LobbyCountdown {
     private static int seconds;
 
     public static void start() {
-        if (!SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.LOBBY)) {
+        if (!SmashPlugin.getPlugin().getGameStateManager().getCurrentState().equals(GameState.LOBBY)) {
             throw new IllegalStateException("Lobby-Countdown darf nur im LOBBY-State gestartet werden.");
         }
         seconds = 15;

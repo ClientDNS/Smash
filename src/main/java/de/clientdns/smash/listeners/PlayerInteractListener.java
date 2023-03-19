@@ -38,7 +38,7 @@ public class PlayerInteractListener implements Listener {
             case CHEST -> {
                 List<ItemStack> items = new ArrayList<>(List.of());
                 for (Character character : Character.values()) {
-                    items.add(new Skull(1, character.getData().getName()).build());
+                    items.add(new Skull(1, character.getData().name()).build());
                 }
                 Item explanation = new Item(Material.OAK_WALL_SIGN, 1, empty(), List.of(empty(), MiniMsg.plain("Jeder Charakter verfügt über anderen Fähigkeiten, wähle bedacht!", GRAY)));
                 new InventoryCreator(3, MiniMsg.plain("Charaktere", NamedTextColor.GOLD)).edit(editor -> {

@@ -15,9 +15,10 @@ public class PlayerItemHeldListener implements Listener {
     @EventHandler
     void on(@NotNull PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
-        if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.INGAME)) {
+        if (SmashPlugin.getPlugin().getGameStateManager().getCurrentState().equals(GameState.INGAME)) {
             if (player.getGameMode().equals(GameMode.SPECTATOR)) {
                 event.setCancelled(false);
+                return;
             }
             // Prevent player from moving to other slots than 0
             if (event.getNewSlot() != 0) {

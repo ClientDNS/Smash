@@ -5,13 +5,11 @@ import de.clientdns.smash.character.Character;
 import de.clientdns.smash.gamestate.GameState;
 import de.clientdns.smash.player.PlayerManager;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class InventoryClickListener implements Listener {
@@ -37,19 +35,19 @@ public class InventoryClickListener implements Listener {
             return;
         }
 
-        if (SmashPlugin.getPlugin().getGameStateManager().getGameState().equals(GameState.LOBBY)) {
+        if (SmashPlugin.getPlugin().getGameStateManager().getCurrentState().equals(GameState.LOBBY)) {
             Player player = (Player) event.getWhoClicked();
-            if (Character.MARIO.getData().getName().equals(displayName)) {
+            if (Character.MARIO.getData().name().equals(displayName)) {
                 PlayerManager.set(player, Character.MARIO);
-            } else if (Character.DONKEY_KONG.getData().getName().equals(displayName)) {
+            } else if (Character.DONKEY_KONG.getData().name().equals(displayName)) {
                 PlayerManager.set(player, Character.DONKEY_KONG);
-            } else if (Character.FLASH.getData().getName().equals(displayName)) {
+            } else if (Character.FLASH.getData().name().equals(displayName)) {
                 PlayerManager.set(player, Character.FLASH);
-            } else if (Character.PIKACHU.getData().getName().equals(displayName)) {
+            } else if (Character.PIKACHU.getData().name().equals(displayName)) {
                 PlayerManager.set(player, Character.PIKACHU);
-            } else if (Character.SUPERMAN.getData().getName().equals(displayName)) {
+            } else if (Character.SUPERMAN.getData().name().equals(displayName)) {
                 PlayerManager.set(player, Character.SUPERMAN);
-            } else if (Character.LINK.getData().getName().equals(displayName)) {
+            } else if (Character.LINK.getData().name().equals(displayName)) {
                 PlayerManager.set(player, Character.LINK);
             }
         }
