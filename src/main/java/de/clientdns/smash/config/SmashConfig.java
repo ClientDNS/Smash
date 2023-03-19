@@ -19,8 +19,8 @@ public class SmashConfig {
 
     private final Logger logger;
     private final File configFile;
-    private FileConfiguration fileConfiguration;
     private boolean changed;
+    private FileConfiguration fileConfiguration;
 
     /**
      * Creates a new instance of a SmashConfig class. It can be used to create a new file
@@ -48,8 +48,7 @@ public class SmashConfig {
             return;
         }
         fileConfiguration.set(path, value);
-        if (!changed)
-            changed = true;
+        if (!changed) changed = true;
     }
 
     public void reset() {
@@ -147,13 +146,13 @@ public class SmashConfig {
 
     public void save(@NotNull Consumer<IOException> consumer) {
         try {
-            if (changed) {
-                fileConfiguration.save(configFile);
-                changed = false;
-                consumer.accept(null);
-            } else {
-                logger.info("Detected config save but no changes made.");
+            if (!changed) {
+                logger.info("No changes detected, not saving.");
+                return;
             }
+            fileConfiguration.save(configFile);
+            changed = false;
+            consumer.accept(null);
         } catch (IOException exception) {
             consumer.accept(exception);
         }
