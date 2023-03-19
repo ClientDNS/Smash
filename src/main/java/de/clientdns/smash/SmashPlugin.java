@@ -6,22 +6,28 @@ import de.clientdns.smash.config.SmashConfig;
 import de.clientdns.smash.gamestate.GameStateManager;
 import de.clientdns.smash.listeners.*;
 import de.clientdns.smash.listeners.custom.GameStateChangeListener;
-import de.clientdns.smash.map.Map;
 import de.clientdns.smash.map.MapLoader;
 import de.clientdns.smash.map.setup.MapSetup;
 import de.clientdns.smash.player.PlayerManager;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Difficulty;
+import org.bukkit.GameRule;
+import org.bukkit.World;
+import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class SmashPlugin extends JavaPlugin {
 
     private static SmashPlugin plugin;
     private GameStateManager gameStateManager;
-    private ConcurrentHashMap<Player, MapSetup> setups;
+    private Map<Player, MapSetup> setups;
     private SmashConfig smashConfig;
 
     public static SmashPlugin getPlugin() {
@@ -33,6 +39,7 @@ public final class SmashPlugin extends JavaPlugin {
         if (plugin == null) {
             plugin = this;
         } else {
+            getPlugin().isEnabled();
             getLogger().severe("Cannot assign another plugin instance, disabling.");
             getServer().getPluginManager().disablePlugin(this);
         }
@@ -71,11 +78,13 @@ public final class SmashPlugin extends JavaPlugin {
         if (getSmashConfig().noMaps()) {
             getLogger().warning("No maps found in config.");
         } else {
+            int loaded = 0;
             for (String mapKey : getSmashConfig().getSection("maps").getKeys(false)) {
-                Map map = MapLoader.loadMap(mapKey);
-                if (map != null) {
-                    Location[] locations = getSmashConfig().getLocs("maps." + mapKey + ".spawnLocations");
-                    getLogger().info("Loaded " + map.name() + " with icon " + map.item() + " and " + locations.length + " spawn locations.");
+                if (MapLoader.loadMap(mapKey) != null) {
+                    loaded++;
+                    getLogger().info("Loading " + mapKey + " [" + loaded + "]");
+                } else {
+                    getLogger().info("Failed to load map " + mapKey);
                 }
             }
         }
@@ -100,8 +109,10 @@ public final class SmashPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
 
-        getServer().getCommandMap().register("smash", new ConfigCommand("config"));
-        getServer().getCommandMap().register("smash", new SetupCommand("setup"));
+        List<Command> commandsToRegister = new ArrayList<>();
+        commandsToRegister.add(new ConfigCommand("config"));
+        commandsToRegister.add(new SetupCommand("setup"));
+        getServer().getCommandMap().registerAll("smash", commandsToRegister);
 
         for (World world : Bukkit.getWorlds()) {
             world.setDifficulty(Difficulty.PEACEFUL);
@@ -140,7 +151,7 @@ public final class SmashPlugin extends JavaPlugin {
         return gameStateManager;
     }
 
-    public ConcurrentHashMap<Player, MapSetup> getSetups() {
+    public Map<Player, MapSetup> getSetups() {
         return setups;
     }
 
