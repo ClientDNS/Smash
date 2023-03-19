@@ -19,7 +19,7 @@ public class InventoryCreator {
     public InventoryCreator(int factor, Component name) {
         // Factor 6 is the highest number to create an inventory.
         // This means, the inventory will have 9 * 6 (54 slots) -> 6 rows with every 9 slots.
-        // If factor is more than 6, use 6 as factor. When less than 6, use the factor size provided.
+        // If factor is more than 6, use 6 as factor. When less than 6, use the factor provided.
         this.slots = factor > 6 ? slots * 6 : slots * factor;
         this.name = name;
         this.inventory = Bukkit.createInventory(null, slots, name);
