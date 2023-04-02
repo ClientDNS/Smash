@@ -38,12 +38,12 @@ public class SmashConfig {
             if (configFile.createNewFile()) {
                 logger.info(String.format("Created '%s' file.", fileName));
             }
-        } catch (IOException e) {
+        } catch (Throwable e) {
             throw new RuntimeException("Failed to create file", e);
         }
     }
 
-    public void set(@NotNull String path, Object value) {
+    public <V> void set(@NotNull String path, V value) {
         if (fileConfiguration.contains(path)) {
             return;
         }
@@ -131,12 +131,8 @@ public class SmashConfig {
     }
 
     public boolean noMaps() {
-        if (isSection("maps")) {
-            return getSection("maps").getKeys(false).isEmpty();
-        }
-        if (isList("maps")) {
-            return getList("maps").isEmpty();
-        }
+        if (isSection("maps")) return getSection("maps").getKeys(false).isEmpty();
+        if (isList("maps")) return getList("maps").isEmpty();
         return true;
     }
 
@@ -144,18 +140,22 @@ public class SmashConfig {
         return changed;
     }
 
-    public void save(@NotNull Consumer<IOException> consumer) {
+    public void save(@NotNull Consumer<Throwable> consumer) {
         try {
             if (!changed) {
                 logger.info("No changes detected, not saving.");
-                return;
+                consumer.accept(null);
             }
             fileConfiguration.save(configFile);
-            changed = false;
+            discardChanges();
             consumer.accept(null);
         } catch (IOException exception) {
             consumer.accept(exception);
         }
+    }
+
+    public void discardChanges() {
+        this.changed = false;
     }
 
     public boolean contains(String path) {
