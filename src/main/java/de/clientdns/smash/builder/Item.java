@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,7 @@ public class Item {
 
     @SuppressWarnings("unused")
     private Item() {
-        throw new UnsupportedOperationException("This class cannot be instantiated.");
+        throw new UnsupportedOperationException("This class can not be instantiated.");
     }
 
     /**
@@ -46,12 +47,12 @@ public class Item {
      * @param lore        The lore of them item.
      */
     public Item(Material material, int amount, Component displayName, List<Component> lore) {
-        if (material == null) throw new NullPointerException("Material cannot be null.");
+        if (material == null) throw new NullPointerException("Material can not be null.");
         else {
             this.itemStack = new ItemStack(material, amount);
             this.itemMeta = itemStack.getItemMeta();
             if (displayName != null) this.itemMeta.displayName(displayName);
-            if (lore != null && !lore.isEmpty()) this.itemMeta.lore(lore);
+            if (lore != null) this.itemMeta.lore(lore);
         }
     }
 
@@ -108,7 +109,7 @@ public class Item {
      *
      * @return The material of the item.
      */
-    public Material type() {
+    public @NotNull Material type() {
         return itemStack.getType();
     }
 
@@ -148,7 +149,7 @@ public class Item {
      *
      * @return The enchantments of the item.
      */
-    public Map<Enchantment, Integer> enchants() {
+    public @NotNull Map<Enchantment, Integer> enchants() {
         return itemMeta.getEnchants();
     }
 
@@ -168,7 +169,7 @@ public class Item {
      *
      * @return The item flags of the item.
      */
-    public Set<ItemFlag> itemFlags() {
+    public @NotNull Set<ItemFlag> itemFlags() {
         return itemMeta.getItemFlags();
     }
 
@@ -195,7 +196,7 @@ public class Item {
      *
      * @return The final ItemStack result.
      */
-    public ItemStack build() {
+    public @Nullable ItemStack build() {
         if (itemStack != null && itemMeta != null) {
             itemStack.setItemMeta(itemMeta);
             return itemStack;

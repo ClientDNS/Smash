@@ -49,8 +49,8 @@ public class PlayerJoinListener implements Listener {
 
             if (!player.getInventory().isEmpty()) player.getInventory().clear();
 
-            new Item(Material.CHEST, 1, MiniMsg.plain("Charaktere", GOLD), List.of(empty(), MiniMsg.plain("Choose your character", GRAY), empty())).build(characters -> player.getInventory().setItem(2, characters));
-            new Item(Material.MAP, 1, MiniMsg.plain("Maps", GOLD), List.of(empty(), MiniMsg.plain("Vote for a map", GRAY), empty())).build(maps -> player.getInventory().setItem(6, maps));
+            new Item(Material.CHEST, 1, MiniMsg.plain("Charaktere", GOLD), List.of(empty(), MiniMsg.plain("Charakterauswahl", GRAY), empty())).build(characters -> player.getInventory().setItem(2, characters));
+            new Item(Material.MAP, 1, MiniMsg.plain("Maps", GOLD), List.of(empty(), MiniMsg.plain("Kartenauswahl", GRAY), empty())).build(maps -> player.getInventory().setItem(6, maps));
 
             PersistentDataContainer pdc = player.getPersistentDataContainer();
             NamespacedKey key = new NamespacedKey(SmashPlugin.getPlugin(), "damageCount");
@@ -76,6 +76,7 @@ public class PlayerJoinListener implements Listener {
                 }
             }
         }
+
         event.joinMessage(empty());
     }
 }

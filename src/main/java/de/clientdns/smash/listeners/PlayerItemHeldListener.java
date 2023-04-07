@@ -21,8 +21,10 @@ public class PlayerItemHeldListener implements Listener {
                 return;
             }
             // Prevent player from moving to other slots than 0
-            if (event.getNewSlot() != 0) {
+            if (event.getPreviousSlot() == 0) {
                 event.setCancelled(true);
+            } else {
+                player.getInventory().setHeldItemSlot(0);
             }
         }
     }

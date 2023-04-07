@@ -32,7 +32,7 @@ public class PlayerQuitListener implements Listener {
             pdc.remove(key); // Delete key from data container
         }
 
-        // Remove player's setup when running.
+        // Remove player's setup when available.
         if (SmashPlugin.getPlugin().getSetups().get(player) != null) {
             MapSetup mapSetup = SmashPlugin.getPlugin().getSetups().get(player);
             mapSetup.delete();

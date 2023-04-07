@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,7 @@ public class Skull {
 
     @SuppressWarnings("unused")
     private Skull() {
-        throw new UnsupportedOperationException("This class cannot be instantiated.");
+        throw new UnsupportedOperationException("This class can not be instantiated.");
     }
 
     public Skull(int amount, Component component) {
@@ -32,7 +33,7 @@ public class Skull {
         this.itemStack = new ItemStack(Material.PLAYER_HEAD, amount);
         this.skullMeta = (SkullMeta) itemStack.getItemMeta();
         if (displayName != null) this.skullMeta.displayName(displayName);
-        if (lore != null && !lore.isEmpty()) this.skullMeta.lore(lore);
+        if (lore != null) this.skullMeta.lore(lore);
     }
 
     public List<Component> lore() {
@@ -49,7 +50,7 @@ public class Skull {
      *
      * @return The enchantments of the item.
      */
-    public Map<Enchantment, Integer> enchants() {
+    public @NotNull Map<Enchantment, Integer> enchants() {
         return skullMeta.getEnchants();
     }
 
@@ -69,7 +70,7 @@ public class Skull {
      *
      * @return The item flags of the item.
      */
-    public Set<ItemFlag> itemFlags() {
+    public @NotNull Set<ItemFlag> itemFlags() {
         return skullMeta.getItemFlags();
     }
 
@@ -96,7 +97,7 @@ public class Skull {
      *
      * @return The final ItemStack result.
      */
-    public ItemStack build() {
+    public @Nullable ItemStack build() {
         if (itemStack != null && skullMeta != null) {
             itemStack.setItemMeta(skullMeta);
             return itemStack;

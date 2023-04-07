@@ -40,7 +40,7 @@ public class PlayerInteractListener implements Listener {
                 for (Character character : Character.values()) {
                     items.add(new Skull(1, character.getData().name()).build());
                 }
-                Item explanation = new Item(Material.OAK_WALL_SIGN, 1, empty(), List.of(empty(), MiniMsg.plain("Jeder Charakter verfügt über anderen Fähigkeiten, wähle bedacht!", GRAY)));
+                Item explanation = new Item(Material.OAK_WALL_SIGN, 1, empty(), List.of(empty(), MiniMsg.plain("Jeder Charakter verfügt über andere Fähigkeiten. Wähle bedacht!", GRAY)));
                 new InventoryCreator(3, MiniMsg.plain("Charaktere", NamedTextColor.GOLD)).edit(editor -> {
                     for (int i = 0; i < items.size(); i++) {
                         editor.set(i, items.get(i));
