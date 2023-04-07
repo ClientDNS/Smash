@@ -7,8 +7,13 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.Experimental
 public class SkinUtil {
 
-    @ApiStatus.Experimental
-    public void setSkin(PlayerProfile profile, PlayerTextures textures) {
+    private final PlayerProfile profile;
+
+    public SkinUtil(PlayerProfile profile) {
+        this.profile = profile;
+    }
+
+    public void setSkin(PlayerTextures textures) {
         if (profile == null || textures == null || textures.isEmpty()) {
             return;
         }

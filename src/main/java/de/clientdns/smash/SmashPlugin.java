@@ -16,12 +16,13 @@ import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public final class SmashPlugin extends JavaPlugin {
 
@@ -39,14 +40,13 @@ public final class SmashPlugin extends JavaPlugin {
         if (plugin == null) {
             plugin = this;
         } else {
-            getPlugin().isEnabled();
             getLogger().severe("Cannot assign another plugin instance, disabling.");
             getServer().getPluginManager().disablePlugin(this);
         }
         double classVersion = NumberUtils.toDouble(System.getProperty("java.class.version"));
         if (classVersion < 61.0) {
             getLogger().warning("You are using an unsupported java version (class: " + classVersion + ")!");
-            getLogger().warning("Please update to Java 17 (class: 61).");
+            getLogger().warning("Please update at least to Java 17 (class: 61).");
             getServer().getPluginManager().disablePlugin(this);
         }
     }
@@ -60,59 +60,69 @@ public final class SmashPlugin extends JavaPlugin {
         } else {
             smashConfig.load();
             if (smashConfig.empty()) {
+                getLogger().info("Config is empty (contains no values), resetting to default values.");
                 smashConfig.reset();
                 smashConfig.save(exception -> {
                     if (exception == null) {
                         getLogger().info("Saved default values to config.");
                     } else {
-                        getLogger().severe("Config is empty (could not save default values), disabling.");
+                        getLogger().severe("Config is empty (could not save default values), disabling plugin.");
                         getServer().getPluginManager().disablePlugin(this);
                     }
                 });
-            } else {
-                smashConfig.load();
-                getLogger().info("Successfully loaded configuration.");
-            }
+            } else getLogger().info("Successfully loaded configuration.");
         }
 
         if (getSmashConfig().noMaps()) {
             getLogger().warning("No maps found in config.");
         } else {
-            int loaded = 0;
             for (String mapKey : getSmashConfig().getSection("maps").getKeys(false)) {
-                if (MapLoader.loadMap(mapKey) != null) {
-                    loaded++;
-                    getLogger().info("Loading " + mapKey + " [" + loaded + "]");
+                de.clientdns.smash.map.Map map = MapLoader.load(mapKey);
+                if (map != null) {
+                    getLogger().info("Loading " + mapKey);
                 } else {
-                    getLogger().info("Failed to load map " + mapKey);
+                    getLogger().info("Failed to load map " + mapKey + ", ignoring it");
                 }
             }
         }
 
+        List<Listener> listeners = new ArrayList<>();
         // custom events
-        getServer().getPluginManager().registerEvents(new GameStateChangeListener(), this);
+        listeners.add(new GameStateChangeListener());
 
-        getServer().getPluginManager().registerEvents(new AsyncPlayerPreLoginListener(), this);
-        getServer().getPluginManager().registerEvents(new BlockBreakListener(), this);
-        getServer().getPluginManager().registerEvents(new BlockPlaceListener(), this);
-        getServer().getPluginManager().registerEvents(new ChunkLoadListener(), this);
-        getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
-        getServer().getPluginManager().registerEvents(new EntityPickupItemListener(), this);
-        getServer().getPluginManager().registerEvents(new FoodLevelChangeListener(), this);
-        getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerDropItemListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerGameModeChangeListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerItemHeldListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
+        listeners.add(new AsyncPlayerPreLoginListener());
+        listeners.add(new BlockBreakListener());
+        listeners.add(new BlockPlaceListener());
+        listeners.add(new ChunkLoadListener());
+        listeners.add(new EntityDamageListener());
+        listeners.add(new EntityPickupItemListener());
+        listeners.add(new FoodLevelChangeListener());
+        listeners.add(new InventoryClickListener());
+        listeners.add(new PlayerDeathListener());
+        listeners.add(new PlayerDropItemListener());
+        listeners.add(new PlayerGameModeChangeListener());
+        listeners.add(new PlayerInteractListener());
+        listeners.add(new PlayerItemHeldListener());
+        listeners.add(new PlayerJoinListener());
+        listeners.add(new PlayerMoveListener());
+        listeners.add(new PlayerQuitListener());
 
-        List<Command> commandsToRegister = new ArrayList<>();
-        commandsToRegister.add(new ConfigCommand("config"));
-        commandsToRegister.add(new SetupCommand("setup"));
-        getServer().getCommandMap().registerAll("smash", commandsToRegister);
+        int eventCount = 0;
+        for (Listener eventListener : listeners) {
+            getServer().getPluginManager().registerEvents(eventListener, this);
+            eventCount++;
+        }
+
+        List<Command> commands = new ArrayList<>();
+        commands.add(new ConfigCommand("config"));
+        commands.add(new SetupCommand("setup"));
+
+        int commandCount = 0;
+        for (Command command : commands) {
+            getServer().getCommandMap().register("smash", command);
+            commandCount++;
+        }
+        logger.info("Registered " + eventCount + " events & " + commandCount + " commands.");
 
         for (World world : Bukkit.getWorlds()) {
             world.setDifficulty(Difficulty.PEACEFUL);
@@ -139,7 +149,7 @@ public final class SmashPlugin extends JavaPlugin {
             world.setGameRule(GameRule.MAX_ENTITY_CRAMMING, 8);
         }
         gameStateManager = new GameStateManager();
-        setups = new ConcurrentHashMap<>();
+        setups = new HashMap<>();
     }
 
     @Override

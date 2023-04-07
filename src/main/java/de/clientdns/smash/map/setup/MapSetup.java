@@ -34,6 +34,10 @@ public class MapSetup {
         return new Map(name, icon, spawnLocations);
     }
 
+    public boolean enoughLocations() {
+        return spawnLocations.length >= indexSize;
+    }
+
     public void setSpawnLocation(int index, Location location) {
         spawnLocations[index] = location;
     }

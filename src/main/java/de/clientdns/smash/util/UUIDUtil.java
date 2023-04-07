@@ -20,20 +20,20 @@ public class UUIDUtil {
 
     public static @NotNull Optional<String> uuid(String playerName) {
         if (savedIds.containsKey(playerName)) {
-            return Optional.ofNullable(savedIds.get(playerName));
+            return Optional.of(savedIds.get(playerName));
         }
         try {
             URL url = new URL("https://api.mojang.com/users/profiles/minecraft/" + playerName);
             URLConnection connection = url.openConnection();
             connection.connect();
-            try (InputStreamReader isr = new InputStreamReader(connection.getInputStream())) {
-                JsonElement element = JsonParser.parseReader(isr);
+            try (InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream())) {
+                JsonElement element = JsonParser.parseReader(inputStreamReader);
                 JsonObject object = element.getAsJsonObject();
                 String uuid = object.get("id").getAsString();
                 savedIds.put(playerName, uuid);
                 SmashPlugin.getPlugin().getLogger().info("Cached uuid for player " + playerName + "(" + uuid + ")");
             }
-            return Optional.ofNullable(savedIds.get(playerName));
+            return Optional.of(savedIds.get(playerName));
         } catch (IOException exception) {
             exception.printStackTrace();
         }

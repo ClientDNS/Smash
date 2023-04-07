@@ -7,7 +7,7 @@ import org.bukkit.Material;
 
 public record Map(String name, Material item, Location[] spawnLocations) {
 
-    public boolean save() {
+    public boolean write() {
         if (spawnLocations.length < 2) {
             return false;
         }

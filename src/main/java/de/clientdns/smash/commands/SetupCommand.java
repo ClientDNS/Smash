@@ -55,6 +55,7 @@ public class SetupCommand extends Command {
                         return false;
                     }
                     MapSetup mapSetup = SmashPlugin.getPlugin().getSetups().get(player);
+                    player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Beende Map-Erstellung ''" + mapSetup.getName() + "'...", RED)));
                     mapSetup.delete();
                     player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Du hast die Map-Erstellung abgebrochen.", RED)));
                     return true;
@@ -70,7 +71,7 @@ public class SetupCommand extends Command {
                         return false;
                     }
                     Map map = mapSetup.finish();
-                    if (map.save()) {
+                    if (map.write()) {
                         player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Map '" + map.name() + "' abgelegt.", GREEN)));
                         player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Speicher die Map mit '/config save'.", YELLOW)));
                     }

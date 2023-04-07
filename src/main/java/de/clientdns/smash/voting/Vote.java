@@ -6,10 +6,13 @@ import org.bukkit.entity.Player;
 public class Vote {
 
     private final Player player;
-    private final Map map;
+    private Map map;
 
-    public Vote(Player player, Map map) {
+    public Vote(Player player) {
         this.player = player;
+    }
+
+    public void choose(Map map) {
         this.map = map;
     }
 

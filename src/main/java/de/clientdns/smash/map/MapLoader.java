@@ -7,9 +7,9 @@ import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class MapLoader {
 
@@ -22,25 +22,36 @@ public class MapLoader {
     public static @NotNull List<Map> getMaps() {
         List<Map> maps = new ArrayList<>();
         for (String mapKey : config.getSection("maps").getKeys(false)) {
-            maps.add(loadMap(mapKey));
+            maps.add(load(mapKey));
         }
         return maps;
     }
 
-    public static @Nullable Map loadMap(String name) {
+    public static @Nullable Map load(String name) {
         if (config.contains(name)) {
             return null;
         }
-        Material icon = Material.getMaterial(config.getStr("maps." + name + ".material"));
+
+        String materialName = config.getStr("maps." + name + ".material");
+
+        if (materialName == null) {
+            throw new NullPointerException("Could not retrieve material from config.");
+        }
+
         Location[] locations = config.getLocs("maps." + name + ".spawnLocations");
+        Material icon = Material.getMaterial(materialName);
+
+        if (icon == null) {
+            throw new NullPointerException("No material " + materialName + " found.");
+        }
         return new Map(name, icon, locations);
     }
 
-    public Map random() {
+    public static @Nullable Map random() {
         if (getMaps().isEmpty()) {
             return null;
         }
-        int randomIndex = ThreadLocalRandom.current().nextInt(getMaps().size());
+        int randomIndex = new SecureRandom().nextInt(getMaps().size());
         return getMaps().get(randomIndex);
     }
 }
