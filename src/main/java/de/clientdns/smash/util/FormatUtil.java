@@ -6,7 +6,7 @@ public class FormatUtil {
 
     public static @NotNull String percent(double value, double max) {
         double percent = (value * 100D) / max;
-        return (int) percent + "%";
+        return percent + "%";
     }
 
     /**

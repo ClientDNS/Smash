@@ -67,7 +67,7 @@ public class SetupCommand extends Command {
                     }
                     MapSetup mapSetup = SmashPlugin.getPlugin().getSetups().get(player);
                     if (mapSetup.countLocations() < mapSetup.getIndexSize()) {
-                        player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Nicht genug Spawn-Positionen! (" + mapSetup.countLocations() + "/" + mapSetup.getIndexSize() + ")", RED)));
+                        player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Nicht genug Spawn-Positionen! (" + mapSetup.countLocations() + " von " + mapSetup.getIndexSize() + ")", RED)));
                         return false;
                     }
                     Map map = mapSetup.finish();

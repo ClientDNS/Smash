@@ -55,11 +55,11 @@ public class PlayerInteractListener implements Listener {
                     event.setCancelled(true);
                     return;
                 }
-                for (Map map : MapLoader.getMaps()) {
+                for (Map map : MapLoader.getConfigurationMaps()) {
                     editor.add(new Item(map.item(), 1, MiniMsg.plain(map.name(), GREEN)).build());
                     event.setCancelled(true);
                 }
-            }).accept(player::openInventory, !SmashPlugin.getPlugin().getSmashConfig().noMaps());
+            }).accept(player::openInventory);
             default -> event.setCancelled(true);
         }
     }

@@ -60,17 +60,17 @@ public final class SmashPlugin extends JavaPlugin {
         } else {
             smashConfig.load();
             if (smashConfig.empty()) {
-                getLogger().info("Config is empty (contains no values), resetting to default values.");
+                getLogger().info("Konfiguration ist leer (contains no values), resetting to default values.");
                 smashConfig.reset();
                 smashConfig.save(exception -> {
                     if (exception == null) {
-                        getLogger().info("Saved default values to config.");
+                        getLogger().info("Standardwerte in Konfiguration gespeichert.");
                     } else {
-                        getLogger().severe("Config is empty (could not save default values), disabling plugin.");
+                        getLogger().severe("Konfiguration ist leer (konnte Standardwerte nicht speichern), deaktiviere Plugin.");
                         getServer().getPluginManager().disablePlugin(this);
                     }
                 });
-            } else getLogger().info("Successfully loaded configuration.");
+            } else getLogger().info("Konfiguration erfolgreich geladen.");
         }
 
         if (getSmashConfig().noMaps()) {

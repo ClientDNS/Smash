@@ -1,7 +1,6 @@
 package de.clientdns.smash.events;
 
 import de.clientdns.smash.gamestate.GameState;
-import lombok.Getter;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
@@ -9,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 /**
  * This event is called when the game state changes.
  */
-@Getter
 public class GameStateChangeEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
@@ -22,6 +20,10 @@ public class GameStateChangeEvent extends Event {
      */
     public GameStateChangeEvent(GameState state) {
         this.gameState = state;
+    }
+
+    public GameState getGameState() {
+        return gameState;
     }
 
     public static HandlerList getHandlerList() {

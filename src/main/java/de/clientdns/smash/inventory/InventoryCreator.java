@@ -18,9 +18,9 @@ public class InventoryCreator {
 
     public InventoryCreator(int factor, Component name) {
         // Factor 6 is the highest number to create an inventory.
-        // This means, the inventory will have 9 * 6 (54 slots) -> 6 rows with every 9 slots.
+        // This means the inventory will have 9 * 6 (54) slots -> 6 rows with every 9 slots.
         // If factor is more than 6, use 6 as factor. When less than 6, use the factor provided.
-        this.slots = factor > 6 ? slots * 6 : slots * factor;
+        this.slots = factor > 6 ? 54 : slots * factor;
         this.name = name;
         this.inventory = Bukkit.createInventory(null, slots, name);
         this.editor = new InventoryEditor(this);
@@ -28,12 +28,6 @@ public class InventoryCreator {
 
     public void accept(@NotNull Consumer<Inventory> consumer) {
         consumer.accept(inventory);
-    }
-
-    public void accept(@NotNull Consumer<Inventory> consumer, boolean condition) {
-        if (condition) {
-            consumer.accept(inventory);
-        }
     }
 
     public InventoryCreator edit(@NotNull Consumer<InventoryEditor> consumer) {
@@ -66,10 +60,6 @@ public class InventoryCreator {
 
         public void set(int index, ItemStack itemStack) {
             creator.accept(inventory -> inventory.setItem(index, itemStack));
-        }
-
-        public void contents(ItemStack... itemStacks) {
-            creator.accept(inventory -> inventory.setContents(itemStacks));
         }
 
         public void clear() {

@@ -2,12 +2,10 @@ package de.clientdns.smash.map.setup;
 
 import de.clientdns.smash.SmashPlugin;
 import de.clientdns.smash.map.Map;
-import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-@Getter
 public class MapSetup {
 
     private final Player player;
@@ -34,8 +32,12 @@ public class MapSetup {
         return new Map(name, icon, spawnLocations);
     }
 
-    public boolean enoughLocations() {
-        return spawnLocations.length >= indexSize;
+    public String getName() {
+        return name;
+    }
+
+    public int getIndexSize() {
+        return indexSize;
     }
 
     public void setSpawnLocation(int index, Location location) {

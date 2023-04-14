@@ -38,21 +38,21 @@ public class ConfigCommand extends Command {
             switch (args[0].toLowerCase()) {
                 case "reload" -> {
                     if (config.isChanged()) {
-                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("There are some changes left to save.", RED)));
-                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Save with '/config save' to use the reload function.", RED)));
+                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Es sind noch einige Änderungen offen zum speichern.", RED)));
+                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Nutze '/config save', um die Konfiguration neu zu laden.", RED)));
                         return false;
                     }
                     config.load();
-                    sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Config reloaded.", GREEN)));
+                    sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Konfiguration neu geladen.", GREEN)));
                 }
                 case "save" -> {
                     if (!config.isChanged()) {
-                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("No changes to save.", RED)));
+                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Keine Änderungen erkannt.", RED)));
                         return false;
                     }
                     config.save(exception -> {
                         if (exception == null) {
-                            sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Config saved.", GREEN)));
+                            sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Konfiguration gespeichert.", GREEN)));
                         }
                     });
                 }

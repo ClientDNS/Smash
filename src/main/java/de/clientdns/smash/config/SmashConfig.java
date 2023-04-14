@@ -143,7 +143,7 @@ public class SmashConfig {
     public void save(@NotNull Consumer<Throwable> consumer) {
         try {
             if (!changed) {
-                logger.info("No changes detected, not saving.");
+                logger.info("Keine Änderungen erkannt, abbrechen.");
                 consumer.accept(null);
             }
             fileConfiguration.save(configFile);

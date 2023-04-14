@@ -24,6 +24,6 @@ public class ProfileUtil {
     }
 
     public PlayerProfile getProfile() {
-        return Bukkit.createProfileExact(uuid, name);
+        return Bukkit.createProfile(uuid, name);
     }
 }
