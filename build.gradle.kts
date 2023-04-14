@@ -11,8 +11,6 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.projectlombok:lombok:1.18.26")
-    annotationProcessor("org.projectlombok:lombok:1.18.26")
     compileOnly("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
     compileOnly("com.google.code.gson:gson:2.10.1")
     //implementation("de.chojo.sadu:sadu:1.2.0")
