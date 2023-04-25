@@ -10,7 +10,6 @@ import de.clientdns.smash.map.MapLoader;
 import de.clientdns.smash.map.setup.MapSetup;
 import de.clientdns.smash.player.PlayerManager;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.GameRule;
 import org.bukkit.World;
@@ -120,7 +119,7 @@ public final class SmashPlugin extends JavaPlugin {
             getServer().getCommandMap().register("smash", command);
         }
 
-        for (World world : Bukkit.getWorlds()) {
+        for (World world : getServer().getWorlds()) {
             world.setDifficulty(Difficulty.PEACEFUL);
             world.getWorldBorder().reset();
             world.setThundering(false);
