@@ -55,7 +55,7 @@ public class SetupCommand extends Command {
                         return false;
                     }
                     MapSetup mapSetup = SmashPlugin.getPlugin().getSetups().get(player);
-                    player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Beende Map-Erstellung ''" + mapSetup.getName() + "'...", RED)));
+                    player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Breche Map-Erstellung '" + mapSetup.getName() + "' ab...", RED)));
                     mapSetup.delete();
                     player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Du hast die Map-Erstellung abgebrochen.", RED)));
                     return true;
@@ -145,10 +145,10 @@ public class SetupCommand extends Command {
                 return false;
             }
         } else {
-            player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Use following arguments:", GRAY)));
+            player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Benutze folgende Argumente:", GRAY)));
             player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- abort", GREEN)));
             player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- finish", GREEN)));
-            player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- setlocation <index (beginning with zero)>", GREEN)));
+            player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- setlocation <index (beginnend mit 0)>", GREEN)));
             player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- start <map-name> <icon-material> <size of spawn locations>", GREEN)));
             return false;
         }

@@ -33,13 +33,13 @@ public class SmashConfig {
         this.changed = false;
         try {
             if (configFile.getParentFile().mkdirs()) {
-                logger.info(String.format("Created '%s' folder.", configFile.getParentFile().getName()));
+                logger.info(String.format("'%s' Ordner erstellt.", configFile.getParentFile().getName()));
             }
             if (configFile.createNewFile()) {
-                logger.info(String.format("Created '%s' file.", fileName));
+                logger.info(String.format("'%s' Datei erstellt.", fileName));
             }
         } catch (Throwable e) {
-            throw new RuntimeException("Failed to create file", e);
+            throw new RuntimeException("Fehler beim Erstellen der Datei '" + configFile.getName() + "'" , e);
         }
     }
 
@@ -51,10 +51,20 @@ public class SmashConfig {
         if (!changed) changed = true;
     }
 
+    public <V> void setWithComment(@NotNull String path, V value, String comment) {
+        if (fileConfiguration.contains(path)) {
+            return;
+        }
+        fileConfiguration.set(path, value);
+        fileConfiguration.setComments(path, List.of(comment));
+        if (!changed) changed = true;
+    }
+
     public void reset() {
-        set("deny-gamemode-switch", true);
-        set("min-players", 2);
-        set("prefix", "<red>Smash</red> <dark_gray>|</dark_gray> ");
+        setWithComment("deny-gamemode-switch", true, "Prevents player from changing gamemode in-game.");
+        setWithComment("min-players", 2, "Sets the minimum amount of players to able to start the game.");
+        setWithComment("language", "ger", "Sets the language. Available options: 'ger', 'eng'");
+        set("prefix", "<gold>Smash</gold> <dark_gray>|</dark_gray> ");
         set("unknown-command", "<red>Unbekannter Befehl. ($command)</red>");
         set("join-message", "<green>$name ist dem Server beigetreten.</green>");
         set("quit-message", "<red>$name hat den Server verlassen.</red>");
@@ -144,13 +154,14 @@ public class SmashConfig {
         try {
             if (!changed) {
                 logger.info("Keine Änderungen erkannt, abbrechen.");
-                consumer.accept(null);
+            } else { // There are changes
+                fileConfiguration.save(configFile);
+                discardChanges();
             }
-            fileConfiguration.save(configFile);
-            discardChanges();
-            consumer.accept(null);
         } catch (IOException exception) {
             consumer.accept(exception);
+        } finally {
+            consumer.accept(null);
         }
     }
 

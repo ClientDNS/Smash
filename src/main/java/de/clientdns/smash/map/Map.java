@@ -7,6 +7,13 @@ import org.bukkit.Material;
 
 public record Map(String name, Material item, Location[] spawnLocations) {
 
+    public Map(String name, Material item, Location[] spawnLocations) {
+        this.name = name;
+        this.item = item;
+        this.spawnLocations = spawnLocations;
+        MapLoader.getLoadedMaps().put(name, this);
+    }
+
     public boolean write() {
         if (spawnLocations.length < 2) {
             return false;

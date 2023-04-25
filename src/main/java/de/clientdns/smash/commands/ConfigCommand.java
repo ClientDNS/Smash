@@ -38,7 +38,7 @@ public class ConfigCommand extends Command {
             switch (args[0].toLowerCase()) {
                 case "reload" -> {
                     if (config.isChanged()) {
-                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Es sind noch einige Änderungen offen zum speichern.", RED)));
+                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Es sind noch einige Änderungen offen zum Speichern.", RED)));
                         sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Nutze '/config save', um die Konfiguration neu zu laden.", RED)));
                         return false;
                     }
@@ -58,7 +58,7 @@ public class ConfigCommand extends Command {
                 }
             }
         } else {
-            sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Use following arguments:", GRAY)));
+            sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Benutze folgende Argumente:", GRAY)));
             sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- reload", GREEN)));
             sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- save", GREEN)));
             return false;

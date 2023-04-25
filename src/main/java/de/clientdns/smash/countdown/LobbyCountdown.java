@@ -6,6 +6,7 @@ import de.clientdns.smash.gamestate.GameState;
 import de.clientdns.smash.util.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.ApiStatus;
 
 import static net.kyori.adventure.text.format.NamedTextColor.GREEN;
 import static net.kyori.adventure.text.format.NamedTextColor.YELLOW;
@@ -47,6 +48,7 @@ public class LobbyCountdown {
         }, 0L, 20L);
     }
 
+    @ApiStatus.Experimental
     public static void forceStopScheduler() {
         if (taskId != -1) {
             Bukkit.getScheduler().cancelTask(taskId);

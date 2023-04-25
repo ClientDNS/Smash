@@ -40,13 +40,13 @@ public final class SmashPlugin extends JavaPlugin {
         if (plugin == null) {
             plugin = this;
         } else {
-            getLogger().severe("Cannot assign another plugin instance, disabling.");
+            getLogger().severe("Konnte keine neue Plugin-Instanz zuweisen, deaktiviere Plugin.");
             getServer().getPluginManager().disablePlugin(this);
         }
         double classVersion = NumberUtils.toDouble(System.getProperty("java.class.version"));
         if (classVersion < 61.0) {
-            getLogger().warning("You are using an unsupported java version (class: " + classVersion + ")!");
-            getLogger().warning("Please update at least to Java 17 (class: 61).");
+            getLogger().warning("Du nutzt eine nicht unterstütze Java-Version! (Klasse: " + classVersion + ")");
+            getLogger().warning("Bitte aktualisiere auf Java 17 (Klasse: 61) oder höher.");
             getServer().getPluginManager().disablePlugin(this);
         }
     }
@@ -55,12 +55,12 @@ public final class SmashPlugin extends JavaPlugin {
     public void onEnable() {
         smashConfig = new SmashConfig("smash.yml");
         if (!smashConfig.exists()) {
-            getLogger().severe("Could not find config file, disabling.");
+            getLogger().severe("Konnte die Konfiguration nicht finden, deaktiviere Plugin.");
             getServer().getPluginManager().disablePlugin(this);
         } else {
             smashConfig.load();
             if (smashConfig.empty()) {
-                getLogger().info("Konfiguration ist leer (contains no values), resetting to default values.");
+                getLogger().warning("Konfiguration ist leer, setze auf Standardwerte zurück.");
                 smashConfig.reset();
                 smashConfig.save(exception -> {
                     if (exception == null) {
@@ -70,18 +70,19 @@ public final class SmashPlugin extends JavaPlugin {
                         getServer().getPluginManager().disablePlugin(this);
                     }
                 });
-            } else getLogger().info("Konfiguration erfolgreich geladen.");
+            }
         }
 
         if (getSmashConfig().noMaps()) {
-            getLogger().warning("No maps found in config.");
+            getLogger().warning("Keine Karten in der Konfiguration gefunden.");
+            getLogger().info("Richte eine Karte mit '/setup start' ein.");
         } else {
             for (String mapKey : getSmashConfig().getSection("maps").getKeys(false)) {
                 de.clientdns.smash.map.Map map = MapLoader.load(mapKey);
                 if (map != null) {
-                    getLogger().info("Loading " + mapKey);
+                    getLogger().info("'" + mapKey + "' vorgeladen.");
                 } else {
-                    getLogger().info("Failed to load map " + mapKey + ", ignoring it");
+                    getLogger().warning("Fehler beim Vorladen von " + mapKey + ", ignoriere es.");
                 }
             }
         }
@@ -107,22 +108,17 @@ public final class SmashPlugin extends JavaPlugin {
         listeners.add(new PlayerMoveListener());
         listeners.add(new PlayerQuitListener());
 
-        int eventCount = 0;
         for (Listener eventListener : listeners) {
             getServer().getPluginManager().registerEvents(eventListener, this);
-            eventCount++;
         }
 
         List<Command> commands = new ArrayList<>();
         commands.add(new ConfigCommand("config"));
         commands.add(new SetupCommand("setup"));
 
-        int commandCount = 0;
         for (Command command : commands) {
             getServer().getCommandMap().register("smash", command);
-            commandCount++;
         }
-        logger.info("Registered " + eventCount + " events & " + commandCount + " commands.");
 
         for (World world : Bukkit.getWorlds()) {
             world.setDifficulty(Difficulty.PEACEFUL);

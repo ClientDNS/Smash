@@ -49,9 +49,10 @@ public class MapLoader {
             throw new NullPointerException("No material " + materialName + " found.");
         }
 
-        Map map = new Map(name, icon, locations);
-        loadedMaps.put(name, map);
+        return new Map(name, icon, locations);
+    }
 
-        return null;
+    public static java.util.Map<String, Map> getLoadedMaps() {
+        return loadedMaps;
     }
 }
