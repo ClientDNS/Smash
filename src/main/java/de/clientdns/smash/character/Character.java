@@ -22,7 +22,7 @@ public enum Character {
         this.data = data;
     }
 
-    public CharacterData getData() {
+    public CharacterData data() {
         return data;
     }
 }
