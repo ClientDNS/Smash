@@ -22,12 +22,12 @@ public class GameStateChangeEvent extends Event {
         this.gameState = state;
     }
 
-    public GameState getGameState() {
-        return gameState;
-    }
-
     public static HandlerList getHandlerList() {
         return handlers;
+    }
+
+    public GameState getGameState() {
+        return gameState;
     }
 
     @Override
