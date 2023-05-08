@@ -10,8 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -76,22 +74,9 @@ public class Item {
         return this;
     }
 
-    public List<Component> lore() {
-        return itemMeta.lore();
-    }
-
     public Item lore(List<Component> lore) {
         itemMeta.lore(lore);
         return this;
-    }
-
-    /**
-     * Gets the amount of the item.
-     *
-     * @return The amount of the item.
-     */
-    public int amount() {
-        return itemStack.getAmount();
     }
 
     /**
@@ -102,15 +87,6 @@ public class Item {
     public Item amount(int amount) {
         itemStack.setAmount(amount);
         return this;
-    }
-
-    /**
-     * Gets the material of the item.
-     *
-     * @return The material of the item.
-     */
-    public @NotNull Material type() {
-        return itemStack.getType();
     }
 
     /**
@@ -125,15 +101,6 @@ public class Item {
     }
 
     /**
-     * Gets the unbreakable state of the item.
-     *
-     * @return The unbreakable state of the item.
-     */
-    public boolean unbreakable() {
-        return itemMeta.isUnbreakable();
-    }
-
-    /**
      * Sets the unbreakable state of the item.
      *
      * @param unbreakable The unbreakable state.
@@ -145,15 +112,6 @@ public class Item {
     }
 
     /**
-     * Gets the enchantments of the item.
-     *
-     * @return The enchantments of the item.
-     */
-    public @NotNull Map<Enchantment, Integer> enchants() {
-        return itemMeta.getEnchants();
-    }
-
-    /**
      * Sets the enchantment of the item.
      *
      * @param enchantment The enchantment of the item.
@@ -162,15 +120,6 @@ public class Item {
     public Item enchant(Enchantment enchantment, int level) {
         itemMeta.addEnchant(enchantment, level, true);
         return this;
-    }
-
-    /**
-     * Gets the item flags of the item.
-     *
-     * @return The item flags of the item.
-     */
-    public @NotNull Set<ItemFlag> itemFlags() {
-        return itemMeta.getItemFlags();
     }
 
     /**

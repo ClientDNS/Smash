@@ -10,8 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
 public class Skull {
@@ -36,22 +34,9 @@ public class Skull {
         if (lore != null) this.skullMeta.lore(lore);
     }
 
-    public List<Component> lore() {
-        return skullMeta.lore();
-    }
-
     public Skull lore(List<Component> lore) {
         skullMeta.lore(lore);
         return this;
-    }
-
-    /**
-     * Gets the enchantments of the item.
-     *
-     * @return The enchantments of the item.
-     */
-    public @NotNull Map<Enchantment, Integer> enchants() {
-        return skullMeta.getEnchants();
     }
 
     /**
@@ -63,15 +48,6 @@ public class Skull {
     public Skull enchant(Enchantment enchantment, int level) {
         skullMeta.addEnchant(enchantment, level, true);
         return this;
-    }
-
-    /**
-     * Gets the item flags of the item.
-     *
-     * @return The item flags of the item.
-     */
-    public @NotNull Set<ItemFlag> itemFlags() {
-        return skullMeta.getItemFlags();
     }
 
     /**
