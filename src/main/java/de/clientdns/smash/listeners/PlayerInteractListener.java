@@ -38,10 +38,10 @@ public class PlayerInteractListener implements Listener {
             case CHEST -> {
                 List<ItemStack> items = new ArrayList<>(List.of());
                 for (Character character : Character.values()) {
-                    items.add(new Skull(1, character.getData().name()).build());
+                    items.add(new Skull(1, character.data().name()).build());
                 }
-                Item explanation = new Item(Material.OAK_WALL_SIGN, 1, empty(), List.of(empty(), MiniMsg.plain("Jeder Charakter verfügt über andere Fähigkeiten. Wähle bedacht!", GRAY)));
-                new InventoryCreator(3, MiniMsg.plain("Charaktere", NamedTextColor.GOLD)).edit(editor -> {
+                Item explanation = new Item(Material.OAK_WALL_SIGN, 1, empty(), List.of(empty(), MiniMsg.plain("Every character has it's own abilities!", GRAY)));
+                new InventoryCreator(3, MiniMsg.plain("Characters", NamedTextColor.GOLD)).edit(editor -> {
                     for (int i = 0; i < items.size(); i++) {
                         editor.set(i, items.get(i));
                     }
@@ -51,7 +51,7 @@ public class PlayerInteractListener implements Listener {
             }
             case MAP -> new InventoryCreator(1, MiniMsg.plain("Maps", NamedTextColor.GOLD)).edit(editor -> {
                 if (SmashPlugin.getPlugin().getSmashConfig().noMaps()) {
-                    player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Es wurden keine Maps eingerichtet.", RED)));
+                    player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("No maps set up", RED)));
                     event.setCancelled(true);
                     return;
                 }
@@ -59,7 +59,7 @@ public class PlayerInteractListener implements Listener {
                     editor.add(new Item(map.item(), 1, MiniMsg.plain(map.name(), GREEN)).build());
                     event.setCancelled(true);
                 }
-            }).accept(player::openInventory);
+            }).accept(player::openInventory, !SmashPlugin.getPlugin().getSmashConfig().noMaps());
             default -> event.setCancelled(true);
         }
     }

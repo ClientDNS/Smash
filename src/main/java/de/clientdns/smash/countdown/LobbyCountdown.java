@@ -18,7 +18,7 @@ public class LobbyCountdown {
 
     public static void start() {
         if (!SmashPlugin.getPlugin().getGameStateManager().getCurrentState().equals(GameState.LOBBY)) {
-            throw new IllegalStateException("Lobby-Countdown darf nur im LOBBY-State gestartet werden.");
+            throw new IllegalStateException("Lobby-Countdown can only be started in LOBBY-State.");
         }
         seconds = 15;
         taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(SmashPlugin.getPlugin(), () -> {
@@ -29,14 +29,14 @@ public class LobbyCountdown {
                             player.getInventory().clear();
                         }
                     }
-                    PlayerUtil.broadcast(MiniMsg.mini("prefix").append(MiniMsg.plain("Das Spiel startet in " + seconds + " Sekunden.", YELLOW)));
+                    PlayerUtil.broadcast(MiniMsg.mini("prefix").append(MiniMsg.plain("The game starts in " + seconds + " seconds.", YELLOW)));
                 }
                 case 1 ->
-                        PlayerUtil.broadcast(MiniMsg.mini("prefix").append(MiniMsg.plain("Das Spiel startet in einer Sekunde.", YELLOW)));
+                        PlayerUtil.broadcast(MiniMsg.mini("prefix").append(MiniMsg.plain("The game starts in " + seconds + " second.", YELLOW)));
                 case 0 -> {
                     forceStopScheduler();
-                    SmashPlugin.getPlugin().getGameStateManager().setGameState(GameState.INGAME);
-                    PlayerUtil.broadcast(MiniMsg.mini("prefix").append(MiniMsg.plain("Das Spiel kann beginnen!", GREEN)));
+                    SmashPlugin.getPlugin().getGameStateManager().setCurrentState(GameState.INGAME);
+                    PlayerUtil.broadcast(MiniMsg.mini("prefix").append(MiniMsg.plain("Let the game begin!", GREEN)));
                     return;
                 }
             }

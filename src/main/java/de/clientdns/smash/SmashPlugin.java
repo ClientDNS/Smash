@@ -39,13 +39,13 @@ public final class SmashPlugin extends JavaPlugin {
         if (plugin == null) {
             plugin = this;
         } else {
-            getLogger().severe("Konnte keine neue Plugin-Instanz zuweisen, deaktiviere Plugin.");
+            getLogger().severe("Could not assign new/another plugin instance, deactivating plugin...");
             getServer().getPluginManager().disablePlugin(this);
         }
         double classVersion = NumberUtils.toDouble(System.getProperty("java.class.version"));
         if (classVersion < 61.0) {
-            getLogger().warning("Du nutzt eine nicht unterstütze Java-Version! (Klasse: " + classVersion + ")");
-            getLogger().warning("Bitte aktualisiere auf Java 17 (Klasse: 61) oder höher.");
+            getLogger().warning("You are using a unsupported Java Version! (class: " + classVersion + ")");
+            getLogger().warning("Please update to at least Java 17 (class: 61).");
             getServer().getPluginManager().disablePlugin(this);
         }
     }
@@ -54,18 +54,18 @@ public final class SmashPlugin extends JavaPlugin {
     public void onEnable() {
         smashConfig = new SmashConfig("smash.yml");
         if (!smashConfig.exists()) {
-            getLogger().severe("Konnte die Konfiguration nicht finden, deaktiviere Plugin.");
+            getLogger().severe("Could not find configuration file, deactivating plugin.");
             getServer().getPluginManager().disablePlugin(this);
         } else {
             smashConfig.load();
             if (smashConfig.empty()) {
-                getLogger().warning("Konfiguration ist leer, setze auf Standardwerte zurück.");
+                getLogger().warning("Configuration file is empty, resetting to default values...");
                 smashConfig.reset();
                 smashConfig.save(exception -> {
                     if (exception == null) {
-                        getLogger().info("Standardwerte in Konfiguration gespeichert.");
+                        getLogger().info("Default values saved in configuration.");
                     } else {
-                        getLogger().severe("Konfiguration ist leer (konnte Standardwerte nicht speichern), deaktiviere Plugin.");
+                        getLogger().severe("Configuration file is empty (could not save default values), deactivating plugin.");
                         getServer().getPluginManager().disablePlugin(this);
                     }
                 });
@@ -73,15 +73,15 @@ public final class SmashPlugin extends JavaPlugin {
         }
 
         if (getSmashConfig().noMaps()) {
-            getLogger().warning("Keine Karten in der Konfiguration gefunden.");
-            getLogger().info("Richte eine Karte mit '/setup start' ein.");
+            getLogger().warning("No maps found in configuration.");
+            getLogger().warning("Setup with '/setup start'.");
         } else {
             for (String mapKey : getSmashConfig().getSection("maps").getKeys(false)) {
                 de.clientdns.smash.map.Map map = MapLoader.load(mapKey);
                 if (map != null) {
-                    getLogger().info("'" + mapKey + "' vorgeladen.");
+                    getLogger().info("'" + mapKey + "' preloaded.");
                 } else {
-                    getLogger().warning("Fehler beim Vorladen von " + mapKey + ", ignoriere es.");
+                    getLogger().warning("Error while preloading of " + mapKey + ", ignoring it.");
                 }
             }
         }
@@ -104,7 +104,7 @@ public final class SmashPlugin extends JavaPlugin {
         listeners.add(new PlayerInteractListener());
         listeners.add(new PlayerItemHeldListener());
         listeners.add(new PlayerJoinListener());
-        listeners.add(new PlayerMoveListener());
+        // listeners.add(new PlayerMoveListener());
         listeners.add(new PlayerQuitListener());
 
         for (Listener eventListener : listeners) {

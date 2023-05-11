@@ -33,13 +33,13 @@ public class SmashConfig {
         this.changed = false;
         try {
             if (configFile.getParentFile().mkdirs()) {
-                logger.info(String.format("'%s' Ordner erstellt.", configFile.getParentFile().getName()));
+                logger.info(String.format("'%s' created.", configFile.getParentFile().getName()));
             }
             if (configFile.createNewFile()) {
-                logger.info(String.format("'%s' Datei erstellt.", fileName));
+                logger.info(String.format("'%s' file created.", fileName));
             }
         } catch (Throwable e) {
-            throw new RuntimeException("Fehler beim Erstellen der Datei '" + configFile.getName() + "'" , e);
+            throw new RuntimeException("Error while creating file", e);
         }
     }
 
@@ -63,15 +63,16 @@ public class SmashConfig {
     public void reset() {
         setWithComment("deny-gamemode-switch", true, "Prevents player from changing gamemode in-game.");
         setWithComment("min-players", 2, "Sets the minimum amount of players to able to start the game.");
-        setWithComment("language", "ger", "Sets the language. Available options: 'ger', 'eng'");
         set("prefix", "<gold>Smash</gold> <dark_gray>|</dark_gray> ");
-        set("unknown-command", "<red>Unbekannter Befehl. ($command)</red>");
-        set("join-message", "<green>$name ist dem Server beigetreten.</green>");
-        set("quit-message", "<red>$name hat den Server verlassen.</red>");
-        set("permission-required", "<red>Du hast keine Berechtigung, dies zu tun.</red>");
-        set("player-required", "<red>Du musst ein Spieler sein, um dies zu tun.</red>");
-        set("player-not-found", "<red>Der Spieler wurde nicht gefunden.</red>");
-        set("switch-gamemode", "<red>Du kannst deinen Spielmodus nicht ändern.</red>");
+        set("unknown-command", "<red>Unknown command. ($command)</red>");
+        set("join-message", "<green>$name joined the server.</green>");
+        set("quit-message", "<red>$name left the server.</red>");
+        set("character-select", "<green>Your character has been set to $name.</green>");
+        set("character-switch", "<green>Your character has been changed to $name.</green>");
+        set("permission-required", "<red>You have no permission to do that.</red>");
+        set("player-required", "<red>You have to be a player to do that.</red>");
+        set("player-not-found", "<red>The player was not found.</red>");
+        set("switch-gamemode", "<red>You cannot change your gamemode while playing.</red>");
         set("maps", List.of());
     }
 
@@ -153,7 +154,7 @@ public class SmashConfig {
     public void save(@NotNull Consumer<Throwable> consumer) {
         try {
             if (!changed) {
-                logger.info("Keine Änderungen erkannt, abbrechen.");
+                logger.info("No changes detected, canceling...");
             } else { // There are changes
                 fileConfiguration.save(configFile);
                 discardChanges();

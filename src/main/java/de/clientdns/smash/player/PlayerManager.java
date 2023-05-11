@@ -2,6 +2,7 @@ package de.clientdns.smash.player;
 
 import de.clientdns.smash.character.Character;
 import de.clientdns.smash.config.MiniMsg;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
@@ -25,11 +26,13 @@ public class PlayerManager {
             characters.put(player, character);
         }
         if (before == null) {
-            player.sendActionBar(MiniMsg.mini("prefix").append(MiniMsg.plain("Dein Charakter wurde auf ", NamedTextColor.GREEN).append(PlayerManager.get(player).getData().name()).append(MiniMsg.plain(" gesetzt.", NamedTextColor.GREEN))));
+            Component finalMessage = MiniMsg.mini("character-select").replaceText(builder -> builder.matchLiteral("$name").replacement(character.data().name()));
+            player.sendActionBar(MiniMsg.mini("prefix").append(finalMessage));
             return;
         }
         if (before != character) {
-            player.sendActionBar(MiniMsg.mini("prefix").append(MiniMsg.plain("Dein Charakter wurde zu ", NamedTextColor.GREEN).append(PlayerManager.get(player).getData().name()).append(MiniMsg.plain(" geändert.", NamedTextColor.GREEN))));
+            Component finalMessage = MiniMsg.mini("character-switch").replaceText(builder -> builder.matchLiteral("$name").replacement(character.data().name()));
+            player.sendActionBar(MiniMsg.mini("prefix").append(finalMessage));
         }
     }
 

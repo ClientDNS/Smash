@@ -38,27 +38,27 @@ public class ConfigCommand extends Command {
             switch (args[0].toLowerCase()) {
                 case "reload" -> {
                     if (config.isChanged()) {
-                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Es sind noch einige Änderungen offen zum Speichern.", RED)));
-                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Nutze '/config save', um die Konfiguration neu zu laden.", RED)));
+                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("There are detected changes.", RED)));
+                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Use '/config save' to save the file.", RED)));
                         return false;
                     }
                     config.load();
-                    sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Konfiguration neu geladen.", GREEN)));
+                    sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Configuration file reloaded.", GREEN)));
                 }
                 case "save" -> {
                     if (!config.isChanged()) {
-                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Keine Änderungen erkannt.", RED)));
+                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("No changes detected.", RED)));
                         return false;
                     }
                     config.save(exception -> {
                         if (exception == null) {
-                            sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Konfiguration gespeichert.", GREEN)));
+                            sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Configuration file saved.", GREEN)));
                         }
                     });
                 }
             }
         } else {
-            sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Benutze folgende Argumente:", GRAY)));
+            sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Use following arguments:", GRAY)));
             sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- reload", GREEN)));
             sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- save", GREEN)));
             return false;

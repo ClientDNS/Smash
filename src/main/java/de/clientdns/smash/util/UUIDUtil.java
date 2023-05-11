@@ -16,27 +16,25 @@ import java.util.Optional;
 
 public class UUIDUtil {
 
-    private static final Map<String, String> savedIds = new HashMap<>();
+    private static final Map<String, String> cachedUuid = new HashMap<>();
 
     public static @NotNull Optional<String> uuid(String playerName) {
-        if (savedIds.containsKey(playerName)) {
-            return Optional.of(savedIds.get(playerName));
+        if (cachedUuid.containsKey(playerName)) {
+            return Optional.of(cachedUuid.get(playerName));
         }
         try {
             URL url = new URL("https://api.mojang.com/users/profiles/minecraft/" + playerName);
             URLConnection connection = url.openConnection();
             connection.setAllowUserInteraction(false);
             connection.setDoInput(false);
-            connection.setConnectTimeout(1500);
-            connection.setReadTimeout(2000);
             connection.connect();
             String uuid;
             try (InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream())) {
                 JsonElement element = JsonParser.parseReader(inputStreamReader);
                 JsonObject object = element.getAsJsonObject();
-                uuid = object.get("id").getAsString();
-                savedIds.put(playerName, uuid);
-                SmashPlugin.getPlugin().getLogger().info("Cached uuid for player " + playerName + "(" + uuid + ")");
+                uuid = object.get("id").getAsString(); // I hope Mojang does not change the path to the uuid
+                cachedUuid.put(playerName, uuid);
+                SmashPlugin.getPlugin().getLogger().info("Cached uuid for player " + playerName + " (" + uuid + ")");
             }
             return Optional.of(uuid);
         } catch (IOException exception) {

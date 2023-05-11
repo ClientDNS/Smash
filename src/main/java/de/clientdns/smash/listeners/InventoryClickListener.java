@@ -37,17 +37,17 @@ public class InventoryClickListener implements Listener {
 
         if (SmashPlugin.getPlugin().getGameStateManager().getCurrentState().equals(GameState.LOBBY)) {
             Player player = (Player) event.getWhoClicked();
-            if (Character.MARIO.getData().name().equals(displayName)) {
+            if (Character.MARIO.data().name().equals(displayName)) {
                 PlayerManager.set(player, Character.MARIO);
-            } else if (Character.DONKEY_KONG.getData().name().equals(displayName)) {
+            } else if (Character.DONKEY_KONG.data().name().equals(displayName)) {
                 PlayerManager.set(player, Character.DONKEY_KONG);
-            } else if (Character.FLASH.getData().name().equals(displayName)) {
+            } else if (Character.FLASH.data().name().equals(displayName)) {
                 PlayerManager.set(player, Character.FLASH);
-            } else if (Character.PIKACHU.getData().name().equals(displayName)) {
+            } else if (Character.PIKACHU.data().name().equals(displayName)) {
                 PlayerManager.set(player, Character.PIKACHU);
-            } else if (Character.SUPERMAN.getData().name().equals(displayName)) {
+            } else if (Character.SUPERMAN.data().name().equals(displayName)) {
                 PlayerManager.set(player, Character.SUPERMAN);
-            } else if (Character.LINK.getData().name().equals(displayName)) {
+            } else if (Character.LINK.data().name().equals(displayName)) {
                 PlayerManager.set(player, Character.LINK);
             }
         }

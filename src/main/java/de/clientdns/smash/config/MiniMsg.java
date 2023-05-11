@@ -12,7 +12,11 @@ public class MiniMsg {
     private static final SmashConfig SMASH_CONFIG = SmashPlugin.getPlugin().getSmashConfig();
 
     public static @NotNull Component mini(String path) {
-        return MINI_MESSAGE.deserialize(SMASH_CONFIG.getStr(path));
+        return plain(SMASH_CONFIG.getStr(path));
+    }
+
+    public static @NotNull Component mini(String path, TextColor color) {
+        return plain(SMASH_CONFIG.getStr(path), color);
     }
 
     public static <R extends String> @NotNull Component plain(R message) {
