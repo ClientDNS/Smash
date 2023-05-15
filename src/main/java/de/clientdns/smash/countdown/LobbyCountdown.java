@@ -51,7 +51,9 @@ public class LobbyCountdown {
 
     public static void forceStopScheduler() {
         if (taskId != -1) {
-            Bukkit.getScheduler().cancelTask(taskId);
+            if (Bukkit.getScheduler().isQueued(taskId)) {
+                Bukkit.getScheduler().cancelTask(taskId);
+            }
             if (!Bukkit.getScheduler().isCurrentlyRunning(taskId)) {
                 taskId = -1; // (set back to -1 when scheduler is not running anymore)
             }
