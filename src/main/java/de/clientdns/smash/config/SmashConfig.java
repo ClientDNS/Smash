@@ -52,17 +52,14 @@ public class SmashConfig {
     }
 
     public <V> void setWithComment(@NotNull String path, V value, String comment) {
-        if (fileConfiguration.contains(path)) {
-            return;
-        }
-        fileConfiguration.set(path, value);
+        set(path, value);
         fileConfiguration.setComments(path, List.of(comment));
         if (!changed) changed = true;
     }
 
     public void reset() {
-        setWithComment("deny-gamemode-switch", true, "Prevents player from changing gamemode in-game.");
-        setWithComment("min-players", 2, "Sets the minimum amount of players to able to start the game.");
+        set("deny-gamemode-switch", true);
+        set("min-players", 2);
         set("prefix", "<gold>Smash</gold> <dark_gray>|</dark_gray> ");
         set("unknown-command", "<red>Unknown command. ($command)</red>");
         set("join-message", "<green>$name joined the server.</green>");
@@ -71,7 +68,6 @@ public class SmashConfig {
         set("character-switch", "<green>Your character has been changed to $name.</green>");
         set("permission-required", "<red>You have no permission to do that.</red>");
         set("player-required", "<red>You have to be a player to do that.</red>");
-        set("player-not-found", "<red>The player was not found.</red>");
         set("switch-gamemode", "<red>You cannot change your gamemode while playing.</red>");
         set("maps", List.of());
     }
@@ -100,18 +96,6 @@ public class SmashConfig {
         return fileConfiguration.getBoolean(path, def);
     }
 
-    public List<String> getStrList(String path) {
-        return fileConfiguration.getStringList(path);
-    }
-
-    public List<Integer> getIntList(String path) {
-        return fileConfiguration.getIntegerList(path);
-    }
-
-    public List<Boolean> getBoolList(String path) {
-        return fileConfiguration.getBooleanList(path);
-    }
-
     public Location[] getLocs(String path) {
         List<?> configList = getList(path);
         List<Location> locs = new ArrayList<>();
@@ -123,14 +107,19 @@ public class SmashConfig {
             }
         }
 
-        Location[] locationArray = new Location[locs.size()];
+        if (locs.size() != 0) {
 
-        int i = 0;
-        for (Location location : locs) {
-            locationArray[i] = location;
-            i++;
+            Location[] locationArray = new Location[locs.size()];
+
+            int i = 0;
+            for (Location location : locs) {
+                locationArray[i] = location;
+                i++;
+            }
+
+            return locationArray;
         }
-        return locationArray;
+        return null;
     }
 
     public List<?> getList(String path) {
@@ -154,20 +143,20 @@ public class SmashConfig {
     public void save(@NotNull Consumer<Throwable> consumer) {
         try {
             if (!changed) {
-                logger.info("No changes detected, canceling...");
+                logger.info("No changes detected, cancelling...");
             } else { // There are changes
                 fileConfiguration.save(configFile);
-                discardChanges();
             }
         } catch (IOException exception) {
             consumer.accept(exception);
         } finally {
             consumer.accept(null);
+            discardChanges();
         }
     }
 
     public void discardChanges() {
-        this.changed = false;
+        if (this.changed) this.changed = false;
     }
 
     public boolean contains(String path) {
@@ -191,6 +180,7 @@ public class SmashConfig {
     }
 
     public void load() {
+        this.changed = false;
         fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
     }
 }
