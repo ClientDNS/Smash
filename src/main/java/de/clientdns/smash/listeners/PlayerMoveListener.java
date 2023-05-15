@@ -15,7 +15,7 @@ import java.security.SecureRandom;
 
 public class PlayerMoveListener implements Listener {
 
-    private final Color[] colors = new Color[]{Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.BLUE, Color.PURPLE};
+    private final Color[] colors = new Color[]{Color.RED, Color.ORANGE, Color.YELLOW, Color.LIME, Color.GREEN, Color.AQUA, Color.BLUE, Color.PURPLE};
 
     @EventHandler
     void on(@NotNull PlayerMoveEvent event) {
