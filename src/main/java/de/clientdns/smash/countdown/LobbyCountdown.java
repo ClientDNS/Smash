@@ -11,6 +11,7 @@ import org.jetbrains.annotations.ApiStatus;
 import static net.kyori.adventure.text.format.NamedTextColor.GREEN;
 import static net.kyori.adventure.text.format.NamedTextColor.YELLOW;
 
+@ApiStatus.Experimental
 public class LobbyCountdown {
 
     private static int taskId = -1;
@@ -48,11 +49,12 @@ public class LobbyCountdown {
         }, 0L, 20L);
     }
 
-    @ApiStatus.Experimental
     public static void forceStopScheduler() {
         if (taskId != -1) {
             Bukkit.getScheduler().cancelTask(taskId);
-            taskId = -1; // taskId will be set to -1 when scheduling fails and I guess, would set it back to it when the
+            if (!Bukkit.getScheduler().isCurrentlyRunning(taskId)) {
+                taskId = -1; // (set back to -1 when scheduler is not running anymore)
+            }
         }
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.setLevel(0);
