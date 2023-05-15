@@ -3,7 +3,6 @@ package de.clientdns.smash.player;
 import de.clientdns.smash.character.Character;
 import de.clientdns.smash.config.MiniMsg;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
