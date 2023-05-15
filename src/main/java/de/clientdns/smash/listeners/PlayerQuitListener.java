@@ -29,7 +29,7 @@ public class PlayerQuitListener implements Listener {
         PersistentDataContainer pdc = player.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(SmashPlugin.getPlugin(), "damageCount");
         if (pdc.has(key)) {
-            pdc.remove(key); // Delete key from data container
+            pdc.remove(key); // Delete key from data container when existing
         }
 
         // Remove player's setup when available.
