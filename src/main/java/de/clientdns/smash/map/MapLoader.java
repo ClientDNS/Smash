@@ -32,9 +32,6 @@ public class MapLoader {
         if (loadedMaps.containsKey(name)) {
             return loadedMaps.get(name);
         }
-        if (config.contains(name)) {
-            return null;
-        }
 
         String materialName = config.getStr("maps." + name + ".material");
 
