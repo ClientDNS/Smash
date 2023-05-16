@@ -6,6 +6,7 @@ import de.clientdns.smash.config.SmashConfig;
 import de.clientdns.smash.gamestate.GameStateManager;
 import de.clientdns.smash.listeners.*;
 import de.clientdns.smash.listeners.custom.GameStateChangeListener;
+import de.clientdns.smash.map.Map;
 import de.clientdns.smash.map.MapLoader;
 import de.clientdns.smash.map.setup.MapSetup;
 import de.clientdns.smash.player.PlayerManager;
@@ -18,16 +19,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public final class SmashPlugin extends JavaPlugin {
 
     private static SmashPlugin plugin;
     private GameStateManager gameStateManager;
-    private Map<Player, MapSetup> setups;
+    private Instant then;
+    private HashMap<Player, MapSetup> setups;
     private SmashConfig smashConfig;
 
     public static SmashPlugin getPlugin() {
@@ -48,6 +51,7 @@ public final class SmashPlugin extends JavaPlugin {
             getLogger().warning("Please update to at least Java 17 (class: 61).");
             getServer().getPluginManager().disablePlugin(this);
         }
+        then = Instant.now();
     }
 
     @Override
@@ -77,7 +81,7 @@ public final class SmashPlugin extends JavaPlugin {
             getLogger().warning("Setup with '/setup start'.");
         } else {
             for (String mapKey : getSmashConfig().getSection("maps").getKeys(false)) {
-                de.clientdns.smash.map.Map map = MapLoader.load(mapKey);
+                Map map = MapLoader.load(mapKey);
                 if (map != null) {
                     getLogger().info("'" + mapKey + "' preloaded.");
                 } else {
@@ -145,6 +149,8 @@ public final class SmashPlugin extends JavaPlugin {
         }
         gameStateManager = new GameStateManager();
         setups = new HashMap<>();
+
+        getLogger().info("Took " + Duration.between(then, Instant.now()).toMillis() + " ms to start.");
     }
 
     @Override
@@ -156,7 +162,7 @@ public final class SmashPlugin extends JavaPlugin {
         return gameStateManager;
     }
 
-    public Map<Player, MapSetup> getSetups() {
+    public HashMap<Player, MapSetup> getSetups() {
         return setups;
     }
 
