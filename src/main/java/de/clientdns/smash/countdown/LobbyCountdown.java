@@ -6,6 +6,7 @@ import de.clientdns.smash.gamestate.GameState;
 import de.clientdns.smash.util.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.ApiStatus;
 
 import static net.kyori.adventure.text.format.NamedTextColor.GREEN;
@@ -51,12 +52,14 @@ public class LobbyCountdown {
 
     public static void forceStopScheduler() {
         if (taskId != -1) {
-            if (Bukkit.getScheduler().isQueued(taskId)) {
-                Bukkit.getScheduler().cancelTask(taskId);
+            BukkitScheduler scheduler = Bukkit.getScheduler();
+            if (scheduler.isQueued(taskId)) {
+                scheduler.cancelTask(taskId);
             }
-            if (!Bukkit.getScheduler().isCurrentlyRunning(taskId)) {
-                taskId = -1; // (set back to -1 when scheduler is not running anymore)
+            if (scheduler.isCurrentlyRunning(taskId)) {
+                scheduler.cancelTask(taskId);
             }
+            taskId = -1; // (reset back to -1)
         }
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.setLevel(0);
