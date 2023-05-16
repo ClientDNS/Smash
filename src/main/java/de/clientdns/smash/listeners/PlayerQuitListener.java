@@ -33,10 +33,9 @@ public class PlayerQuitListener implements Listener {
         }
 
         // Remove player's setup when available.
-        if (SmashPlugin.getPlugin().getSetups().get(player) != null) {
-            MapSetup mapSetup = SmashPlugin.getPlugin().getSetups().get(player);
+        MapSetup mapSetup = SmashPlugin.getPlugin().getSetups().get(player);
+        if (mapSetup != null)
             mapSetup.delete();
-        }
 
         int online = Bukkit.getOnlinePlayers().size() - 1;
         int minPlayers = SmashPlugin.getPlugin().getSmashConfig().getInt("min-players");
