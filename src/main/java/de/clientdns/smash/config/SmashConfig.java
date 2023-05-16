@@ -51,12 +51,6 @@ public class SmashConfig {
         if (!changed) changed = true;
     }
 
-    public <V> void setWithComment(@NotNull String path, V value, String comment) {
-        set(path, value);
-        fileConfiguration.setComments(path, List.of(comment));
-        if (!changed) changed = true;
-    }
-
     public void reset() {
         set("deny-gamemode-switch", true);
         set("min-players", 2);
@@ -136,7 +130,7 @@ public class SmashConfig {
         return true;
     }
 
-    public boolean isChanged() {
+    public boolean leftChanges() {
         return changed;
     }
 
