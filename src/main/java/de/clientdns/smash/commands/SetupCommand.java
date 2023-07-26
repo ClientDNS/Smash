@@ -70,6 +70,10 @@ public class SetupCommand extends Command {
                         return false;
                     }
                     Map map = mapSetup.finish();
+                    if (map == null) {
+                        player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Error while saving map.", GREEN)));
+                        return true;
+                    }
                     if (map.write()) {
                         player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Map '" + map.name() + "' cached.", GREEN)));
                         player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Save the map with '/config save'.", YELLOW)));
