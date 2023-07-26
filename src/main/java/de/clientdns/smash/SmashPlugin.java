@@ -1,6 +1,7 @@
 package de.clientdns.smash;
 
 import de.clientdns.smash.commands.ConfigCommand;
+import de.clientdns.smash.commands.FetchCommand;
 import de.clientdns.smash.commands.SetupCommand;
 import de.clientdns.smash.config.SmashConfig;
 import de.clientdns.smash.gamestate.GameStateManager;
@@ -82,9 +83,7 @@ public final class SmashPlugin extends JavaPlugin {
         } else {
             for (String mapKey : getSmashConfig().getSection("maps").getKeys(false)) {
                 Map map = MapLoader.load(mapKey);
-                if (map != null) {
-                    getLogger().info("'" + mapKey + "' preloaded.");
-                } else {
+                if (map == null) {
                     getLogger().warning("Error while preloading of " + mapKey + ", ignoring it.");
                 }
             }
@@ -117,6 +116,7 @@ public final class SmashPlugin extends JavaPlugin {
 
         List<Command> commands = new ArrayList<>();
         commands.add(new ConfigCommand("config"));
+        commands.add(new FetchCommand("fetch"));
         commands.add(new SetupCommand("setup"));
 
         for (Command command : commands) {
