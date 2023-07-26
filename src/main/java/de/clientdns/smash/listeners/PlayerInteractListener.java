@@ -51,7 +51,7 @@ public class PlayerInteractListener implements Listener {
             }
             case MAP -> new InventoryCreator(1, MiniMsg.plain("Maps", NamedTextColor.GOLD)).edit(editor -> {
                 if (SmashPlugin.getPlugin().getSmashConfig().noMaps()) {
-                    player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("No maps set up", RED)));
+                    player.sendActionBar(MiniMsg.mini("prefix").append(MiniMsg.plain("No maps set up!", RED)));
                     event.setCancelled(true);
                     return;
                 }
