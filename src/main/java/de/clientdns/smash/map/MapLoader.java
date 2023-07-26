@@ -39,11 +39,24 @@ public class MapLoader {
             throw new NullPointerException("Could not get material from config.");
         }
 
+        if (materialName.isEmpty()) {
+            throw new NullPointerException("Material in config is empty.");
+        }
+
         Location[] locations = config.getLocs("maps." + name + ".spawnLocations");
+
+        if (locations.length == 0) {
+            throw new NullPointerException("Locations in config are empty.");
+        }
+
         Material icon = Material.getMaterial(materialName);
 
         if (icon == null) {
             throw new NullPointerException("No material " + materialName + " found.");
+        }
+
+        if (icon.isEmpty()) {
+            throw new NullPointerException("Icon in config is null.");
         }
 
         return new Map(name, icon, locations);
