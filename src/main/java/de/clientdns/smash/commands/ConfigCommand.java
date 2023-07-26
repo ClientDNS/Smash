@@ -56,6 +56,10 @@ public class ConfigCommand extends Command {
                         }
                     });
                 }
+                default -> {
+                    sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.mini("unknown-command").replaceText(builder -> builder.matchLiteral("$command").replacement(args[0]))));
+                    return false;
+                }
             }
         } else {
             sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Use following arguments:", GRAY)));
