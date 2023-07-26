@@ -32,7 +32,7 @@ public class GameStateChangeListener implements Listener {
                     player.sendTitlePart(TitlePart.TITLE, MiniMsg.plain("Hooray!", GREEN));
                     player.sendTitlePart(TitlePart.SUBTITLE, MiniMsg.plain("The game begins!", GRAY));
                     player.sendTitlePart(TitlePart.TIMES, Title.Times.times(Duration.ZERO, Duration.ofMillis(2500), Duration.ZERO));
-                    // TODO: Give items and teleport to voted map locations
+                    // TODO: Teleport players to random locations of voted map
                 }
                 LobbyCountdown.forceStopScheduler();
             }
