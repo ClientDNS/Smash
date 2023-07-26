@@ -19,4 +19,12 @@ public class SkinUtil {
         }
         profile.getTextures().setSkin(textures.getSkin());
     }
+
+    public PlayerProfile getProfile() {
+        return profile;
+    }
+
+    public PlayerTextures getTextures() {
+        return profile.getTextures();
+    }
 }
