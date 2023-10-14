@@ -13,11 +13,6 @@ public class GameStateChangeEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
     private final GameState gameState;
 
-    /**
-     * Creates a new game state change event.
-     *
-     * @param state The new game state
-     */
     public GameStateChangeEvent(GameState state) {
         this.gameState = state;
     }

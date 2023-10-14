@@ -11,12 +11,12 @@ import org.jetbrains.annotations.NotNull;
 public class EntityDamageListener implements Listener {
 
     @SuppressWarnings("unused")
-    @EventHandler()
+    @EventHandler
     void on(@NotNull EntityDamageEvent event) {
         if (!event.getEntityType().equals(EntityType.DROPPED_ITEM)) {
             event.setCancelled(true);
         }
-        if (SmashPlugin.getPlugin().getGameStateManager().getCurrentState().equals(GameState.INGAME)) {
+        if (SmashPlugin.getPlugin().getGameStateManager().is(GameState.INGAME)) {
             if (!event.getEntityType().equals(EntityType.PLAYER)) {
                 event.setDamage(0D);
             }

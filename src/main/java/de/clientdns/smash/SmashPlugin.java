@@ -1,16 +1,13 @@
 package de.clientdns.smash;
 
 import de.clientdns.smash.commands.ConfigCommand;
-import de.clientdns.smash.commands.FetchCommand;
 import de.clientdns.smash.commands.SetupCommand;
 import de.clientdns.smash.config.SmashConfig;
 import de.clientdns.smash.gamestate.GameStateManager;
 import de.clientdns.smash.listeners.*;
 import de.clientdns.smash.listeners.custom.GameStateChangeListener;
-import de.clientdns.smash.map.Map;
-import de.clientdns.smash.map.MapLoader;
 import de.clientdns.smash.map.setup.MapSetup;
-import de.clientdns.smash.player.PlayerManager;
+import de.clientdns.smash.timer.GameTimer;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.Difficulty;
 import org.bukkit.GameRule;
@@ -33,6 +30,7 @@ public final class SmashPlugin extends JavaPlugin {
     private Instant then;
     private HashMap<Player, MapSetup> setups;
     private SmashConfig smashConfig;
+    private GameTimer gameTimer;
 
     public static SmashPlugin getPlugin() {
         return plugin;
@@ -42,51 +40,54 @@ public final class SmashPlugin extends JavaPlugin {
     public void onLoad() {
         if (plugin == null) {
             plugin = this;
+            then = Instant.now();
         } else {
-            getLogger().severe("Could not assign new/another plugin instance, deactivating plugin...");
+            getLogger().severe("Could not assign new/another plugin instance, deactivating plugin.");
             getServer().getPluginManager().disablePlugin(this);
+            return;
         }
         double classVersion = NumberUtils.toDouble(System.getProperty("java.class.version"));
         if (classVersion < 61.0) {
             getLogger().warning("You are using a unsupported Java Version! (class: " + classVersion + ")");
             getLogger().warning("Please update to at least Java 17 (class: 61).");
             getServer().getPluginManager().disablePlugin(this);
+            return;
         }
-        then = Instant.now();
+        gameStateManager = new GameStateManager();
+        setups = new HashMap<>();
     }
 
     @Override
     public void onEnable() {
         smashConfig = new SmashConfig("smash.yml");
         if (!smashConfig.exists()) {
-            getLogger().severe("Could not find configuration file, deactivating plugin.");
+            getLogger().severe("Could not check configuration file, deactivating plugin.");
             getServer().getPluginManager().disablePlugin(this);
+            return;
         } else {
             smashConfig.load();
             if (smashConfig.empty()) {
-                getLogger().warning("Configuration file is empty, resetting to default values...");
+                getLogger().warning("Configuration file is empty, resetting to default values.");
                 smashConfig.reset();
                 smashConfig.save(exception -> {
                     if (exception == null) {
                         getLogger().info("Default values saved in configuration.");
                     } else {
-                        getLogger().severe("Configuration file is empty (could not save default values), deactivating plugin.");
-                        getServer().getPluginManager().disablePlugin(this);
+                        getLogger().severe("Error while saving default values to config." + exception);
                     }
                 });
             }
         }
 
+        /*if (getSmashConfig().getInt("min-players") < 2) {
+            getLogger().warning("Minimum players cannot be lower than 2, deactivating plugin.");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }*/
+
         if (getSmashConfig().noMaps()) {
             getLogger().warning("No maps found in configuration.");
             getLogger().warning("Setup with '/setup start'.");
-        } else {
-            for (String mapKey : getSmashConfig().getSection("maps").getKeys(false)) {
-                Map map = MapLoader.load(mapKey);
-                if (map == null) {
-                    getLogger().warning("Error while preloading of " + mapKey + ", ignoring it.");
-                }
-            }
         }
 
         List<Listener> listeners = new ArrayList<>();
@@ -107,16 +108,14 @@ public final class SmashPlugin extends JavaPlugin {
         listeners.add(new PlayerInteractListener());
         listeners.add(new PlayerItemHeldListener());
         listeners.add(new PlayerJoinListener());
-        // listeners.add(new PlayerMoveListener());
         listeners.add(new PlayerQuitListener());
 
-        for (Listener eventListener : listeners) {
-            getServer().getPluginManager().registerEvents(eventListener, this);
+        for (Listener listener : listeners) {
+            getServer().getPluginManager().registerEvents(listener, this);
         }
 
         List<Command> commands = new ArrayList<>();
         commands.add(new ConfigCommand("config"));
-        commands.add(new FetchCommand("fetch"));
         commands.add(new SetupCommand("setup"));
 
         for (Command command : commands) {
@@ -147,15 +146,10 @@ public final class SmashPlugin extends JavaPlugin {
             world.setGameRule(GameRule.REDUCED_DEBUG_INFO, true);
             world.setGameRule(GameRule.MAX_ENTITY_CRAMMING, 8);
         }
-        gameStateManager = new GameStateManager();
-        setups = new HashMap<>();
+
+        gameTimer = new GameTimer();
 
         getLogger().info("Took " + Duration.between(then, Instant.now()).toMillis() + " ms to start.");
-    }
-
-    @Override
-    public void onDisable() {
-        PlayerManager.clearCharacters();
     }
 
     public GameStateManager getGameStateManager() {
@@ -168,5 +162,9 @@ public final class SmashPlugin extends JavaPlugin {
 
     public SmashConfig getSmashConfig() {
         return smashConfig;
+    }
+
+    public GameTimer getGameTimer() {
+        return gameTimer;
     }
 }

@@ -1,6 +1,7 @@
 package de.clientdns.smash.config;
 
 import de.clientdns.smash.SmashPlugin;
+import de.clientdns.smash.map.loader.MapLoader;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -29,14 +30,15 @@ public class SmashConfig {
      */
     public SmashConfig(@NotNull @Pattern("[a-z_\\-.]+") String fileName) {
         this.logger = SmashPlugin.getPlugin().getLogger();
+        this.logger.info("Checking configuration.");
         this.configFile = new File("plugins/Smash/", fileName);
         this.changed = false;
         try {
             if (configFile.getParentFile().mkdirs()) {
-                logger.info(String.format("'%s' created.", configFile.getParentFile().getName()));
+                this.logger.info(String.format("'%s' created.", configFile.getParentFile().getName()));
             }
             if (configFile.createNewFile()) {
-                logger.info(String.format("'%s' file created.", fileName));
+                this.logger.info(String.format("'%s' file created.", fileName));
             }
         } catch (Throwable e) {
             throw new RuntimeException("Error while creating file", e);
@@ -52,17 +54,13 @@ public class SmashConfig {
     }
 
     public void reset() {
-        set("deny-gamemode-switch", true);
-        set("min-players", 2);
+        this.logger.info("Resetting configuration.");
         set("prefix", "<gold>Smash</gold> <dark_gray>|</dark_gray> ");
+        set("min-players", 2);
+        set("permission-required", "<red>You have no permission to do that.</red>");
         set("unknown-command", "<red>Unknown command. ($command)</red>");
         set("join-message", "<green>$name joined the server.</green>");
         set("quit-message", "<red>$name left the server.</red>");
-        set("character-select", "<green>Your character has been set to $name.</green>");
-        set("character-switch", "<green>Your character has been changed to $name.</green>");
-        set("permission-required", "<red>You have no permission to do that.</red>");
-        set("player-required", "<red>You have to be a player to do that.</red>");
-        set("switch-gamemode", "<red>You cannot change your gamemode while playing.</red>");
         set("maps", List.of());
     }
 
@@ -82,14 +80,6 @@ public class SmashConfig {
         return fileConfiguration.getInt(path, def);
     }
 
-    public boolean getBool(String path) {
-        return getBool(path, false);
-    }
-
-    public boolean getBool(String path, boolean def) {
-        return fileConfiguration.getBoolean(path, def);
-    }
-
     public Location[] getLocs(String path) {
         List<?> configList = getList(path);
         List<Location> locs = new ArrayList<>();
@@ -101,7 +91,7 @@ public class SmashConfig {
             }
         }
 
-        if (locs.size() != 0) {
+        if (!locs.isEmpty()) {
 
             Location[] locationArray = new Location[locs.size()];
 
@@ -125,27 +115,31 @@ public class SmashConfig {
     }
 
     public boolean noMaps() {
-        if (isSection("maps")) return getSection("maps").getKeys(false).isEmpty();
-        if (isList("maps")) return getList("maps").isEmpty();
+        if (isSection("maps"))
+            return getSection("maps").getKeys(false).isEmpty();
+        if (isList("maps"))
+            return getList("maps").isEmpty();
         return true;
     }
 
-    public boolean leftChanges() {
+    public boolean isChanged() {
         return changed;
     }
 
     public void save(@NotNull Consumer<Throwable> consumer) {
+        this.logger.info("Saving configuration.");
         try {
             if (!changed) {
-                logger.info("No changes detected, cancelling...");
-            } else { // There are changes
+                this.logger.info("No changes detected, cancelling.");
+            } else {
+                // There are unsaved changes left
                 fileConfiguration.save(configFile);
+                discardChanges();
             }
         } catch (IOException exception) {
             consumer.accept(exception);
         } finally {
             consumer.accept(null);
-            discardChanges();
         }
     }
 
@@ -175,6 +169,9 @@ public class SmashConfig {
 
     public void load() {
         this.changed = false;
+        this.logger.info("Loading configuration.");
         fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
+        MapLoader.clearMaps();
+        MapLoader.loadMaps();
     }
 }

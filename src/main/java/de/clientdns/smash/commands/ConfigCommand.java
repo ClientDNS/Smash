@@ -37,22 +37,23 @@ public class ConfigCommand extends Command {
             SmashConfig config = SmashPlugin.getPlugin().getSmashConfig();
             switch (args[0].toLowerCase()) {
                 case "reload" -> {
-                    if (config.leftChanges()) {
-                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("There are detected changes.", RED)));
+                    if (config.isChanged()) {
+                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("There are detected changes!", RED)));
+                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("You can not reload without saving your changes.", RED)));
                         sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Use '/config save' to save the file.", RED)));
                         return false;
                     }
                     config.load();
-                    sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Configuration file reloaded.", GREEN)));
+                    sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Configuration reloaded.", GREEN)));
                 }
                 case "save" -> {
-                    if (!config.leftChanges()) {
+                    if (!config.isChanged()) {
                         sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("No changes detected.", RED)));
                         return false;
                     }
                     config.save(exception -> {
                         if (exception == null) {
-                            sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Configuration file saved.", GREEN)));
+                            sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Configuration saved.", GREEN)));
                         }
                     });
                 }

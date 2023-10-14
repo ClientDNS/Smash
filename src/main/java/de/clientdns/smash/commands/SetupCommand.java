@@ -4,10 +4,9 @@ import de.clientdns.smash.SmashPlugin;
 import de.clientdns.smash.config.MiniMsg;
 import de.clientdns.smash.gamestate.GameState;
 import de.clientdns.smash.map.Map;
-import de.clientdns.smash.map.MapLoader;
+import de.clientdns.smash.map.loader.MapLoader;
 import de.clientdns.smash.map.setup.MapSetup;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -36,7 +35,7 @@ public class SetupCommand extends Command {
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.mini("player-required")));
+            sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("You have to be a player to do that.", RED)));
             return false;
         }
         if (!player.hasPermission("smash.setup")) {
@@ -44,7 +43,7 @@ public class SetupCommand extends Command {
             return false;
         }
         if (args.length == 1) {
-            if (!SmashPlugin.getPlugin().getGameStateManager().getCurrentState().equals(GameState.LOBBY)) {
+            if (!SmashPlugin.getPlugin().getGameStateManager().is(GameState.LOBBY)) {
                 player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("The setup is not possible while playing.", RED)));
                 return false;
             }
@@ -77,6 +76,9 @@ public class SetupCommand extends Command {
                     if (map.write()) {
                         player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Map '" + map.name() + "' cached.", GREEN)));
                         player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Save the map with '/config save'.", YELLOW)));
+                    } else {
+                        player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Map '" + map.name() + "' not cached because of an error.", RED)));
+                        player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Look in the console to find out, what's wrong.", RED)));
                     }
                     return true;
                 }
@@ -109,7 +111,7 @@ public class SetupCommand extends Command {
                 sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.mini("unknown-command").replaceText(builder -> builder.matchLiteral("$command").replacement(args[0]))));
                 return false;
             }
-        } else if (args.length == 4) {
+        } else if (args.length == 3) {
             if (args[0].equalsIgnoreCase("start")) {
                 String mapName = args[1];
                 int actual;
@@ -122,26 +124,17 @@ public class SetupCommand extends Command {
                     player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Map '" + mapName + "' already exists.", RED)));
                     return false;
                 }
-                Material material = Material.getMaterial(args[2]);
-                if (material == null) {
-                    sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Material '" + args[3] + "' is not a valid material.", RED)));
-                    return false;
-                }
-                if (material.isAir()) {
-                    sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Material '" + args[3] + "' could not be set.", RED)));
-                    return false;
-                }
                 if (SmashPlugin.getPlugin().getSetups().get(player) != null) {
                     MapSetup mapSetup = SmashPlugin.getPlugin().getSetups().get(player);
                     sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Setup '" + mapSetup.getName() + "' already running.", YELLOW)));
                     return false;
                 }
-                if (!NumberUtils.isParsable(args[3])) {
-                    sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Index size '" + args[3] + "' is not a valid number.", RED)));
+                if (!NumberUtils.isParsable(args[2])) {
+                    sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Index size '" + args[2] + "' is not a valid number.", RED)));
                     return false;
                 }
-                int indexSize = NumberUtils.toInt(args[3]);
-                MapSetup setup = new MapSetup(player, mapName, material, indexSize);
+                int indexSize = NumberUtils.toInt(args[2]);
+                MapSetup setup = new MapSetup(player, mapName, indexSize);
                 sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Setup '" + setup.getName() + "' started.", GREEN)));
             } else {
                 player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.mini("unknown-command").replaceText(builder -> builder.matchLiteral("$command").replacement(args[0]))));
@@ -152,7 +145,7 @@ public class SetupCommand extends Command {
             player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- abort", GREEN)));
             player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- finish", GREEN)));
             player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- set <index (beginning with 0)>", GREEN)));
-            player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- start <map-name> <icon-material> <size of spawn locations>", GREEN)));
+            player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- start <map-name> <size of spawn locations>", GREEN)));
             return false;
         }
         return false;
