@@ -23,13 +23,9 @@ public class FormatUtil {
         long second = seconds;
         long minute = second / 60;
         long hour = minute / 60;
-        long day = hour / 24;
         second = second % 60;
 
         StringBuilder sb = new StringBuilder();
-        if (day != 0) {
-            sb.append(day).append("d ");
-        }
         if (hour != 0) {
             sb.append(hour).append("h ");
         }
