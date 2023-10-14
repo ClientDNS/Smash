@@ -20,9 +20,9 @@ public class AsyncPlayerPreLoginListener implements Listener {
         int online = Bukkit.getOnlinePlayers().size();
         int max = Bukkit.getMaxPlayers();
         if (online >= max) {
-            if (SmashPlugin.getPlugin().getGameStateManager().getCurrentState().equals(GameState.LOBBY)) {
+            if (SmashPlugin.getPlugin().getGameStateManager().is(GameState.LOBBY)) {
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, MiniMsg.plain("The server is full!", RED));
-            } else if (SmashPlugin.getPlugin().getGameStateManager().getCurrentState().equals(GameState.INGAME)) {
+            } else if (SmashPlugin.getPlugin().getGameStateManager().is(GameState.INGAME)) {
                 event.allow();
                 Player player = Bukkit.getPlayer(event.getUniqueId());
                 if (player != null) {

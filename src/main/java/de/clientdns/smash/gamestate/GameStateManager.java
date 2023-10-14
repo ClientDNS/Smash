@@ -19,4 +19,8 @@ public class GameStateManager {
         this.currentState = gamestate;
         Bukkit.getPluginManager().callEvent(new GameStateChangeEvent(gamestate));
     }
+
+    public boolean is(GameState state) {
+        return this.currentState == state;
+    }
 }

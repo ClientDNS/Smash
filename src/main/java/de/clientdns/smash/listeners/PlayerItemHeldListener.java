@@ -15,7 +15,7 @@ public class PlayerItemHeldListener implements Listener {
     @EventHandler
     void on(@NotNull PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
-        if (SmashPlugin.getPlugin().getGameStateManager().getCurrentState().equals(GameState.INGAME)) {
+        if (SmashPlugin.getPlugin().getGameStateManager().is(GameState.INGAME)) {
             if (player.getGameMode().equals(GameMode.SPECTATOR)) {
                 event.setCancelled(false);
                 return;

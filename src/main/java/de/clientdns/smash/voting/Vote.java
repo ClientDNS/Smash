@@ -8,11 +8,8 @@ public class Vote {
     private final Player player;
     private Map map;
 
-    public Vote(Player player) {
+    public Vote(Player player, Map map) {
         this.player = player;
-    }
-
-    public void choose(Map map) {
         this.map = map;
     }
 
@@ -22,5 +19,9 @@ public class Vote {
 
     public Map getMap() {
         return map;
+    }
+
+    public void setMap(Map map) {
+        this.map = map;
     }
 }

@@ -6,8 +6,7 @@ import de.clientdns.smash.builder.Skull;
 import de.clientdns.smash.character.Character;
 import de.clientdns.smash.config.MiniMsg;
 import de.clientdns.smash.inventory.InventoryCreator;
-import de.clientdns.smash.map.Map;
-import de.clientdns.smash.map.MapLoader;
+import de.clientdns.smash.map.loader.MapLoader;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -51,12 +50,12 @@ public class PlayerInteractListener implements Listener {
             }
             case MAP -> new InventoryCreator(1, MiniMsg.plain("Maps", NamedTextColor.GOLD)).edit(editor -> {
                 if (SmashPlugin.getPlugin().getSmashConfig().noMaps()) {
-                    player.sendActionBar(MiniMsg.mini("prefix").append(MiniMsg.plain("No maps set up!", RED)));
+                    player.sendActionBar(MiniMsg.mini("prefix").append(MiniMsg.plain("No maps found in config!", RED)));
                     event.setCancelled(true);
                     return;
                 }
-                for (Map map : MapLoader.getConfigurationMaps()) {
-                    editor.add(new Item(map.item(), 1, MiniMsg.plain(map.name(), GREEN)).build());
+                for (String mapName : MapLoader.getLoadedMaps().keySet()) {
+                    editor.add(new Item(Material.PAPER, 1, MiniMsg.plain(mapName, GREEN)).build());
                     event.setCancelled(true);
                 }
             }).accept(player::openInventory, !SmashPlugin.getPlugin().getSmashConfig().noMaps());
