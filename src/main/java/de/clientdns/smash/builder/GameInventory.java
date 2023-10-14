@@ -1,22 +1,21 @@
-package de.clientdns.smash.inventory;
+package de.clientdns.smash.builder;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-public class InventoryCreator {
+public class GameInventory {
 
-    private final Inventory inventory;
+    private final org.bukkit.inventory.Inventory inventory;
     private final Component name;
     private final InventoryEditor editor;
     private int slots = 9; // Here, 9 is a default value when not overriding
 
-    public InventoryCreator(int factor, Component name) {
+    public GameInventory(int factor, Component name) {
         // Factor 6 is the highest number to be able to create an inventory.
         // This means the inventory will have 9 * 6 (54) slots -> 6 rows with every 9 slots.
         // If factor is more than 6, use 6 as factor. When less than 6, use the factor provided.
@@ -26,15 +25,15 @@ public class InventoryCreator {
         this.editor = new InventoryEditor(this);
     }
 
-    public void accept(@NotNull Consumer<Inventory> consumer) {
+    public void accept(@NotNull Consumer<org.bukkit.inventory.Inventory> consumer) {
         consumer.accept(inventory);
     }
 
-    public void accept(@NotNull Consumer<Inventory> consumer, boolean condition) {
+    public void accept(@NotNull Consumer<org.bukkit.inventory.Inventory> consumer, boolean condition) {
         if (condition) consumer.accept(inventory);
     }
 
-    public InventoryCreator edit(@NotNull Consumer<InventoryEditor> consumer) {
+    public GameInventory edit(@NotNull Consumer<InventoryEditor> consumer) {
         consumer.accept(editor);
         return this;
     }
@@ -50,9 +49,9 @@ public class InventoryCreator {
     /**
      * A record for an inventory edit instance.
      *
-     * @param creator The instance of the inventory creator ({@link InventoryCreator}) to manage items in inventories.
+     * @param creator The instance of the inventory creator ({@link GameInventory}) to manage items in inventories.
      */
-    public record InventoryEditor(InventoryCreator creator) {
+    public record InventoryEditor(GameInventory creator) {
 
         public void add(ItemStack itemStack) {
             creator.accept(inventory -> inventory.addItem(itemStack));
@@ -67,7 +66,7 @@ public class InventoryCreator {
         }
 
         public void clear() {
-            creator.accept(Inventory::clear);
+            creator.accept(org.bukkit.inventory.Inventory::clear);
         }
 
         public void remove(Material material) {
