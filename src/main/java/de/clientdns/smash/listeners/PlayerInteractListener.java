@@ -5,7 +5,7 @@ import de.clientdns.smash.builder.Item;
 import de.clientdns.smash.builder.Skull;
 import de.clientdns.smash.character.Character;
 import de.clientdns.smash.config.MiniMsg;
-import de.clientdns.smash.inventory.InventoryCreator;
+import de.clientdns.smash.builder.GameInventory;
 import de.clientdns.smash.map.loader.MapLoader;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
@@ -40,7 +40,7 @@ public class PlayerInteractListener implements Listener {
                     items.add(new Skull(1, character.data().name()).build());
                 }
                 Item explanation = new Item(Material.OAK_WALL_SIGN, 1, empty(), List.of(empty(), MiniMsg.plain("Every character has it's own abilities!", GRAY)));
-                new InventoryCreator(3, MiniMsg.plain("Characters", NamedTextColor.GOLD)).edit(editor -> {
+                new GameInventory(3, MiniMsg.plain("Characters", NamedTextColor.GOLD)).edit(editor -> {
                     for (int i = 0; i < items.size(); i++) {
                         editor.set(i, items.get(i));
                     }
@@ -48,7 +48,7 @@ public class PlayerInteractListener implements Listener {
                 }).accept(player::openInventory);
                 event.setCancelled(true);
             }
-            case MAP -> new InventoryCreator(1, MiniMsg.plain("Maps", NamedTextColor.GOLD)).edit(editor -> {
+            case MAP -> new GameInventory(1, MiniMsg.plain("Maps", NamedTextColor.GOLD)).edit(editor -> {
                 if (SmashPlugin.getPlugin().getSmashConfig().noMaps()) {
                     player.sendActionBar(MiniMsg.mini("prefix").append(MiniMsg.plain("No maps found in config!", RED)));
                     event.setCancelled(true);
