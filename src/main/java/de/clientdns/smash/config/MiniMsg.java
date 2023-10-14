@@ -2,7 +2,7 @@ package de.clientdns.smash.config;
 
 import de.clientdns.smash.SmashPlugin;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +15,7 @@ public class MiniMsg {
         return plain(SMASH_CONFIG.getStr(path));
     }
 
-    public static @NotNull Component mini(String path, TextColor color) {
+    public static @NotNull Component mini(String path, NamedTextColor color) {
         return plain(SMASH_CONFIG.getStr(path), color);
     }
 
@@ -23,7 +23,7 @@ public class MiniMsg {
         return MINI_MESSAGE.deserialize(message);
     }
 
-    public static <R extends String> @NotNull Component plain(R message, TextColor color) {
+    public static <R extends String> @NotNull Component plain(R message, NamedTextColor color) {
         return MINI_MESSAGE.deserialize(message).color(color);
     }
 }
