@@ -30,6 +30,10 @@ public class PlayerJoinListener implements Listener {
 
     private static PlayerScoreboard playerScoreboard;
 
+    public static PlayerScoreboard getPlayerScoreboard() {
+        return playerScoreboard;
+    }
+
     @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull PlayerJoinEvent event) {
@@ -84,9 +88,5 @@ public class PlayerJoinListener implements Listener {
         }
 
         event.joinMessage(empty());
-    }
-
-    public static PlayerScoreboard getPlayerScoreboard() {
-        return playerScoreboard;
     }
 }

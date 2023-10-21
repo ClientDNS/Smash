@@ -1,11 +1,11 @@
 package de.clientdns.smash.listeners;
 
 import de.clientdns.smash.SmashPlugin;
+import de.clientdns.smash.builder.GameInventory;
 import de.clientdns.smash.builder.Item;
 import de.clientdns.smash.builder.Skull;
 import de.clientdns.smash.character.Character;
 import de.clientdns.smash.config.MiniMsg;
-import de.clientdns.smash.builder.GameInventory;
 import de.clientdns.smash.map.loader.MapLoader;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
