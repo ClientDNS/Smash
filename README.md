@@ -23,7 +23,7 @@ git pull
 
 ### Building
 
-To build the project, run the following command inside the cloned `Smash` directory:
+To build/compile the project, run the following command inside the cloned `Smash` directory:
 
 ```shell
 ./gradlew build
