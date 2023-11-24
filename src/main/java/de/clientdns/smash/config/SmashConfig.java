@@ -144,7 +144,7 @@ public class SmashConfig {
     }
 
     public void discardChanges() {
-        if (this.changed) this.changed = false;
+        this.changed = false;
     }
 
     public boolean contains(String path) {
