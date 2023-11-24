@@ -3,6 +3,7 @@ package de.clientdns.smash.builder;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,10 +11,10 @@ import java.util.function.Consumer;
 
 public class GameInventory {
 
-    private final org.bukkit.inventory.Inventory inventory;
+    private final Inventory inventory;
     private final Component name;
     private final InventoryEditor editor;
-    private int slots = 9; // Here, 9 is a default value when not overriding
+    private int slots = 9; // 9 is default value when not overriding
 
     public GameInventory(int factor, Component name) {
         // Factor 6 is the highest number to be able to create an inventory.
@@ -25,11 +26,11 @@ public class GameInventory {
         this.editor = new InventoryEditor(this);
     }
 
-    public void accept(@NotNull Consumer<org.bukkit.inventory.Inventory> consumer) {
+    public void accept(@NotNull Consumer<Inventory> consumer) {
         consumer.accept(inventory);
     }
 
-    public void accept(@NotNull Consumer<org.bukkit.inventory.Inventory> consumer, boolean condition) {
+    public void accept(@NotNull Consumer<Inventory> consumer, boolean condition) {
         if (condition) consumer.accept(inventory);
     }
 
@@ -66,7 +67,7 @@ public class GameInventory {
         }
 
         public void clear() {
-            creator.accept(org.bukkit.inventory.Inventory::clear);
+            creator.accept(Inventory::clear);
         }
 
         public void remove(Material material) {
