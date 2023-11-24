@@ -21,7 +21,7 @@ public class ConfigCommand extends Command {
     public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String label, String[] args) {
         if (sender.hasPermission("smash.config")) {
             if (args.length == 1) {
-                return Stream.of("reload", "save").filter(s -> s.startsWith(args[0])).toList();
+                return Stream.of("discard", "reload", "save").filter(s -> s.startsWith(args[0])).toList();
             }
         }
         return List.of();
@@ -36,6 +36,14 @@ public class ConfigCommand extends Command {
         if (args.length == 1) {
             SmashConfig config = SmashPlugin.getPlugin().getSmashConfig();
             switch (args[0].toLowerCase()) {
+                case "discard" -> {
+                    if (!config.isChanged()) {
+                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("No changes detected.", RED)));
+                        return false;
+                    }
+                    config.discardChanges();
+                    sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Changes discarded.", GREEN)));
+                }
                 case "reload" -> {
                     if (config.isChanged()) {
                         sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("There are detected changes!", RED)));
@@ -64,6 +72,7 @@ public class ConfigCommand extends Command {
             }
         } else {
             sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Use following arguments:", GRAY)));
+            sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- discard", GREEN)));
             sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- reload", GREEN)));
             sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- save", GREEN)));
             return false;
