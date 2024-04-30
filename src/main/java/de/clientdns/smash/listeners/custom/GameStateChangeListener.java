@@ -1,8 +1,8 @@
 package de.clientdns.smash.listeners.custom;
 
+import de.clientdns.smash.SmashPlugin;
 import de.clientdns.smash.config.MiniMsg;
 import de.clientdns.smash.countdown.EndCountdown;
-import de.clientdns.smash.countdown.LobbyCountdown;
 import de.clientdns.smash.events.GameStateChangeEvent;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.TitlePart;
@@ -34,19 +34,18 @@ public class GameStateChangeListener implements Listener {
                     player.sendTitlePart(TitlePart.TIMES, Title.Times.times(Duration.ZERO, Duration.ofMillis(2500), Duration.ZERO));
                     // TODO: Teleport players to random locations of voted map
                 }
-                LobbyCountdown.forceStopScheduler();
+                SmashPlugin.getPlugin().getGameTimer().start();
             }
             case END -> {
+                SmashPlugin.getPlugin().getGameTimer().stop();
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     player.setGameMode(GameMode.SPECTATOR);
-                    player.setAllowFlight(true);
-                    player.setFlying(true);
+                    player.setAllowFlight(false);
+                    player.setFlying(false);
                     player.getInventory().clear();
-                    player.sendTitlePart(TitlePart.TITLE, MiniMsg.plain("The game ended.", RED));
-                    player.sendTitlePart(TitlePart.SUBTITLE, MiniMsg.plain("You are now spectating.", GRAY));
-                    player.sendTitlePart(TitlePart.TIMES, Title.Times.times(Duration.ZERO, Duration.ofMillis(2500), Duration.ZERO));
+                    player.sendTitlePart(TitlePart.TITLE, MiniMsg.plain("End of the game!", RED));
+                    player.sendTitlePart(TitlePart.TIMES, Title.Times.times(Duration.ZERO, Duration.ofMillis(1500), Duration.ZERO));
                 }
-                LobbyCountdown.forceStopScheduler();
                 EndCountdown.start();
             }
         }

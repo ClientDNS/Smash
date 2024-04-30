@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public class MiniMsg {
 
     private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
-    private static final SmashConfig SMASH_CONFIG = SmashPlugin.getPlugin().getSmashConfig();
+    private static final PluginConfig SMASH_CONFIG = SmashPlugin.getPlugin().getSmashConfig();
 
     public static @NotNull Component mini(String path) {
         return plain(SMASH_CONFIG.getStr(path));

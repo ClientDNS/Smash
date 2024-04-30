@@ -7,12 +7,10 @@ import de.clientdns.smash.util.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.jetbrains.annotations.ApiStatus;
 
 import static net.kyori.adventure.text.format.NamedTextColor.GREEN;
 import static net.kyori.adventure.text.format.NamedTextColor.YELLOW;
 
-@ApiStatus.Experimental
 public class LobbyCountdown {
 
     private static int taskId = -1;
@@ -39,9 +37,7 @@ public class LobbyCountdown {
                     forceStopScheduler();
                     SmashPlugin.getPlugin().getGameStateManager().setCurrentState(GameState.INGAME);
                     PlayerUtil.broadcast(MiniMsg.mini("prefix").append(MiniMsg.plain("Let the game begin!", GREEN)));
-
                     // TODO: Teleport all players to the different spawn locations
-                    SmashPlugin.getPlugin().getGameTimer().start();
                     return;
                 }
             }
@@ -55,14 +51,14 @@ public class LobbyCountdown {
 
     public static void forceStopScheduler() {
         if (taskId != -1) {
-            BukkitScheduler scheduler = Bukkit.getScheduler();
-            if (scheduler.isQueued(taskId)) {
-                scheduler.cancelTask(taskId);
+            BukkitScheduler bukkitScheduler = Bukkit.getScheduler();
+            if (bukkitScheduler.isQueued(taskId)) {
+                bukkitScheduler.cancelTask(taskId);
             }
-            if (scheduler.isCurrentlyRunning(taskId)) {
-                scheduler.cancelTask(taskId);
+            if (bukkitScheduler.isCurrentlyRunning(taskId)) {
+                bukkitScheduler.cancelTask(taskId);
             }
-            taskId = -1; // (reset back to -1)
+            taskId = -1; // (reset)
         }
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.setLevel(0);

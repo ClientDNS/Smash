@@ -4,9 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.clientdns.smash.SmashPlugin;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@ApiStatus.Experimental
 public class UUIDUtil {
 
     public static final Map<String, UUID> cached = new HashMap<>();
@@ -40,7 +39,7 @@ public class UUIDUtil {
                 cached.put(playerName, uuid);
             }
             return uuid;
-        } catch (Exception exception) {
+        } catch (IOException exception) {
             //
         }
         return null;

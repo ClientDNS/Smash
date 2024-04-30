@@ -19,12 +19,17 @@ public class InventoryClickListener implements Listener {
     @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
         if (event.getCurrentItem() == null) {
             event.setCancelled(true);
             return;
         }
-        Component displayName = event.getCurrentItem().getItemMeta().displayName();
-        if (displayName == null) {
+        if (event.getCurrentItem().getItemMeta() == null) {
+            event.setCancelled(true);
+            return;
+        }
+        Component itemName = event.getCurrentItem().getItemMeta().displayName();
+        if (itemName == null) {
             event.setCancelled(true);
             return;
         }
@@ -34,23 +39,31 @@ public class InventoryClickListener implements Listener {
         }
 
         if (SmashPlugin.getPlugin().getGameStateManager().is(GameState.LOBBY)) {
-            Player player = (Player) event.getWhoClicked();
-            player.sendMessage(displayName);
-            if (displayName.equals(Character.MARIO.data().name())) {
-                PlayerManager.set(player, Character.MARIO);
-            } else if (displayName.equals(Character.DONKEY_KONG.data().name())) {
-                PlayerManager.set(player, Character.DONKEY_KONG);
-            } else if (displayName.equals(Character.FLASH.data().name())) {
-                PlayerManager.set(player, Character.FLASH);
-            } else if (displayName.equals(Character.PIKACHU.data().name())) {
-                PlayerManager.set(player, Character.PIKACHU);
-            } else if (displayName.equals(Character.SUPERMAN.data().name())) {
-                PlayerManager.set(player, Character.SUPERMAN);
-            } else if (displayName.equals(Character.LINK.data().name())) {
-                PlayerManager.set(player, Character.LINK);
+            PlayerManager playerManager = SmashPlugin.getPlugin().getPlayerManager();
+            if (itemName.equals(Character.MARIO.data().name())) {
+                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName));
+                playerManager.set(player, Character.MARIO);
+            } else if (itemName.equals(Character.DONKEY_KONG.data().name())) {
+                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName));
+                playerManager.set(player, Character.DONKEY_KONG);
+            } else if (itemName.equals(Character.FLASH.data().name())) {
+                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName));
+                playerManager.set(player, Character.FLASH);
+            } else if (itemName.equals(Character.PIKACHU.data().name())) {
+                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName));
+                playerManager.set(player, Character.PIKACHU);
+            } else if (itemName.equals(Character.SUPERMAN.data().name())) {
+                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName));
+                playerManager.set(player, Character.SUPERMAN);
+            } else if (itemName.equals(Character.LINK.data().name())) {
+                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName));
+                playerManager.set(player, Character.LINK);
             } else {
-                player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("This item does nothing.", NamedTextColor.GRAY)));
+                player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("This character does not exist.", NamedTextColor.GRAY)));
+                return;
             }
+            event.setCancelled(true);
+            return;
         }
         event.setCancelled(true);
     }

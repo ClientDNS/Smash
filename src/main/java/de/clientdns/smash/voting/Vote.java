@@ -1,20 +1,21 @@
 package de.clientdns.smash.voting;
 
 import de.clientdns.smash.map.Map;
-import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class Vote {
 
-    private final Player player;
+    private final UUID uuid;
     private Map map;
 
-    public Vote(Player player, Map map) {
-        this.player = player;
+    public Vote(UUID uuid, Map map) {
+        this.uuid = uuid;
         this.map = map;
     }
 
-    public Player getPlayer() {
-        return player;
+    public UUID getUuid() {
+        return uuid;
     }
 
     public Map getMap() {

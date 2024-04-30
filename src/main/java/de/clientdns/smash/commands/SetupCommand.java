@@ -114,12 +114,6 @@ public class SetupCommand extends Command {
         } else if (args.length == 3) {
             if (args[0].equalsIgnoreCase("start")) {
                 String mapName = args[1];
-                int actual;
-                if (mapName.length() > 16) {
-                    actual = mapName.length();
-                    player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Map name cannot be longer than 16 chars. ('" + mapName + "': " + actual + ")", RED)));
-                    return false;
-                }
                 if (MapLoader.contains(mapName)) {
                     player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Map '" + mapName + "' already exists.", RED)));
                     return false;

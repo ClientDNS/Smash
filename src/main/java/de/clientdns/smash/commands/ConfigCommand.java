@@ -2,7 +2,7 @@ package de.clientdns.smash.commands;
 
 import de.clientdns.smash.SmashPlugin;
 import de.clientdns.smash.config.MiniMsg;
-import de.clientdns.smash.config.SmashConfig;
+import de.clientdns.smash.config.PluginConfig;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +34,7 @@ public class ConfigCommand extends Command {
             return false;
         }
         if (args.length == 1) {
-            SmashConfig config = SmashPlugin.getPlugin().getSmashConfig();
+            PluginConfig config = SmashPlugin.getPlugin().getSmashConfig();
             switch (args[0].toLowerCase()) {
                 case "discard" -> {
                     if (!config.isChanged()) {

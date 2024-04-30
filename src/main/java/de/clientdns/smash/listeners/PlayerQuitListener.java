@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.scoreboard.Objective;
 import org.jetbrains.annotations.NotNull;
 
 import static net.kyori.adventure.text.Component.empty;
@@ -54,6 +55,10 @@ public class PlayerQuitListener implements Listener {
         } else {
             // end state
             stopServer(online);
+        }
+        Objective objective = player.getScoreboard().getObjective("abc_" + player.getName());
+        if (objective != null) {
+            objective.unregister();
         }
         event.quitMessage(empty());
     }

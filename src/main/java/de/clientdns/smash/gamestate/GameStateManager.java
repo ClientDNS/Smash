@@ -12,7 +12,7 @@ public class GameStateManager {
     }
 
     public GameState getCurrentState() {
-        return currentState;
+        return this.currentState;
     }
 
     public void setCurrentState(GameState gamestate) {

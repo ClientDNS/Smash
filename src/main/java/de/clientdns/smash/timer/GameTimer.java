@@ -1,9 +1,6 @@
 package de.clientdns.smash.timer;
 
 import de.clientdns.smash.SmashPlugin;
-import de.clientdns.smash.config.MiniMsg;
-import de.clientdns.smash.util.FormatUtil;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
@@ -19,14 +16,15 @@ public class GameTimer {
     }
 
     public void start() {
-        task = scheduler.runTaskTimerAsynchronously(SmashPlugin.getPlugin(), () -> {
-            Bukkit.broadcast(MiniMsg.plain(FormatUtil.formatSeconds(seconds), NamedTextColor.GREEN));
+        if (isRunning())
+            return;
+        task = scheduler.runTaskTimer(SmashPlugin.getPlugin(), () -> {
             seconds++;
         }, 0, 20);
     }
 
     public void stop() {
-        if (!isRunning()) {
+        if (isRunning()) {
             task.cancel();
         }
     }

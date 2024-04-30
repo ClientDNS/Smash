@@ -96,7 +96,7 @@ public class Item {
      * @return The material of the item.
      */
     public Item type(Material material) {
-        itemStack.setType(material);
+        itemStack.withType(material);
         return this;
     }
 

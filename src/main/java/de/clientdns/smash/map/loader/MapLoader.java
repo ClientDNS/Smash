@@ -1,9 +1,10 @@
 package de.clientdns.smash.map.loader;
 
 import de.clientdns.smash.SmashPlugin;
-import de.clientdns.smash.config.SmashConfig;
+import de.clientdns.smash.config.PluginConfig;
 import de.clientdns.smash.map.Map;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,7 +12,7 @@ import java.util.HashMap;
 
 public class MapLoader {
 
-    private static final SmashConfig config = SmashPlugin.getPlugin().getSmashConfig();
+    private static final PluginConfig config = SmashPlugin.getPlugin().getSmashConfig();
     private static final HashMap<String, Map> loadedMaps = new HashMap<>();
 
     public static boolean contains(String name) {
@@ -19,7 +20,11 @@ public class MapLoader {
     }
 
     public static void loadMaps() {
-        for (String mapName : config.getSection("maps").getKeys(false)) {
+        ConfigurationSection section = config.getSection("maps");
+        if (section == null) {
+            return;
+        }
+        for (String mapName : section.getKeys(false)) {
             Map map = loadMap(mapName);
             loadedMaps.put(mapName, map);
         }

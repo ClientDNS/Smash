@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
-public class SmashConfig {
+public class PluginConfig {
 
     private final Logger logger;
     private final File configFile;
@@ -28,9 +28,8 @@ public class SmashConfig {
      *
      * @param fileName The name to create a file under it.
      */
-    public SmashConfig(@NotNull @Pattern("[a-z_\\-.]+") String fileName) {
+    public PluginConfig(@NotNull @Pattern("[a-z_\\-.]+") String fileName) {
         this.logger = SmashPlugin.getPlugin().getLogger();
-        this.logger.info("Checking configuration.");
         this.configFile = new File("plugins/Smash/", fileName);
         this.changed = false;
         try {
@@ -54,7 +53,6 @@ public class SmashConfig {
     }
 
     public void reset() {
-        this.logger.info("Resetting configuration.");
         set("prefix", "<gold>Smash</gold> <dark_gray>|</dark_gray> ");
         set("min-players", 2);
         set("permission-required", "<red>You have no permission to do that.</red>");
@@ -127,7 +125,6 @@ public class SmashConfig {
     }
 
     public void save(@NotNull Consumer<Throwable> consumer) {
-        this.logger.info("Saving configuration.");
         try {
             if (!changed) {
                 this.logger.info("No changes detected, cancelling.");
@@ -168,8 +165,7 @@ public class SmashConfig {
     }
 
     public void load() {
-        this.changed = false;
-        this.logger.info("Loading configuration.");
+        discardChanges();
         fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
         MapLoader.clearMaps();
         MapLoader.loadMaps();
