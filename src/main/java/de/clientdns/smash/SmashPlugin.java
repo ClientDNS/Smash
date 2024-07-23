@@ -1,7 +1,5 @@
 package de.clientdns.smash;
 
-import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
-import com.destroystokyo.paper.utils.PaperPluginLogger;
 import de.clientdns.smash.commands.ConfigCommand;
 import de.clientdns.smash.commands.SetupCommand;
 import de.clientdns.smash.commands.SmashDebugCommand;
@@ -14,9 +12,7 @@ import de.clientdns.smash.map.setup.MapSetup;
 import de.clientdns.smash.player.PlayerManager;
 import de.clientdns.smash.timer.GameTimer;
 import de.clientdns.smash.voting.VoteManager;
-import io.papermc.paper.text.PaperComponents;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.GameRule;
 import org.bukkit.World;
@@ -171,7 +167,7 @@ public final class SmashPlugin extends JavaPlugin {
         voteManager = new VoteManager();
         gameTimer = new GameTimer();
 
-        Duration time = Duration.between(then,Instant.now());
+        Duration time = Duration.between(then, Instant.now());
         getLogger().info("Took " + time.toMillis() + " ms to start.");
     }
 
