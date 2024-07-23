@@ -1,7 +1,11 @@
 package de.clientdns.smash;
 
+import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
+import com.destroystokyo.paper.utils.PaperPluginLogger;
 import de.clientdns.smash.commands.ConfigCommand;
 import de.clientdns.smash.commands.SetupCommand;
+import de.clientdns.smash.commands.SmashDebugCommand;
+import de.clientdns.smash.commands.VoteCommand;
 import de.clientdns.smash.config.PluginConfig;
 import de.clientdns.smash.gamestate.GameStateManager;
 import de.clientdns.smash.listeners.*;
@@ -10,7 +14,9 @@ import de.clientdns.smash.map.setup.MapSetup;
 import de.clientdns.smash.player.PlayerManager;
 import de.clientdns.smash.timer.GameTimer;
 import de.clientdns.smash.voting.VoteManager;
+import io.papermc.paper.text.PaperComponents;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.GameRule;
 import org.bukkit.World;
@@ -42,10 +48,11 @@ public final class SmashPlugin extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        // getLogger().warning("This plugin only works with ");
         if (plugin == null) {
             getLogger().info("Assign plugin instance.");
-            plugin = this;
             then = Instant.now();
+            plugin = this;
         } else {
             getLogger().severe("Could not assign new/another plugin instance, deactivating plugin.");
             getServer().getPluginManager().disablePlugin(this);
@@ -123,8 +130,14 @@ public final class SmashPlugin extends JavaPlugin {
         }
 
         List<Command> commands = new ArrayList<>();
-        commands.add(new ConfigCommand("config"));
-        commands.add(new SetupCommand("setup"));
+        commands.add(new ConfigCommand("config",
+                "Config command to manage plugin config.", "/config <discard, reload, save>"));
+        commands.add(new SetupCommand("setup",
+                "Setup command to configure maps.", "/setup <abort, finish, set, start>"));
+        commands.add(new SmashDebugCommand("smashdebug",
+                "Debug command to test things with the plugin.", "/sd <gamestate, vote>"));
+        commands.add(new VoteCommand("vote",
+                "Vote command to change map vote.", "/vote <map>"));
 
         for (Command command : commands) {
             getServer().getCommandMap().register("smash", command);
@@ -158,7 +171,8 @@ public final class SmashPlugin extends JavaPlugin {
         voteManager = new VoteManager();
         gameTimer = new GameTimer();
 
-        getLogger().info("Took " + Duration.between(then, Instant.now()).toMillis() + " ms to start.");
+        Duration time = Duration.between(then,Instant.now());
+        getLogger().info("Took " + time.toMillis() + " ms to start.");
     }
 
     public GameStateManager getGameStateManager() {

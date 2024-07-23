@@ -11,12 +11,12 @@ public class VoteManager {
 
     public Vote update(UUID uuid, Map map) {
         Vote vote = votes.get(uuid);
-        votes.replace(uuid, new Vote(uuid, map));
+        votes.replace(uuid, new Vote(map));
         return votes.get(uuid);
     }
 
     public Vote add(UUID uuid, Map map) {
-        Vote vote = new Vote(uuid, map);
+        Vote vote = new Vote(map);
         votes.put(uuid, vote);
         return votes.get(uuid);
     }

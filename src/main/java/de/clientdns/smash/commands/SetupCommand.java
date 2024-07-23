@@ -19,14 +19,14 @@ import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class SetupCommand extends Command {
 
-    public SetupCommand(String name) {
-        super(name, "/", "/", List.of());
+    public SetupCommand(String name, String description, String usageMessage) {
+        super(name, description, usageMessage, List.of());
     }
 
     public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String label, String[] args) {
         if (sender.hasPermission("smash.setup")) {
             if (args.length == 1) {
-                return Stream.of("start", "abort", "set", "finish").filter(s -> s.startsWith(args[0])).toList();
+                return Stream.of("abort", "finish", "set", "start").filter(s -> s.startsWith(args[0])).toList();
             }
         }
         return List.of();

@@ -20,6 +20,12 @@ public class GameStateManager {
         Bukkit.getPluginManager().callEvent(new GameStateChangeEvent(gamestate));
     }
 
+    public void skip() {
+        if (is(GameState.LOBBY)) {
+            setCurrentState(GameState.INGAME);
+        }
+    }
+
     public boolean is(GameState state) {
         return this.currentState == state;
     }

@@ -7,6 +7,7 @@ import de.clientdns.smash.builder.Skull;
 import de.clientdns.smash.character.Character;
 import de.clientdns.smash.config.MiniMsg;
 import de.clientdns.smash.map.loader.MapLoader;
+import de.clientdns.smash.strings.Strings;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -42,7 +43,7 @@ public class PlayerInteractListener implements Listener {
                     items.add(new Skull(a, character.data().name()).build());
                 }
                 Item explanation = new Item(Material.OAK_WALL_SIGN, 1, empty(), List.of(empty(), MiniMsg.plain("Every character has it's own abilities!", GRAY)));
-                new GameInventory(3, MiniMsg.plain("Characters", NamedTextColor.GOLD)).edit(editor -> {
+                new GameInventory(3, Strings.CHARACTERS_SELECTION_NAME).edit(editor -> {
                     for (int i = 0; i < items.size(); i++) {
                         editor.set(i, items.get(i));
                     }

@@ -41,28 +41,29 @@ public class InventoryClickListener implements Listener {
         if (SmashPlugin.getPlugin().getGameStateManager().is(GameState.LOBBY)) {
             PlayerManager playerManager = SmashPlugin.getPlugin().getPlayerManager();
             if (itemName.equals(Character.MARIO.data().name())) {
-                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName));
+                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName)); // Debug
                 playerManager.set(player, Character.MARIO);
             } else if (itemName.equals(Character.DONKEY_KONG.data().name())) {
-                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName));
+                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName)); // Debug
                 playerManager.set(player, Character.DONKEY_KONG);
             } else if (itemName.equals(Character.FLASH.data().name())) {
-                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName));
+                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName)); // Debug
                 playerManager.set(player, Character.FLASH);
             } else if (itemName.equals(Character.PIKACHU.data().name())) {
-                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName));
+                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName)); // Debug
                 playerManager.set(player, Character.PIKACHU);
             } else if (itemName.equals(Character.SUPERMAN.data().name())) {
-                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName));
+                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName)); // Debug
                 playerManager.set(player, Character.SUPERMAN);
             } else if (itemName.equals(Character.LINK.data().name())) {
-                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName));
+                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName)); // Debug
                 playerManager.set(player, Character.LINK);
             } else {
                 player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("This character does not exist.", NamedTextColor.GRAY)));
                 return;
             }
             event.setCancelled(true);
+            event.getWhoClicked().getOpenInventory().close();
             return;
         }
         event.setCancelled(true);

@@ -30,17 +30,18 @@ public class PlayerScoreboard {
         this.player = player;
         this.scoreboard = player.getScoreboard();
         this.gameTimer = SmashPlugin.getPlugin().getGameTimer();
-        if (scoreboard.getObjective("abc_" + player.getName()) == null)
+        if (scoreboard.getObjective("abc_" + player.getName()) == null) {
             this.objective = scoreboard.registerNewObjective("abc_" + player.getName(), Criteria.DUMMY, MiniMsg.mini("prefix").append(MiniMsg.plain("Overview", NamedTextColor.GREEN)));
-        else
+        } else {
             this.objective = scoreboard.getObjective("abc_" + player.getName());
+        }
         this.scores = new HashMap<>();
     }
 
     public void set() {
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        task = Bukkit.getScheduler().runTaskTimer(SmashPlugin.getPlugin(), this::update, 0, 10);
+        task = Bukkit.getScheduler().runTaskTimer(SmashPlugin.getPlugin(), this::update, 0, 15);
 
         player.setScoreboard(scoreboard);
     }
@@ -50,6 +51,7 @@ public class PlayerScoreboard {
         this.scores.put(" ", 7);
         this.scores.put("Game time", 6);
 
+        // Game timer in scoreboard
         boolean gameTimerRunning = gameTimer.isRunning();
         int seconds = SmashPlugin.getPlugin().getGameTimer().getSeconds();
         this.scores.replace("=> " + (gameTimerRunning ? FormatUtil.formatSeconds(seconds) : "/"), 5);
