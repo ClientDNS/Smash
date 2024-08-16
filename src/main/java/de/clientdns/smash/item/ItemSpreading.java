@@ -33,7 +33,7 @@ public class ItemSpreading {
             for (int z = -radius; z <= radius; z++) {
                 Location spreadLocation = location.clone().add(x, 1, z);
                 if (spreadLocation.getBlock().getType().equals(Material.AIR)) {
-
+                    break;
                 }
 
                 SecureRandom random = new SecureRandom();

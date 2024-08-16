@@ -1,28 +1,23 @@
 package de.clientdns.smash.countdown;
 
+import de.clientdns.smash.SmashPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitScheduler;
 
 public class Countdown {
 
     private BukkitScheduler bs;
+    private SmashPlugin pl;
     private int delay;
     private int period;
     private int taskId;
-    private boolean async;
 
-    public Countdown(int period, boolean async) {
+    public Countdown(int delay, int period) {
         this.bs = Bukkit.getScheduler();
-        this.delay = 0;
-        this.period = period;
-        this.taskId = -1;
-        this.async = async;
-    }
-
-    public Countdown(int delay, int period, boolean async) {
+        this.pl = SmashPlugin.getPlugin();
         this.delay = delay;
         this.period = period;
-        this.async = async;
+        this.taskId = -1;
     }
 
     public void refresh() {
@@ -31,6 +26,13 @@ public class Countdown {
 
     public void start() {
         refresh();
+
+        this.bs.runTaskTimer(this.pl, new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }, this.delay, this.period);
     }
 
     public void stop() {

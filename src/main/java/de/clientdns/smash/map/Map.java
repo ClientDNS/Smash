@@ -15,7 +15,7 @@ public record Map(String name, Location[] spawnLocations) {
             SmashPlugin.getPlugin().getLogger().info("Could not get config file, exiting.");
             return false;
         }
-        config.set("maps." + name + ".spawnLocations", spawnLocations);
+        config.setValue("maps." + name + ".spawnLocations", spawnLocations);
         return true;
     }
 }

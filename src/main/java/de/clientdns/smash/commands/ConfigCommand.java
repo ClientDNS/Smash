@@ -21,7 +21,7 @@ public class ConfigCommand extends Command {
     public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String label, String[] args) {
         if (sender.hasPermission("smash.config")) {
             if (args.length == 1) {
-                return Stream.of("discard", "reload", "save").filter(s -> s.startsWith(args[0])).toList();
+                return Stream.of("delete", "discard", "reload", "save").filter(s -> s.startsWith(args[0])).toList();
             }
         }
         return List.of();
@@ -36,6 +36,19 @@ public class ConfigCommand extends Command {
         if (args.length == 1) {
             PluginConfig config = SmashPlugin.getPlugin().getSmashConfig();
             switch (args[0].toLowerCase()) {
+                case "delete" -> {
+                    if (config.isChanged()) {
+                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Open changes detected.", RED)));
+                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Save with /config save", RED)));
+                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("before deleting the config file.", RED)));
+                        return false;
+                    }
+                    if (SmashPlugin.getPlugin().getSmashConfig().delete()) {
+                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Config file deleted.", GREEN)));
+                    } else {
+                        sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Could not delete config file.", RED)));
+                    }
+                }
                 case "discard" -> {
                     if (!config.isChanged()) {
                         sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("No changes detected.", RED)));
@@ -72,6 +85,7 @@ public class ConfigCommand extends Command {
             }
         } else {
             sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Use following arguments:", GRAY)));
+            sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- delete", GREEN)));
             sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- discard", GREEN)));
             sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- reload", GREEN)));
             sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("- save", GREEN)));

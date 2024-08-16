@@ -2,6 +2,7 @@ package de.clientdns.smash.config;
 
 import de.clientdns.smash.SmashPlugin;
 import de.clientdns.smash.map.loader.MapLoader;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -44,7 +45,7 @@ public class PluginConfig {
         }
     }
 
-    public <V> void set(@NotNull String path, V value) {
+    public <V> void setValue(@NotNull String path, V value) {
         if (fileConfiguration.contains(path)) {
             return;
         }
@@ -52,14 +53,22 @@ public class PluginConfig {
         if (!changed) changed = true;
     }
 
-    public void reset() {
-        set("prefix", "<gold>Smash</gold> <dark_gray>|</dark_gray> ");
-        set("min-players", 2);
-        set("permission-required", "<red>You have no permission to do that.</red>");
-        set("unknown-command", "<red>Unknown command. ($command)</red>");
-        set("join-message", "<green>$name joined the server.</green>");
-        set("quit-message", "<red>$name left the server.</red>");
-        set("maps", List.of());
+    public void setRichMessage(@NotNull String path, Component value) {
+        if (fileConfiguration.contains(path)) {
+            return;
+        }
+        fileConfiguration.setRichMessage(path, value);
+        if (!changed) changed = true;
+    }
+
+    public void defaultValues() {
+        setRichMessage("prefix", MiniMsg.plain("<gold>Smash</gold> <dark_gray>|</dark_gray> "));
+        setRichMessage("permission-required", MiniMsg.plain("<red>You have no permission to do that.</red>"));
+        setRichMessage("unknown-command", MiniMsg.plain("<red>Unknown command. ($command)</red>"));
+        setRichMessage("join-message", MiniMsg.plain("<green>$name joined the server.</green>"));
+        setRichMessage("quit-message", MiniMsg.plain("<red>$name left the server.</red>"));
+        setValue("min-players", 2);
+        setValue("maps", List.of());
     }
 
     public String getStr(String path) {
@@ -154,6 +163,10 @@ public class PluginConfig {
 
     public boolean isList(String path) {
         return fileConfiguration.isList(path);
+    }
+
+    public boolean delete() {
+        return configFile.getParentFile().delete() && configFile.delete();
     }
 
     public boolean exists() {

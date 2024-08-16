@@ -13,16 +13,12 @@ import de.clientdns.smash.player.PlayerManager;
 import de.clientdns.smash.timer.GameTimer;
 import de.clientdns.smash.voting.VoteManager;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.bukkit.Difficulty;
-import org.bukkit.GameRule;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +27,7 @@ public final class SmashPlugin extends JavaPlugin {
 
     private static SmashPlugin plugin;
     private GameStateManager gameStateManager;
-    private Instant then;
+    //private Instant then;
     private PlayerManager playerManager;
     private HashMap<Player, MapSetup> setups;
     private PluginConfig pluginConfig;
@@ -44,16 +40,19 @@ public final class SmashPlugin extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        // getLogger().warning("This plugin only works with ");
         if (plugin == null) {
-            getLogger().info("Assign plugin instance.");
-            then = Instant.now();
+            //then = Instant.now();
             plugin = this;
         } else {
             getLogger().severe("Could not assign new/another plugin instance, deactivating plugin.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+
+        Server server = Bukkit.getServer();
+        String bv = server.getBukkitVersion();
+        getLogger().info("This server uses version " + bv);
+
         double classVersion = NumberUtils.toDouble(System.getProperty("java.class.version"));
         if (classVersion < 61.0) {
             getLogger().warning("You are using a unsupported Java Version! (class: " + classVersion + ")");
@@ -79,7 +78,7 @@ public final class SmashPlugin extends JavaPlugin {
             pluginConfig.load();
             if (pluginConfig.empty()) {
                 getLogger().warning("Configuration file is empty, resetting to default values.");
-                pluginConfig.reset();
+                pluginConfig.defaultValues();
                 pluginConfig.save(exception -> {
                     if (exception == null) {
                         getLogger().info("Default values saved in configuration.");
@@ -90,6 +89,10 @@ public final class SmashPlugin extends JavaPlugin {
             }
         }
 
+        if (getSmashConfig().noMaps()) {
+            getLogger().warning("No maps found in configuration. Setup with '/setup start'.");
+        }
+
         // DEACTIVATE: DEBUG COMPLICATIONS
         /*if (getSmashConfig().getInt("min-players") < 2) {
             getLogger().warning("Minimum players cannot be lower than 2, deactivating plugin.");
@@ -97,13 +100,7 @@ public final class SmashPlugin extends JavaPlugin {
             return;
         }*/
 
-        if (getSmashConfig().noMaps()) {
-            getLogger().warning("No maps found in configuration. Setup with '/setup start'.");
-        }
-
         List<Listener> listeners = new ArrayList<>();
-        // custom events
-        listeners.add(new GameStateChangeListener());
 
         listeners.add(new AsyncPlayerPreLoginListener());
         listeners.add(new BlockBreakListener());
@@ -120,6 +117,9 @@ public final class SmashPlugin extends JavaPlugin {
         listeners.add(new PlayerItemHeldListener());
         listeners.add(new PlayerJoinListener());
         listeners.add(new PlayerQuitListener());
+
+        // custom event
+        listeners.add(new GameStateChangeListener());
 
         for (Listener listener : listeners) {
             getServer().getPluginManager().registerEvents(listener, this);
@@ -167,8 +167,8 @@ public final class SmashPlugin extends JavaPlugin {
         voteManager = new VoteManager();
         gameTimer = new GameTimer();
 
-        Duration time = Duration.between(then, Instant.now());
-        getLogger().info("Took " + time.toMillis() + " ms to start.");
+        /*Duration time = Duration.between(then, Instant.now());
+        //getLogger().info("Took " + time.toMillis() + " ms to start.");*/
     }
 
     public GameStateManager getGameStateManager() {
