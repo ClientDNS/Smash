@@ -1,7 +1,6 @@
 package de.clientdns.smash.config;
 
 import de.clientdns.smash.SmashPlugin;
-import de.clientdns.smash.map.loader.MapLoader;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -63,8 +62,6 @@ public class PluginConfig {
 
     public void defaultValues() {
         setRichMessage("prefix", MiniMsg.plain("<gold>Smash</gold> <dark_gray>|</dark_gray> "));
-        setRichMessage("permission-required", MiniMsg.plain("<red>You have no permission to do that.</red>"));
-        setRichMessage("unknown-command", MiniMsg.plain("<red>Unknown command. ($command)</red>"));
         setRichMessage("join-message", MiniMsg.plain("<green>$name joined the server.</green>"));
         setRichMessage("quit-message", MiniMsg.plain("<red>$name left the server.</red>"));
         setValue("min-players", 2);
@@ -100,15 +97,15 @@ public class PluginConfig {
 
         if (!locs.isEmpty()) {
 
-            Location[] locationArray = new Location[locs.size()];
+            Location[] locations = new Location[locs.size()];
 
             int i = 0;
             for (Location location : locs) {
-                locationArray[i] = location;
+                locations[i] = location;
                 i++;
             }
 
-            return locationArray;
+            return locations;
         }
         return null;
     }
@@ -138,7 +135,7 @@ public class PluginConfig {
             if (!changed) {
                 this.logger.info("No changes detected, cancelling.");
             } else {
-                // There are unsaved changes left
+                // There are unsaved changes left, hopefully.
                 fileConfiguration.save(configFile);
                 discardChanges();
             }
@@ -166,7 +163,7 @@ public class PluginConfig {
     }
 
     public boolean delete() {
-        return configFile.getParentFile().delete() && configFile.delete();
+        return configFile.delete();
     }
 
     public boolean exists() {
@@ -180,7 +177,5 @@ public class PluginConfig {
     public void load() {
         discardChanges();
         fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
-        MapLoader.clearMaps();
-        MapLoader.loadMaps();
     }
 }

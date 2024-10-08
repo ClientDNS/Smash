@@ -2,18 +2,20 @@ package de.clientdns.smash;
 
 import de.clientdns.smash.commands.ConfigCommand;
 import de.clientdns.smash.commands.SetupCommand;
-import de.clientdns.smash.commands.SmashDebugCommand;
 import de.clientdns.smash.commands.VoteCommand;
 import de.clientdns.smash.config.PluginConfig;
 import de.clientdns.smash.gamestate.GameStateManager;
 import de.clientdns.smash.listeners.*;
 import de.clientdns.smash.listeners.custom.GameStateChangeListener;
+import de.clientdns.smash.map.loader.MapLoader;
 import de.clientdns.smash.map.setup.MapSetup;
 import de.clientdns.smash.player.PlayerManager;
 import de.clientdns.smash.timer.GameTimer;
 import de.clientdns.smash.voting.VoteManager;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.bukkit.*;
+import org.bukkit.Difficulty;
+import org.bukkit.GameRule;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -23,11 +25,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public final class SmashPlugin extends JavaPlugin {
+public class SmashPlugin extends JavaPlugin {
 
     private static SmashPlugin plugin;
     private GameStateManager gameStateManager;
-    //private Instant then;
     private PlayerManager playerManager;
     private HashMap<Player, MapSetup> setups;
     private PluginConfig pluginConfig;
@@ -41,17 +42,12 @@ public final class SmashPlugin extends JavaPlugin {
     @Override
     public void onLoad() {
         if (plugin == null) {
-            //then = Instant.now();
             plugin = this;
         } else {
             getLogger().severe("Could not assign new/another plugin instance, deactivating plugin.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-
-        Server server = Bukkit.getServer();
-        String bv = server.getBukkitVersion();
-        getLogger().info("This server uses version " + bv);
 
         double classVersion = NumberUtils.toDouble(System.getProperty("java.class.version"));
         if (classVersion < 61.0) {
@@ -76,6 +72,8 @@ public final class SmashPlugin extends JavaPlugin {
         } else {
             getLogger().info("Loading config.");
             pluginConfig.load();
+            MapLoader.clearMaps();
+            MapLoader.loadMaps();
             if (pluginConfig.empty()) {
                 getLogger().warning("Configuration file is empty, resetting to default values.");
                 pluginConfig.defaultValues();
@@ -89,8 +87,11 @@ public final class SmashPlugin extends JavaPlugin {
             }
         }
 
+        getLogger().info("Searching and loading maps.");
         if (getSmashConfig().noMaps()) {
-            getLogger().warning("No maps found in configuration. Setup with '/setup start'.");
+            getLogger().warning("No maps found.");
+        } else {
+            getLogger().info("Maps found.");
         }
 
         // DEACTIVATE: DEBUG COMPLICATIONS
@@ -130,8 +131,6 @@ public final class SmashPlugin extends JavaPlugin {
                 "Config command to manage plugin config.", "/config <discard, reload, save>"));
         commands.add(new SetupCommand("setup",
                 "Setup command to configure maps.", "/setup <abort, finish, set, start>"));
-        commands.add(new SmashDebugCommand("smashdebug",
-                "Debug command to test things with the plugin.", "/sd <gamestate, vote>"));
         commands.add(new VoteCommand("vote",
                 "Vote command to change map vote.", "/vote <map>"));
 
@@ -140,8 +139,8 @@ public final class SmashPlugin extends JavaPlugin {
         }
 
         for (World world : getServer().getWorlds()) {
+            getLogger().info("Setting game rules for '" + world.getName() + "'.");
             world.setDifficulty(Difficulty.PEACEFUL);
-            world.getWorldBorder().reset();
             world.setThundering(false);
             world.setStorm(false);
             world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
@@ -158,17 +157,16 @@ public final class SmashPlugin extends JavaPlugin {
             world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, false);
             world.setGameRule(GameRule.LOG_ADMIN_COMMANDS, false);
             world.setGameRule(GameRule.KEEP_INVENTORY, false);
+            world.setGameRule(GameRule.COMMAND_BLOCK_OUTPUT, false);
             world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
             world.setGameRule(GameRule.UNIVERSAL_ANGER, false);
             world.setGameRule(GameRule.REDUCED_DEBUG_INFO, true);
+            world.setGameRule(GameRule.SEND_COMMAND_FEEDBACK, true);
             world.setGameRule(GameRule.MAX_ENTITY_CRAMMING, 8);
         }
 
         voteManager = new VoteManager();
         gameTimer = new GameTimer();
-
-        /*Duration time = Duration.between(then, Instant.now());
-        //getLogger().info("Took " + time.toMillis() + " ms to start.");*/
     }
 
     public GameStateManager getGameStateManager() {

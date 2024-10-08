@@ -18,7 +18,6 @@ public class Skull {
 
     private final SkullMeta skullMeta;
 
-    @SuppressWarnings("unused")
     private Skull() {
         throw new UnsupportedOperationException("This class can not be instantiated.");
     }

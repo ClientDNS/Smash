@@ -5,7 +5,6 @@ import de.clientdns.smash.builder.Item;
 import de.clientdns.smash.config.MiniMsg;
 import de.clientdns.smash.countdown.LobbyCountdown;
 import de.clientdns.smash.gamestate.GameState;
-import de.clientdns.smash.scoreboard.PlayerScoreboard;
 import de.clientdns.smash.util.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -28,13 +27,6 @@ import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class PlayerJoinListener implements Listener {
 
-    private static PlayerScoreboard playerScoreboard;
-
-    public static PlayerScoreboard getPlayerScoreboard() {
-        return playerScoreboard;
-    }
-
-    @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull PlayerJoinEvent event) {
         Player player = event.getPlayer();
@@ -65,9 +57,6 @@ public class PlayerJoinListener implements Listener {
             if (!pdc.has(key)) {
                 pdc.set(key, PersistentDataType.INTEGER, 0);
             }
-
-            playerScoreboard = new PlayerScoreboard(player);
-            playerScoreboard.set();
 
             int online = Bukkit.getOnlinePlayers().size();
             int minPlayers = SmashPlugin.getPlugin().getSmashConfig().getInt("min-players");

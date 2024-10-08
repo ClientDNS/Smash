@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class BlockBreakListener implements Listener {
 
-    @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull BlockBreakEvent event) {
         event.setCancelled(true);

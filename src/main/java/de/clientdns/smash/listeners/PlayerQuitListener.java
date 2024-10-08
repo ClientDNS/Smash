@@ -21,7 +21,6 @@ import static net.kyori.adventure.text.format.NamedTextColor.RED;
 
 public class PlayerQuitListener implements Listener {
 
-    @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull PlayerQuitEvent event) {
         Player player = event.getPlayer();
@@ -32,8 +31,6 @@ public class PlayerQuitListener implements Listener {
         if (pdc.has(key)) {
             pdc.remove(key); // Delete key from data container when existing
         }
-
-        PlayerJoinListener.getPlayerScoreboard().stopUpdating();
 
         // Remove player's setup when available.
         MapSetup mapSetup = SmashPlugin.getPlugin().getSetups().get(player);
@@ -46,7 +43,7 @@ public class PlayerQuitListener implements Listener {
             // lobby state
             PlayerUtil.broadcast(MiniMsg.mini("prefix").append(MiniMsg.mini("quit-message").replaceText(builder -> builder.matchLiteral("$name").replacement(player.getName()))));
             if (online < minPlayers) {
-                LobbyCountdown.forceStopScheduler();
+                LobbyCountdown.forceStop();
                 Bukkit.broadcast(MiniMsg.mini("prefix").append(MiniMsg.plain("The countdown was stopped, not enough players online to proceed.", RED)));
             }
         } else if (SmashPlugin.getPlugin().getGameStateManager().is(GameState.INGAME)) {

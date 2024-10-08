@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class BlockPlaceListener implements Listener {
 
-    @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull BlockPlaceEvent event) {
         event.setCancelled(true);

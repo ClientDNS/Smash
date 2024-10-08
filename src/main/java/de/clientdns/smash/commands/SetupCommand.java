@@ -6,6 +6,7 @@ import de.clientdns.smash.gamestate.GameState;
 import de.clientdns.smash.map.Map;
 import de.clientdns.smash.map.loader.MapLoader;
 import de.clientdns.smash.map.setup.MapSetup;
+import de.clientdns.smash.strings.Strings;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -35,11 +36,11 @@ public class SetupCommand extends Command {
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("You have to be a player to do that.", RED)));
+            sender.sendMessage(MiniMsg.mini("prefix").append(Strings.ONLY_PLAYERS));
             return false;
         }
         if (!player.hasPermission("smash.setup")) {
-            player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.mini("permission-required")));
+            player.sendMessage(MiniMsg.mini("prefix").append(Strings.PERMISSION_REQUIRED));
             return false;
         }
         if (args.length == 1) {
@@ -131,7 +132,7 @@ public class SetupCommand extends Command {
                 MapSetup setup = new MapSetup(player, mapName, indexSize);
                 sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Setup '" + setup.getName() + "' started.", GREEN)));
             } else {
-                player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.mini("unknown-command").replaceText(builder -> builder.matchLiteral("$command").replacement(args[0]))));
+                player.sendMessage(MiniMsg.mini("prefix").append(Strings.UNKNOWN_COMMAND.replaceText(builder -> builder.matchLiteral("$command").replacement(args[0]))));
                 return false;
             }
         } else {

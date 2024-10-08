@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlayerItemHeldListener implements Listener {
 
-    @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull PlayerItemHeldEvent event) {
         Player player = event.getPlayer();

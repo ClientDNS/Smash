@@ -16,17 +16,11 @@ public class GameTimer {
     }
 
     public void start() {
-        if (isRunning())
-            return;
-        task = scheduler.runTaskTimer(SmashPlugin.getPlugin(), () -> {
-            seconds++;
-        }, 0, 20);
+        task = scheduler.runTaskTimer(SmashPlugin.getPlugin(), () -> seconds++, 0, 20);
     }
 
     public void stop() {
-        if (isRunning()) {
-            task.cancel();
-        }
+        task.cancel();
     }
 
     public boolean isRunning() {

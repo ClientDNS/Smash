@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class EntityPickupItemListener implements Listener {
 
-    @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull EntityPickupItemEvent event) {
         event.setCancelled(true);

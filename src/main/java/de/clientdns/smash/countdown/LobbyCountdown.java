@@ -24,7 +24,7 @@ public class LobbyCountdown {
         taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(SmashPlugin.getPlugin(), () -> {
             switch (seconds) {
                 case 15, 10, 5, 4, 3, 2 -> {
-                    if (seconds == 3) {
+                    if (seconds == 5) {
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             player.getInventory().clear();
                         }
@@ -34,7 +34,7 @@ public class LobbyCountdown {
                 case 1 ->
                         PlayerUtil.broadcast(MiniMsg.mini("prefix").append(MiniMsg.plain("The game starts in " + seconds + " second.", YELLOW)));
                 case 0 -> {
-                    forceStopScheduler();
+                    forceStop();
                     SmashPlugin.getPlugin().getGameStateManager().setCurrentState(GameState.INGAME);
                     PlayerUtil.broadcast(MiniMsg.mini("prefix").append(MiniMsg.plain("Let the game begin!", GREEN)));
                     // TODO: Teleport all players to the different spawn locations
@@ -49,7 +49,7 @@ public class LobbyCountdown {
         }, 0L, 20L);
     }
 
-    public static void forceStopScheduler() {
+    public static void forceStop() {
         if (taskId != -1) {
             BukkitScheduler bukkitScheduler = Bukkit.getScheduler();
             if (bukkitScheduler.isQueued(taskId)) {

@@ -14,7 +14,6 @@ import static net.kyori.adventure.text.format.NamedTextColor.RED;
 
 public class AsyncPlayerPreLoginListener implements Listener {
 
-    @SuppressWarnings("unused")
     @EventHandler
     void on(AsyncPlayerPreLoginEvent event) {
         int online = Bukkit.getOnlinePlayers().size();

@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class EntityDamageListener implements Listener {
 
-    @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull EntityDamageEvent event) {
         if (!event.getEntityType().equals(EntityType.DROPPED_ITEM)) {

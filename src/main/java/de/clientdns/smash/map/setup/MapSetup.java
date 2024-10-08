@@ -26,7 +26,7 @@ public class MapSetup {
 
     public Map finish() {
         delete();
-        return new Map(this.name, this.spawnLocations);
+        return new Map(name, spawnLocations);
     }
 
     public Player getPlayer() {

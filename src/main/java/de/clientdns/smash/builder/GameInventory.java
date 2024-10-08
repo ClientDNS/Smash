@@ -14,13 +14,20 @@ public class GameInventory {
     private final Inventory inventory;
     private final Component name;
     private final InventoryEditor editor;
-    private int slots = 9; // 9 is default value when not overriding
+    private int slots;
+
+    public GameInventory(Component name) {
+        this.slots = 9; // Default value when not overriding
+        this.name = name;
+        this.inventory = Bukkit.createInventory(null, slots, name);
+        this.editor = new InventoryEditor(this);
+    }
 
     public GameInventory(int factor, Component name) {
         // Factor 6 is the highest valid number available to create an inventory.
         // This means the inventory will have 9 * 6 (54) slots
         // If factor is greater than 6, use 6 as factor.
-        this.slots = factor > 6 ? 54 : slots * factor;
+        this.slots = factor > 6 ? 54 : 9 * factor;
         this.name = name;
         this.inventory = Bukkit.createInventory(null, slots, name);
         this.editor = new InventoryEditor(this);
@@ -45,6 +52,10 @@ public class GameInventory {
 
     public int getSlots() {
         return slots;
+    }
+
+    public void setSlots(int slots) {
+        this.slots = slots;
     }
 
     /**

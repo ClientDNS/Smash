@@ -19,6 +19,10 @@ public class MapLoader {
         return config.contains("maps." + name);
     }
 
+    private static void removeMap(String name) {
+        loadedMaps.remove(name);
+    }
+
     public static void loadMaps() {
         ConfigurationSection section = config.getSection("maps");
         if (section == null) {
@@ -40,9 +44,7 @@ public class MapLoader {
     }
 
     public static void clearMaps() {
-        if (!loadedMaps.isEmpty()) {
-            loadedMaps.clear();
-        }
+        loadedMaps.forEach((name, map) -> removeMap(name));
     }
 
     public static HashMap<String, Map> getLoadedMaps() {

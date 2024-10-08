@@ -23,6 +23,8 @@ public class GameStateManager {
     public void skip() {
         if (is(GameState.LOBBY)) {
             setCurrentState(GameState.INGAME);
+        } else if (is(GameState.INGAME)) {
+            setCurrentState(GameState.END);
         }
     }
 

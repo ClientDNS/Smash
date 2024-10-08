@@ -20,7 +20,6 @@ public class Item {
     private final ItemStack itemStack;
     private final ItemMeta itemMeta;
 
-    @SuppressWarnings("unused")
     private Item() {
         throw new UnsupportedOperationException("This class can not be instantiated.");
     }

@@ -7,7 +7,7 @@ import org.bukkit.Location;
 public record Map(String name, Location[] spawnLocations) {
 
     public boolean write() { // Must be saved ingame which can be done with "/config save".
-        if (spawnLocations.length < 2) {
+        if (spawnLocations == null || spawnLocations.length < 2) {
             return false;
         }
         PluginConfig config = SmashPlugin.getPlugin().getSmashConfig();

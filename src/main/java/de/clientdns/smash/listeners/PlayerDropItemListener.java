@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlayerDropItemListener implements Listener {
 
-    @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull PlayerDropItemEvent event) {
         event.setCancelled(true);

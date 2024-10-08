@@ -1,27 +1,27 @@
 package de.clientdns.smash.voting;
 
 import de.clientdns.smash.map.Map;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
-import java.util.UUID;
 
 public class VoteManager {
 
-    private static final HashMap<UUID, Vote> votes = new HashMap<>();
+    private final HashMap<Player, Map> votes = new HashMap<>();
 
-    public Vote update(UUID uuid, Map map) {
-        Vote vote = votes.get(uuid);
-        votes.replace(uuid, new Vote(map));
-        return votes.get(uuid);
+    public void add(Player player, Map map) {
+        votes.put(player, map);
     }
 
-    public Vote add(UUID uuid, Map map) {
-        Vote vote = new Vote(map);
-        votes.put(uuid, vote);
-        return votes.get(uuid);
+    public Map get(Player player) {
+        return votes.get(player);
     }
 
-    public void remove(UUID uuid) {
-        votes.remove(uuid);
+    public void edit(Player player, Map newMap) {
+        votes.replace(player, newMap);
+    }
+
+    public boolean voted(Player player) {
+        return votes.containsKey(player);
     }
 }

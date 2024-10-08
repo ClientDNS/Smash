@@ -3,6 +3,7 @@ package de.clientdns.smash.commands;
 import de.clientdns.smash.SmashPlugin;
 import de.clientdns.smash.config.MiniMsg;
 import de.clientdns.smash.config.PluginConfig;
+import de.clientdns.smash.strings.Strings;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +31,7 @@ public class ConfigCommand extends Command {
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
         if (!sender.hasPermission("smash.setup")) {
-            sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.mini("permission-required")));
+            sender.sendMessage(MiniMsg.mini("prefix").append(Strings.PERMISSION_REQUIRED));
             return false;
         }
         if (args.length == 1) {
@@ -79,7 +80,7 @@ public class ConfigCommand extends Command {
                     });
                 }
                 default -> {
-                    sender.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.mini("unknown-command").replaceText(builder -> builder.matchLiteral("$command").replacement(args[0]))));
+                    sender.sendMessage(MiniMsg.mini("prefix").append(Strings.UNKNOWN_COMMAND.replaceText(builder -> builder.matchLiteral("$command").replacement(args[0]))));
                     return false;
                 }
             }

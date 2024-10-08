@@ -1,12 +1,6 @@
 package de.clientdns.smash.listeners;
 
-import de.clientdns.smash.SmashPlugin;
-import de.clientdns.smash.character.Character;
-import de.clientdns.smash.config.MiniMsg;
-import de.clientdns.smash.gamestate.GameState;
-import de.clientdns.smash.player.PlayerManager;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class InventoryClickListener implements Listener {
 
-    @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
@@ -34,36 +27,6 @@ public class InventoryClickListener implements Listener {
             return;
         }
         if (!event.getClick().equals(ClickType.LEFT)) {
-            event.setCancelled(true);
-            return;
-        }
-
-        if (SmashPlugin.getPlugin().getGameStateManager().is(GameState.LOBBY)) {
-            PlayerManager playerManager = SmashPlugin.getPlugin().getPlayerManager();
-            if (itemName.equals(Character.MARIO.data().name())) {
-                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName)); // Debug
-                playerManager.set(player, Character.MARIO);
-            } else if (itemName.equals(Character.DONKEY_KONG.data().name())) {
-                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName)); // Debug
-                playerManager.set(player, Character.DONKEY_KONG);
-            } else if (itemName.equals(Character.FLASH.data().name())) {
-                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName)); // Debug
-                playerManager.set(player, Character.FLASH);
-            } else if (itemName.equals(Character.PIKACHU.data().name())) {
-                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName)); // Debug
-                playerManager.set(player, Character.PIKACHU);
-            } else if (itemName.equals(Character.SUPERMAN.data().name())) {
-                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName)); // Debug
-                playerManager.set(player, Character.SUPERMAN);
-            } else if (itemName.equals(Character.LINK.data().name())) {
-                player.sendMessage(MiniMsg.plain("Detected name ").append(itemName)); // Debug
-                playerManager.set(player, Character.LINK);
-            } else {
-                player.sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("This character does not exist.", NamedTextColor.GRAY)));
-                return;
-            }
-            event.setCancelled(true);
-            event.getWhoClicked().getOpenInventory().close();
             return;
         }
         event.setCancelled(true);

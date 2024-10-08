@@ -19,13 +19,11 @@ import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class GameStateChangeListener implements Listener {
 
-    @SuppressWarnings("unused")
     @EventHandler
     void on(@NotNull GameStateChangeEvent event) {
         switch (event.getGameState()) {
             case INGAME -> {
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.setGameMode(GameMode.ADVENTURE);
                     player.setAllowFlight(false);
                     player.setFlying(false);
                     player.getInventory().clear();
