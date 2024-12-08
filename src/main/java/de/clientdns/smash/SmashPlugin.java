@@ -120,7 +120,7 @@ public class SmashPlugin extends JavaPlugin {
 
         List<Command> commands = new ArrayList<>();
         commands.add(new ConfigCommand("config",
-                "Config command to manage plugin config.", "/config <discard, reload, save>"));
+                "Config command to manage config.", "/config <discard, reload, save>"));
         commands.add(new SetupCommand("setup",
                 "Setup command to configure maps.", "/setup <abort, finish, set, start>"));
         commands.add(new VoteCommand("vote",
@@ -145,12 +145,12 @@ public class SmashPlugin extends JavaPlugin {
             world.setGameRule(GameRule.DO_MOB_LOOT, false);
             world.setGameRule(GameRule.MOB_GRIEFING, false);
             world.setGameRule(GameRule.NATURAL_REGENERATION, false);
-            world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, false);
             world.setGameRule(GameRule.LOG_ADMIN_COMMANDS, false);
             world.setGameRule(GameRule.KEEP_INVENTORY, false);
             world.setGameRule(GameRule.COMMAND_BLOCK_OUTPUT, false);
             world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
             world.setGameRule(GameRule.UNIVERSAL_ANGER, false);
+            world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
             world.setGameRule(GameRule.REDUCED_DEBUG_INFO, true);
             world.setGameRule(GameRule.SEND_COMMAND_FEEDBACK, true);
             world.setGameRule(GameRule.MAX_ENTITY_CRAMMING, 8);
