@@ -11,24 +11,24 @@ import org.jetbrains.annotations.NotNull;
 public class InventoryClickListener implements Listener {
 
     @EventHandler
-    void on(@NotNull InventoryClickEvent event) {
-        Player player = (Player) event.getWhoClicked();
-        if (event.getCurrentItem() == null) {
-            event.setCancelled(true);
+    void on(@NotNull InventoryClickEvent e) {
+        Player player = (Player) e.getWhoClicked();
+        if (e.getCurrentItem() == null) {
+            e.setCancelled(true);
             return;
         }
-        if (event.getCurrentItem().getItemMeta() == null) {
-            event.setCancelled(true);
+        if (e.getCurrentItem().getItemMeta() == null) {
+            e.setCancelled(true);
             return;
         }
-        Component itemName = event.getCurrentItem().getItemMeta().displayName();
+        Component itemName = e.getCurrentItem().getItemMeta().displayName();
         if (itemName == null) {
-            event.setCancelled(true);
+            e.setCancelled(true);
             return;
         }
-        if (!event.getClick().equals(ClickType.LEFT)) {
+        if (!e.getClick().equals(ClickType.LEFT)) {
             return;
         }
-        event.setCancelled(true);
+        e.setCancelled(true);
     }
 }

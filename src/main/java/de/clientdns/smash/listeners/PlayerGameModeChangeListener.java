@@ -10,10 +10,10 @@ import org.jetbrains.annotations.NotNull;
 public class PlayerGameModeChangeListener implements Listener {
 
     @EventHandler
-    void on(@NotNull PlayerGameModeChangeEvent event) {
-        if (event.getCause().equals(PlayerGameModeChangeEvent.Cause.UNKNOWN) || event.getCause().equals(PlayerGameModeChangeEvent.Cause.COMMAND)) {
-            event.setCancelled(true);
-            event.getPlayer().sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("You cannot change your gamemode while playing.", NamedTextColor.RED)));
+    void on(@NotNull PlayerGameModeChangeEvent e) {
+        if (e.getCause().equals(PlayerGameModeChangeEvent.Cause.UNKNOWN) || e.getCause().equals(PlayerGameModeChangeEvent.Cause.COMMAND)) {
+            e.setCancelled(true);
+            e.getPlayer().sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("You cannot change your gamemode while playing.", NamedTextColor.RED)));
         }
     }
 }

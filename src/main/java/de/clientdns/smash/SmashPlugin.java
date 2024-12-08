@@ -106,7 +106,6 @@ public class SmashPlugin extends JavaPlugin {
         listeners.add(new AsyncPlayerPreLoginListener());
         listeners.add(new BlockBreakListener());
         listeners.add(new BlockPlaceListener());
-        listeners.add(new ChunkLoadListener());
         listeners.add(new EntityDamageListener());
         listeners.add(new EntityPickupItemListener());
         listeners.add(new FoodLevelChangeListener());

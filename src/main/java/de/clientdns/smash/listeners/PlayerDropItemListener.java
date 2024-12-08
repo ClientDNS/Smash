@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 public class PlayerDropItemListener implements Listener {
 
     @EventHandler
-    void on(@NotNull PlayerDropItemEvent event) {
-        event.setCancelled(true);
+    void on(@NotNull PlayerDropItemEvent e) {
+        e.setCancelled(true);
     }
 }

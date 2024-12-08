@@ -12,16 +12,16 @@ import org.jetbrains.annotations.NotNull;
 public class PlayerItemHeldListener implements Listener {
 
     @EventHandler
-    void on(@NotNull PlayerItemHeldEvent event) {
-        Player player = event.getPlayer();
+    void on(@NotNull PlayerItemHeldEvent e) {
+        Player player = e.getPlayer();
         if (SmashPlugin.getPlugin().getGameStateManager().is(GameState.INGAME)) {
             if (player.getGameMode().equals(GameMode.SPECTATOR)) {
-                event.setCancelled(false);
+                e.setCancelled(false);
                 return;
             }
             // Prevent player from moving to other slots than 0
-            if (event.getPreviousSlot() == 0) {
-                event.setCancelled(true);
+            if (e.getPreviousSlot() == 0) {
+                e.setCancelled(true);
             } else {
                 player.getInventory().setHeldItemSlot(0);
             }

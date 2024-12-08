@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 public class FoodLevelChangeListener implements Listener {
 
     @EventHandler
-    void on(@NotNull FoodLevelChangeEvent event) {
-        event.setCancelled(true);
+    void on(@NotNull FoodLevelChangeEvent e) {
+        e.setCancelled(true);
     }
 }

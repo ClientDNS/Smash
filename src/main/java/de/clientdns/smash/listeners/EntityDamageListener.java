@@ -11,16 +11,16 @@ import org.jetbrains.annotations.NotNull;
 public class EntityDamageListener implements Listener {
 
     @EventHandler
-    void on(@NotNull EntityDamageEvent event) {
-        if (!event.getEntityType().equals(EntityType.DROPPED_ITEM)) {
-            event.setCancelled(true);
+    void on(@NotNull EntityDamageEvent e) {
+        if (!e.getEntityType().equals(EntityType.ITEM)) {
+            e.setCancelled(true);
         }
         if (SmashPlugin.getPlugin().getGameStateManager().is(GameState.INGAME)) {
-            if (!event.getEntityType().equals(EntityType.PLAYER)) {
-                event.setDamage(0D);
+            if (!e.getEntityType().equals(EntityType.PLAYER)) {
+                e.setDamage(0D);
             }
         } else {
-            event.setCancelled(true);
+            e.setCancelled(true);
         }
     }
 }

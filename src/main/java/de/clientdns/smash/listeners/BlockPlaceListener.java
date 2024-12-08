@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
 public class BlockPlaceListener implements Listener {
 
     @EventHandler
-    void on(@NotNull BlockPlaceEvent event) {
-        event.setCancelled(true);
-        event.setBuild(false);
+    void on(@NotNull BlockPlaceEvent e) {
+        e.setCancelled(true);
+        e.setBuild(false);
     }
 }

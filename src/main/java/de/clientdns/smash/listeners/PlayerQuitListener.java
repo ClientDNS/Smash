@@ -22,8 +22,8 @@ import static net.kyori.adventure.text.format.NamedTextColor.RED;
 public class PlayerQuitListener implements Listener {
 
     @EventHandler
-    void on(@NotNull PlayerQuitEvent event) {
-        Player player = event.getPlayer();
+    void on(@NotNull PlayerQuitEvent e) {
+        Player player = e.getPlayer();
 
         // Delete damage count from player
         PersistentDataContainer pdc = player.getPersistentDataContainer();
@@ -57,7 +57,7 @@ public class PlayerQuitListener implements Listener {
         if (objective != null) {
             objective.unregister();
         }
-        event.quitMessage(empty());
+        e.quitMessage(empty());
     }
 
     private void stopServer(int count) {

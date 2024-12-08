@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 public class EntityPickupItemListener implements Listener {
 
     @EventHandler
-    void on(@NotNull EntityPickupItemEvent event) {
-        event.setCancelled(true);
+    void on(@NotNull EntityPickupItemEvent e) {
+        e.setCancelled(true);
     }
 }

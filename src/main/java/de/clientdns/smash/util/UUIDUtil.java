@@ -8,6 +8,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -23,7 +25,7 @@ public class UUIDUtil {
             return cached.get(playerName);
         }
         try {
-            URL url = new URL("https://api.mojang.com/users/profiles/minecraft/" + playerName);
+            URL url = new URI("https://api.mojang.com/users/profiles/minecraft/" + playerName).toURL();
             URLConnection connection = url.openConnection();
             connection.setAllowUserInteraction(false);
             connection.setDoInput(false);
@@ -39,7 +41,7 @@ public class UUIDUtil {
                 cached.put(playerName, uuid);
             }
             return uuid;
-        } catch (IOException exception) {
+        } catch (IOException | URISyntaxException exception) {
             //
         }
         return null;

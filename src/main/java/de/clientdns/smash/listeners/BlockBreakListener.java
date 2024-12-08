@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
 public class BlockBreakListener implements Listener {
 
     @EventHandler
-    void on(@NotNull BlockBreakEvent event) {
-        event.setCancelled(true);
-        event.setDropItems(false);
+    void on(@NotNull BlockBreakEvent e) {
+        e.setCancelled(true);
+        e.setDropItems(false);
     }
 }

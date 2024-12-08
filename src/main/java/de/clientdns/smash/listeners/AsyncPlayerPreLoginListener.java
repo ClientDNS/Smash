@@ -15,21 +15,21 @@ import static net.kyori.adventure.text.format.NamedTextColor.RED;
 public class AsyncPlayerPreLoginListener implements Listener {
 
     @EventHandler
-    void on(AsyncPlayerPreLoginEvent event) {
+    void on(AsyncPlayerPreLoginEvent e) {
         int online = Bukkit.getOnlinePlayers().size();
         int max = Bukkit.getMaxPlayers();
         if (online >= max) {
             if (SmashPlugin.getPlugin().getGameStateManager().is(GameState.LOBBY)) {
-                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, MiniMsg.plain("The server is full!", RED));
+                e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, MiniMsg.plain("The server is full!", RED));
             } else if (SmashPlugin.getPlugin().getGameStateManager().is(GameState.INGAME)) {
-                event.allow();
-                Player player = Bukkit.getPlayer(event.getUniqueId());
+                e.allow();
+                Player player = Bukkit.getPlayer(e.getUniqueId());
                 if (player != null) {
                     Bukkit.getOnlinePlayers().remove(player); // Remove player from online players list
                     player.setGameMode(GameMode.SPECTATOR);
                 }
             } else {
-                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, MiniMsg.plain("The game already ended.", RED));
+                e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, MiniMsg.plain("The game already ended.", RED));
             }
         }
     }

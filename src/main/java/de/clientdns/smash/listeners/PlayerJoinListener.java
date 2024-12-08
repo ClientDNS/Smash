@@ -28,8 +28,8 @@ import static net.kyori.adventure.text.format.NamedTextColor.*;
 public class PlayerJoinListener implements Listener {
 
     @EventHandler
-    void on(@NotNull PlayerJoinEvent event) {
-        Player player = event.getPlayer();
+    void on(@NotNull PlayerJoinEvent e) {
+        Player player = e.getPlayer();
 
         player.setHealth(20);
         player.setFoodLevel(20);
@@ -41,7 +41,7 @@ public class PlayerJoinListener implements Listener {
             player.setAllowFlight(false);
             player.setFlying(false);
 
-            AttributeInstance attackSpeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
+            AttributeInstance attackSpeed = player.getAttribute(Attribute.ATTACK_SPEED);
             if (attackSpeed != null && attackSpeed.getValue() != 1024) {
                 attackSpeed.setBaseValue(1024); // Remove 1.9+ cooldown
             }
@@ -76,6 +76,6 @@ public class PlayerJoinListener implements Listener {
             }
         }
 
-        event.joinMessage(empty());
+        e.joinMessage(empty());
     }
 }

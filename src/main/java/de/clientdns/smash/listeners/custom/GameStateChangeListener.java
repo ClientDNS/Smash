@@ -20,8 +20,8 @@ import static net.kyori.adventure.text.format.NamedTextColor.*;
 public class GameStateChangeListener implements Listener {
 
     @EventHandler
-    void on(@NotNull GameStateChangeEvent event) {
-        switch (event.getGameState()) {
+    void on(@NotNull GameStateChangeEvent e) {
+        switch (e.getGameState()) {
             case INGAME -> {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     player.setAllowFlight(false);

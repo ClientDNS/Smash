@@ -22,25 +22,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static net.kyori.adventure.text.format.NamedTextColor.GREEN;
-import static net.kyori.adventure.text.format.NamedTextColor.RED;
 
 public class PlayerInteractListener implements Listener {
 
     @EventHandler
-    void on(@NotNull PlayerInteractEvent event) {
-        if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
-            event.setCancelled(true);
+    void on(@NotNull PlayerInteractEvent e) {
+        if (!(e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
+            e.setCancelled(true);
             return;
         }
-        Player player = event.getPlayer();
+        Player player = e.getPlayer();
 
-        if (SmashPlugin.getPlugin().getSmashConfig().noMaps()) {
-            player.sendActionBar(MiniMsg.mini("prefix").append(MiniMsg.plain("No maps found in config!", RED)));
-            event.setCancelled(true);
-            return;
-        }
-
-        switch (event.getMaterial()) {
+        switch (e.getMaterial()) {
             case CHEST -> {
                 List<ItemStack> items = new ArrayList<>(List.of());
                 for (Character character : Character.values()) {
@@ -51,15 +44,15 @@ public class PlayerInteractListener implements Listener {
                         editor.set(i, items.get(i));
                     }
                 }).accept(player::openInventory);
-                event.setCancelled(true);
+                e.setCancelled(true);
             }
             case MAP -> new GameInventory(MiniMsg.plain("Maps", NamedTextColor.GOLD)).edit(editor -> {
                 for (String mapName : MapLoader.getLoadedMaps().keySet()) {
                     editor.add(new Item(Material.PAPER, 1, MiniMsg.plain(mapName, GREEN)).build());
-                    event.setCancelled(true);
+                    e.setCancelled(true);
                 }
             }).accept(player::openInventory, !SmashPlugin.getPlugin().getSmashConfig().noMaps());
-            default -> event.setCancelled(true);
+            default -> e.setCancelled(true);
         }
     }
 }
