@@ -73,6 +73,12 @@ public class Item {
         return this;
     }
 
+    /**
+     * Sets the displayed lore of the item.
+     *
+     * @param lore The lore of the item.
+     * @return The Item instance.
+     */
     public Item lore(List<Component> lore) {
         itemMeta.lore(lore);
         return this;
@@ -81,21 +87,11 @@ public class Item {
     /**
      * Sets the amount of the item.
      *
+     * @param amount The amount of the item.
      * @return The amount of the item.
      */
     public Item amount(int amount) {
         itemStack.setAmount(amount);
-        return this;
-    }
-
-    /**
-     * Sets the material of the item.
-     *
-     * @param material The material of the item.
-     * @return The material of the item.
-     */
-    public Item type(Material material) {
-        itemStack.withType(material);
         return this;
     }
 

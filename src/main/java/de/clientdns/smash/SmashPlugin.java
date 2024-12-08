@@ -64,13 +64,11 @@ public class SmashPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         pluginConfig = new PluginConfig("smash.yml");
-        getLogger().info("Initializing config.");
         if (!pluginConfig.exists()) {
             getLogger().severe("Could not find configuration file, deactivating plugin.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         } else {
-            getLogger().info("Loading config.");
             pluginConfig.load();
             MapLoader.clearMaps();
             MapLoader.loadMaps();
@@ -78,20 +76,15 @@ public class SmashPlugin extends JavaPlugin {
                 getLogger().warning("Configuration file is empty, resetting to default values.");
                 pluginConfig.defaultValues();
                 pluginConfig.save(exception -> {
-                    if (exception == null) {
-                        getLogger().info("Default values saved in configuration.");
-                    } else {
+                    if (exception != null) {
                         getLogger().severe("Error while saving default values to config." + exception);
                     }
                 });
             }
         }
 
-        getLogger().info("Searching and loading maps.");
         if (getSmashConfig().noMaps()) {
             getLogger().warning("No maps found.");
-        } else {
-            getLogger().info("Maps found.");
         }
 
         // DEACTIVATE: DEBUG COMPLICATIONS
@@ -138,7 +131,6 @@ public class SmashPlugin extends JavaPlugin {
         }
 
         for (World world : getServer().getWorlds()) {
-            getLogger().info("Setting game rules for '" + world.getName() + "'.");
             world.setDifficulty(Difficulty.PEACEFUL);
             world.setThundering(false);
             world.setStorm(false);
