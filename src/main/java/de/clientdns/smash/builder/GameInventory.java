@@ -14,7 +14,7 @@ public class GameInventory {
     private final Inventory inventory;
     private final Component name;
     private final InventoryEditor editor;
-    private int slots;
+    private final int slots;
 
     public GameInventory(Component name) {
         this.slots = 9; // Default value when not overriding
@@ -25,7 +25,7 @@ public class GameInventory {
 
     public GameInventory(int factor, Component name) {
         // Factor 6 is the highest valid number available to create an inventory.
-        // This means the inventory will have 9 * 6 (54) slots
+        // This means the inventory will have 9 * 6 (= 54) slots
         // If factor is greater than 6, use 6 as factor.
         this.slots = factor > 6 ? 54 : 9 * factor;
         this.name = name;
@@ -52,10 +52,6 @@ public class GameInventory {
 
     public int getSlots() {
         return slots;
-    }
-
-    public void setSlots(int slots) {
-        this.slots = slots;
     }
 
     /**
