@@ -11,9 +11,9 @@ public class PlayerGameModeChangeListener implements Listener {
 
     @EventHandler
     void on(@NotNull PlayerGameModeChangeEvent e) {
-        if (e.getCause().equals(PlayerGameModeChangeEvent.Cause.UNKNOWN) || e.getCause().equals(PlayerGameModeChangeEvent.Cause.COMMAND)) {
+        if (e.getCause().equals(PlayerGameModeChangeEvent.Cause.COMMAND)) {
             e.setCancelled(true);
-            e.getPlayer().sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("You cannot change your gamemode while playing.", NamedTextColor.RED)));
+            e.getPlayer().sendMessage(MiniMsg.mini("prefix").append(MiniMsg.plain("Changing gamemode while ingame is not possible.", NamedTextColor.RED)));
         }
     }
 }
