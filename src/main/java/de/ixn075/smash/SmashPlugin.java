@@ -1,7 +1,7 @@
 package de.ixn075.smash;
 
 import de.ixn075.smash.commands.ConfigCommand;
-import de.ixn075.smash.commands.SetupCommand;
+import de.ixn075.smash.commands.MapSetupCommand;
 import de.ixn075.smash.commands.VoteCommand;
 import de.ixn075.smash.config.PluginConfig;
 import de.ixn075.smash.gamestate.GameStateManager;
@@ -120,8 +120,8 @@ public class SmashPlugin extends JavaPlugin {
         List<Command> commands = new ArrayList<>();
         commands.add(new ConfigCommand("config",
                 "Config command to manage config.", "/config <discard, reload, save>"));
-        commands.add(new SetupCommand("setup",
-                "Setup command to configure maps.", "/setup <abort, finish, set, start>"));
+        commands.add(new MapSetupCommand("mapsetup",
+                "Setup command to configure maps.", "/mapsetup <abort, finish, set, start>"));
         commands.add(new VoteCommand("vote",
                 "Vote command to change map vote.", "/vote <map>"));
 

@@ -22,7 +22,7 @@ public class ConfigCommand extends Command {
     public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String label, String[] args) {
         if (sender.hasPermission("smash.config")) {
             if (args.length == 1) {
-                return Stream.of("delete", "discard", "reload", "save").filter(s -> s.startsWith(args[0])).toList();
+                return Stream.of("discard", "reload", "save").filter(s -> s.startsWith(args[0])).toList();
             }
         }
         return List.of();
@@ -30,27 +30,15 @@ public class ConfigCommand extends Command {
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-        if (!sender.hasPermission("smash.setup")) {
+        if (!sender.hasPermission("smash.config")) {
             sender.sendMessage(Strings.PREFIX.append(Strings.PERMISSION_REQUIRED));
             return false;
         }
-        if (args.length == 1) {
+        if (args.length == 0) {
+
+        } else if (args.length == 1) {
             PluginConfig config = SmashPlugin.getPlugin().getSmashConfig();
             switch (args[0].toLowerCase()) {
-                case "delete" -> {
-                    if (config.isChanged()) {
-                        sender.sendMessage(Strings.PREFIX.append(MiniMsg.plain("Open changes detected.", RED)));
-                        sender.sendMessage(Strings.PREFIX.append(MiniMsg.plain("Save with /config save", RED)));
-                        sender.sendMessage(Strings.PREFIX.append(MiniMsg.plain("before deleting the config file.", RED)));
-                        return false;
-                    }
-                    if (SmashPlugin.getPlugin().getSmashConfig().delete()) {
-                        sender.sendMessage(Strings.PREFIX.append(MiniMsg.plain("Config file deleted.", GREEN)));
-                    } else {
-                        sender.sendMessage(Strings.PREFIX.append(MiniMsg.plain("Could not delete config file.", RED)));
-                        sender.sendMessage(Strings.PREFIX.append(MiniMsg.plain("Check console for errors.", RED)));
-                    }
-                }
                 case "discard" -> {
                     if (!config.isChanged()) {
                         sender.sendMessage(Strings.PREFIX.append(MiniMsg.plain("No changes detected.", RED)));
@@ -87,7 +75,6 @@ public class ConfigCommand extends Command {
             }
         } else {
             sender.sendMessage(Strings.PREFIX.append(MiniMsg.plain("Use following arguments:", GRAY)));
-            sender.sendMessage(Strings.PREFIX.append(MiniMsg.plain("- delete", GREEN)));
             sender.sendMessage(Strings.PREFIX.append(MiniMsg.plain("- discard", GREEN)));
             sender.sendMessage(Strings.PREFIX.append(MiniMsg.plain("- reload", GREEN)));
             sender.sendMessage(Strings.PREFIX.append(MiniMsg.plain("- save", GREEN)));

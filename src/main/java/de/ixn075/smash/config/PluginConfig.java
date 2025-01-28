@@ -138,12 +138,11 @@ public class PluginConfig {
             } else {
                 // Case: There are unsaved changes left.
                 fileConfiguration.save(configFile);
-                discardChanges();
             }
         } catch (IOException exception) {
             consumer.accept(exception);
         } finally {
-            consumer.accept(null);
+            if (changed) changed = false;
         }
     }
 
@@ -176,7 +175,6 @@ public class PluginConfig {
     }
 
     public void load() {
-        discardChanges();
         fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
     }
 }

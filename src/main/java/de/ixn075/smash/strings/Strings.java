@@ -19,4 +19,5 @@ public class Strings {
     public static Component PERMISSION_REQUIRED = MiniMsg.plain("You have no permission to do that.", RED);
     public static Component ONLY_PLAYERS = MiniMsg.plain("You have to be a player to do that.", RED);
     public static Component UNKNOWN_COMMAND = MiniMsg.plain("Unknown command. ($command)", RED);
+    public static Component NO_SETUP_STARTED = MiniMsg.plain("No setup started.", RED);
 }

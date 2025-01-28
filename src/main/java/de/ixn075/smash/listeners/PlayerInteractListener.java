@@ -47,12 +47,21 @@ public class PlayerInteractListener implements Listener {
                 }).accept(player::openInventory);
                 e.setCancelled(true);
             }
-            case MAP -> new GameInventory(MiniMsg.plain("Maps", NamedTextColor.GOLD)).edit(editor -> {
-                for (String mapName : MapLoader.getLoadedMaps().keySet()) {
-                    editor.add(new Item(Material.PAPER, 1, MiniMsg.plain(mapName, GREEN)).build());
+            case MAP -> {
+                if (SmashPlugin.getPlugin().getSmashConfig().noMaps()) {
+                    player.sendMessage(Strings.PREFIX.append(MiniMsg.plain("There are not maps configured.", NamedTextColor.RED)));
+                    player.sendMessage(Strings.PREFIX.append(MiniMsg.plain("Create maps with /setup start.", NamedTextColor.YELLOW)));
                     e.setCancelled(true);
+                    return;
                 }
-            }).accept(player::openInventory, !SmashPlugin.getPlugin().getSmashConfig().noMaps());
+                new GameInventory(MiniMsg.plain("Maps", NamedTextColor.GOLD)).edit(editor -> {
+                    for (String mapName : MapLoader.getLoadedMaps().keySet()) {
+                        editor.add(new Item(Material.PAPER, 1, MiniMsg.plain(mapName, GREEN)).build());
+                        e.setCancelled(true);
+                    }
+                }).accept(player::openInventory);
+                e.setCancelled(true);
+            }
             default -> e.setCancelled(true);
         }
     }
