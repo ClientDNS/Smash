@@ -20,7 +20,7 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
-group = "de.clientdns"
+group = "de.ixn075"
 version = "1.0"
 description = "The plugin for Super Smash Bros but in Minecraft."
 

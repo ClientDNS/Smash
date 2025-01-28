@@ -1,7 +1,7 @@
 name: smash
 version: 1.0
 description: "The plugin for Super Smash Bros but in Minecraft."
-author: "ClientDNS"
+author: "ixn_075"
 website: "https://github.com/ClientDNS/Smash"
-main: "de.clientdns.smash.SmashPlugin"
+main: "de.ixn075.smash.SmashPlugin"
 api-version: 1.20
