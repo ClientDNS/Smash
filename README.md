@@ -12,7 +12,7 @@
 Clone the repository:
 
 ```shell
-git clone https://github.com/ClientDNS/Smash.git
+git clone https://github.com/ixn075/Smash.git
 ```
 
 To update the source code to the latest commit, run the following command inside the cloned `Smash` directory:
