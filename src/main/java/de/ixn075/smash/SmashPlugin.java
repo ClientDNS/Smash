@@ -44,7 +44,7 @@ public class SmashPlugin extends JavaPlugin {
         if (plugin == null) {
             plugin = this;
         } else {
-            getLogger().severe("Could not assign new/another plugin instance, deactivating plugin.");
+            getLogger().severe("Could not assign new/another plugin instance, disable plugin.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -65,7 +65,7 @@ public class SmashPlugin extends JavaPlugin {
     public void onEnable() {
         pluginConfig = new PluginConfig("smash.yml");
         if (!pluginConfig.exists()) {
-            getLogger().severe("Could not find configuration file, deactivating plugin.");
+            getLogger().severe("Could not find configuration file, disable plugin.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         } else {
