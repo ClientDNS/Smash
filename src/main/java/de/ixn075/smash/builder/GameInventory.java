@@ -17,7 +17,7 @@ public class GameInventory {
     private final int slots;
 
     public GameInventory(Component name) {
-        this.slots = 9; // Default value when not overriding
+        this.slots = 9; // Default value
         this.name = name;
         this.inventory = Bukkit.createInventory(null, slots, name);
         this.editor = new InventoryEditor(this);
